@@ -1,0 +1,140 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &3207366786364623710
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: acf0adeec7e09c5439623599465f1140, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: acf0adeec7e09c5439623599465f1140, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: acf0adeec7e09c5439623599465f1140, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: acf0adeec7e09c5439623599465f1140, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: acf0adeec7e09c5439623599465f1140, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: acf0adeec7e09c5439623599465f1140, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: acf0adeec7e09c5439623599465f1140, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: acf0adeec7e09c5439623599465f1140, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: acf0adeec7e09c5439623599465f1140, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: acf0adeec7e09c5439623599465f1140, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: acf0adeec7e09c5439623599465f1140, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: acf0adeec7e09c5439623599465f1140, type: 3}
+      propertyPath: m_Name
+      value: Nightstand_06
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: acf0adeec7e09c5439623599465f1140, type: 3}
+--- !u!1 &2324898407563097615 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: acf0adeec7e09c5439623599465f1140, type: 3}
+  m_PrefabInstance: {fileID: 3207366786364623710}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &1032742826807402210
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2324898407563097615}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -1246125916625218638, guid: acf0adeec7e09c5439623599465f1140, type: 3}
+--- !u!4 &3100836525938257077 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: acf0adeec7e09c5439623599465f1140, type: 3}
+  m_PrefabInstance: {fileID: 3207366786364623710}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &8519587497211483785
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 3100836525938257077}
+    m_Modifications:
+    - target: {fileID: 3529002801168226, guid: 6d6133eb940476641a0025e1a32febd9, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3529002801168226, guid: 6d6133eb940476641a0025e1a32febd9, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.1796
+      objectReference: {fileID: 0}
+    - target: {fileID: 3529002801168226, guid: 6d6133eb940476641a0025e1a32febd9, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.1541
+      objectReference: {fileID: 0}
+    - target: {fileID: 3529002801168226, guid: 6d6133eb940476641a0025e1a32febd9, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.387
+      objectReference: {fileID: 0}
+    - target: {fileID: 3529002801168226, guid: 6d6133eb940476641a0025e1a32febd9, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3529002801168226, guid: 6d6133eb940476641a0025e1a32febd9, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3529002801168226, guid: 6d6133eb940476641a0025e1a32febd9, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3529002801168226, guid: 6d6133eb940476641a0025e1a32febd9, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3529002801168226, guid: 6d6133eb940476641a0025e1a32febd9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3529002801168226, guid: 6d6133eb940476641a0025e1a32febd9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3529002801168226, guid: 6d6133eb940476641a0025e1a32febd9, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 812716352215164376, guid: 6d6133eb940476641a0025e1a32febd9, type: 3}
+      propertyPath: m_Name
+      value: Nightstand_06_Door
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6d6133eb940476641a0025e1a32febd9, type: 3}

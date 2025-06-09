@@ -1,0 +1,140 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &1185024157186000823
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: ff03abae9608ced4287ca9ba6a5cc0f8, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ff03abae9608ced4287ca9ba6a5cc0f8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ff03abae9608ced4287ca9ba6a5cc0f8, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ff03abae9608ced4287ca9ba6a5cc0f8, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ff03abae9608ced4287ca9ba6a5cc0f8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ff03abae9608ced4287ca9ba6a5cc0f8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ff03abae9608ced4287ca9ba6a5cc0f8, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ff03abae9608ced4287ca9ba6a5cc0f8, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ff03abae9608ced4287ca9ba6a5cc0f8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ff03abae9608ced4287ca9ba6a5cc0f8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: ff03abae9608ced4287ca9ba6a5cc0f8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ff03abae9608ced4287ca9ba6a5cc0f8, type: 3}
+      propertyPath: m_Name
+      value: Washing_Machine_03
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ff03abae9608ced4287ca9ba6a5cc0f8, type: 3}
+--- !u!4 &1727328696645804124 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ff03abae9608ced4287ca9ba6a5cc0f8, type: 3}
+  m_PrefabInstance: {fileID: 1185024157186000823}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &2068107569936284390 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: ff03abae9608ced4287ca9ba6a5cc0f8, type: 3}
+  m_PrefabInstance: {fileID: 1185024157186000823}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &636240073102118639
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2068107569936284390}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 2312897471769213443, guid: ff03abae9608ced4287ca9ba6a5cc0f8, type: 3}
+--- !u!1001 &1630123726844058145
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1727328696645804124}
+    m_Modifications:
+    - target: {fileID: 2616078321785626950, guid: 71d10eeb34fb1c342833738f4acb4b01, type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2616078321785626950, guid: 71d10eeb34fb1c342833738f4acb4b01, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2616078321785626950, guid: 71d10eeb34fb1c342833738f4acb4b01, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2616078321785626950, guid: 71d10eeb34fb1c342833738f4acb4b01, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2616078321785626950, guid: 71d10eeb34fb1c342833738f4acb4b01, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2616078321785626950, guid: 71d10eeb34fb1c342833738f4acb4b01, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2616078321785626950, guid: 71d10eeb34fb1c342833738f4acb4b01, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2616078321785626950, guid: 71d10eeb34fb1c342833738f4acb4b01, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2616078321785626950, guid: 71d10eeb34fb1c342833738f4acb4b01, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2616078321785626950, guid: 71d10eeb34fb1c342833738f4acb4b01, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2616078321785626950, guid: 71d10eeb34fb1c342833738f4acb4b01, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3388393515188861948, guid: 71d10eeb34fb1c342833738f4acb4b01, type: 3}
+      propertyPath: m_Name
+      value: Washing_Machine_03_Door
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 71d10eeb34fb1c342833738f4acb4b01, type: 3}
