@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     private PlayerInputHandler inputHandler;
     private CharacterController controller;
     private Transform cameraTransform;
+    private Animator animator;
 
     [Header(" Settings ")]
     [SerializeField] private float speed = 5f;
@@ -22,6 +23,7 @@ public class PlayerMovement : MonoBehaviour
         cameraTransform = Camera.main.transform;
         controller = GetComponent<CharacterController>();
         inputHandler = GetComponent<PlayerInputHandler>();
+        animator = GetComponentInChildren<Animator>();
     }
 
     void Update()
@@ -32,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
         Vector2 finalInput = joystickInput.sqrMagnitude > 0.01f ? joystickInput : keyboardInput;
 
         Vector3 move = Vector3.zero;
+        float moveAmount = 0f;
 
         if (finalInput.sqrMagnitude > 0.01f && cameraTransform != null)
         {
@@ -43,6 +46,7 @@ public class PlayerMovement : MonoBehaviour
             right.Normalize();
 
             move = (right * finalInput.x + forward * finalInput.y).normalized;
+            moveAmount = move.magnitude;
 
             // Xoay object con theo hướng di chuyển
             if (modelTransform != null)
@@ -51,6 +55,10 @@ public class PlayerMovement : MonoBehaviour
                 modelTransform.rotation = Quaternion.Slerp(modelTransform.rotation, targetRotation, Time.deltaTime * 10f);
             }
         }
+
+        // Animation
+        if (animator != null)
+            animator.SetFloat("MoveSpeed", moveAmount);
 
         bool isGrounded = controller.isGrounded || Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, 0.15f);
 
