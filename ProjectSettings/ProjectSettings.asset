@@ -817,7 +817,25 @@ PlayerSettings:
   webGLWebAssemblyBigInt: 0
   webGLCloseOnQuit: 0
   webWasm2023: 0
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    Android: URP_OUTLINE
+    EmbeddedLinux: URP_OUTLINE
+    GameCoreScarlett: URP_OUTLINE
+    GameCoreXboxOne: URP_OUTLINE
+    Kepler: URP_OUTLINE
+    LinuxHeadlessSimulation: URP_OUTLINE
+    Nintendo Switch: URP_OUTLINE
+    PS4: URP_OUTLINE
+    PS5: URP_OUTLINE
+    QNX: URP_OUTLINE
+    ReservedCFE: URP_OUTLINE
+    Standalone: ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ODIN_INSPECTOR_3_2;ODIN_INSPECTOR_3_3;URP_OUTLINE
+    VisionOS: URP_OUTLINE
+    WebGL: URP_OUTLINE
+    Windows Store Apps: URP_OUTLINE
+    XboxOne: URP_OUTLINE
+    iPhone: URP_OUTLINE
+    tvOS: URP_OUTLINE
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
