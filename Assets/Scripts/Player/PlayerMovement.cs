@@ -9,8 +9,9 @@ public class PlayerMovement : MonoBehaviour
 
     private PlayerInputHandler inputHandler;
     private CharacterController controller;
+    private PlayerInteractDetector interactDetector;
+    private PlayerAnimation playerAnim;
     private Transform cameraTransform;
-    private Animator animator;
 
     [Header(" Settings ")]
     [SerializeField] private float speed = 5f;
@@ -23,11 +24,16 @@ public class PlayerMovement : MonoBehaviour
         cameraTransform = Camera.main.transform;
         controller = GetComponent<CharacterController>();
         inputHandler = GetComponent<PlayerInputHandler>();
-        animator = GetComponentInChildren<Animator>();
+        playerAnim = GetComponent<PlayerAnimation>();
+        interactDetector = GetComponent<PlayerInteractDetector>();
     }
 
     void Update()
     {
+        // Không di chuyển nếu đang tương tác
+        if (interactDetector != null && interactDetector.IsInteracting)
+            return;
+
         Vector2 joystickInput = joystick.direction;
         Vector2 keyboardInput = inputHandler.GetMoveInput();
 
@@ -57,15 +63,15 @@ public class PlayerMovement : MonoBehaviour
         }
 
         // Animation
-        if (animator != null)
-            animator.SetFloat("MoveSpeed", moveAmount);
+        if (playerAnim != null)
+            playerAnim.UpdateMovementAnimation(moveAmount);
 
         bool isGrounded = controller.isGrounded || Physics.Raycast(transform.position + Vector3.up * 0.1f, Vector3.down, 0.15f);
 
         if (isGrounded)
             verticalVelocity = -2f;
-
-        else verticalVelocity += gravity * Time.deltaTime;
+        else
+            verticalVelocity += gravity * Time.deltaTime;
 
         move.y = verticalVelocity;
         controller.Move(move * speed * Time.deltaTime);

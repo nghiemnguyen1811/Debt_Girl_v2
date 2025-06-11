@@ -1,7 +1,7 @@
-// === DynamicJoystick.cs ===
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class DynamicJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 {
@@ -33,6 +33,9 @@ public class DynamicJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler,
 
     public void OnPointerDown(PointerEventData eventData)
     {
+        if (IsPointerOverRealUI(eventData))
+            return;
+
         joystickRoot.gameObject.SetActive(true);
         joystickRoot.position = eventData.position;
         startTouchPosition = eventData.position;
@@ -43,6 +46,8 @@ public class DynamicJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler,
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (!isDragging) return;
+
         Vector2 delta = eventData.position - startTouchPosition;
         delta = Vector2.ClampMagnitude(delta, moveRadius);
         targetKnobPosition = delta;
@@ -56,5 +61,22 @@ public class DynamicJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler,
         knob.anchoredPosition = Vector2.zero;
         targetKnobPosition = Vector2.zero;
         isDragging = false;
+    }
+
+    /// <summary>
+    /// Kiểm tra xem pointer có đang nhấn vào UI có tag "UIBlock" không
+    /// </summary>
+    private bool IsPointerOverRealUI(PointerEventData eventData)
+    {
+        var results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, results);
+
+        foreach (var result in results)
+        {
+            if (result.gameObject.layer == LayerMask.NameToLayer("UI"))
+                return true;
+        }
+
+        return false;
     }
 }
