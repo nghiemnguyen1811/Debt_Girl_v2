@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f4ca9bea53598946a96f1cfd389b990, type: 3}
+  m_Name: Sleepy
+  m_EditorClassIdentifier: 
+  conditionType: 4
+  eyeSprite: {fileID: 21300000, guid: 44f476be6c1950a4fb1ee53a8befe69f, type: 3}
+  mouthSprite: {fileID: 21300000, guid: 32157cf0f92376d46b0cde5703a5df24, type: 3}

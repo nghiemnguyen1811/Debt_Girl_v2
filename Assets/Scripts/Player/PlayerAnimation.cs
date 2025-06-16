@@ -1,18 +1,26 @@
 using UnityEngine;
-using UnityEngine.InputSystem.XR;
 
 public class PlayerAnimation : MonoBehaviour
 {
-    [Header(" Elements ")]
-    private Animator anim;
+    private Animator animator;
 
-    void Start()
+    private void Awake()
     {
-        anim = GetComponentInChildren<Animator>();
+        animator = GetComponentInChildren<Animator>();
     }
 
-    public void UpdateMovementAnimation(float moveAmount)
+    public void SetMovementSpeed(float speed)
     {
-        anim.SetFloat("MoveSpeed", moveAmount);
+        animator.SetFloat("MoveSpeed", speed);
+    }
+
+    public void SetBoolParameter(string parameterName, bool value)
+    {
+        animator.SetBool(parameterName, value);
+    }
+
+    public void SetTrigger(string triggerName)
+    {
+        animator.SetTrigger(triggerName);
     }
 }

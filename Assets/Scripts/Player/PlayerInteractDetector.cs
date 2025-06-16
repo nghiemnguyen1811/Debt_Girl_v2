@@ -1,84 +1,151 @@
-﻿// === PlayerInteractDetector.cs ===
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
 
+[RequireComponent(typeof(PlayerControl))]
 public class PlayerInteractDetector : MonoBehaviour
 {
-    [Header(" Settings ")]
+    [Header("Settings")]
     [SerializeField] private float detectionRadius = 2f;
     [SerializeField] private LayerMask interactableLayer;
-
-    [Header(" Interactable Button ")]
-    [SerializeField] private CanvasGroup interactableButton;
     [SerializeField] private float fadeSpeed = 3f;
 
+    [Header("UI Elements")]
+    [SerializeField] private CanvasGroup interactableButton;
+    [SerializeField] private Slider durationSlider;
+
+    private PlayerControl control;
+    private Vector3 originalPosition;
+    private Quaternion originalRotation;
+
     public IInteractable CurrentInteractable { get; private set; }
-    public bool IsInteracting { get; private set; } = false;
+    public bool IsInteracting { get; private set; }
+
+    private static readonly Vector3 HeightOffset = Vector3.up * 0.25f;
 
     private void Start()
     {
-        interactableButton.alpha = 0f;
-        interactableButton.gameObject.SetActive(false);
+        control = GetComponent<PlayerControl>();
+        ToggleUI(false, true);
+        durationSlider.gameObject.SetActive(false);
     }
 
     private void Update()
     {
-        ScanForInteractable();
-        UpdateInteractableButton();
+        if (IsInteracting) return;
+
+        DetectInteractable();
+        ToggleUI(CurrentInteractable != null);
     }
 
-    private void ScanForInteractable()
+    private void DetectInteractable()
     {
-        CurrentInteractable = null;
+        var hits = Physics.OverlapSphere(transform.position + HeightOffset, detectionRadius, interactableLayer);
 
-        Collider[] hits = Physics.OverlapSphere(transform.position + Vector3.up * 0.25f, detectionRadius, interactableLayer);
-
-        foreach (var hit in hits)
+        if (hits.Length <= 0)
         {
-            var interactable = hit.GetComponent<IInteractable>();
-            if (interactable != null)
+            if (CurrentInteractable != null)
             {
-                CurrentInteractable = interactable;
-                break;
+                CurrentInteractable.OnExit();
+                CurrentInteractable = null;
+            }
+            return;
+        }
+
+        if (CurrentInteractable == null)
+        {
+            foreach (var hit in hits)
+            {
+                if (hit.TryGetComponent(out IInteractable interactable))
+                {
+                    CurrentInteractable = interactable;
+                    interactable.OnEnter();
+                    break;
+                }
             }
         }
     }
 
-    private void UpdateInteractableButton()
+    private void ToggleUI(bool visible, bool instant = false)
     {
-        bool shouldShow = CurrentInteractable != null;
-        HandleUIFade(shouldShow);
-    }
+        float targetAlpha = visible ? 1f : 0f;
+        float fadeStep = instant ? 1000f : Time.deltaTime * fadeSpeed;
 
-    private void HandleUIFade(bool shouldShow)
-    {
-        if (shouldShow)
-        {
-            if (!interactableButton.gameObject.activeSelf)
-                interactableButton.gameObject.SetActive(true);
-
-            interactableButton.alpha = Mathf.MoveTowards(interactableButton.alpha, 1f, Time.deltaTime * fadeSpeed);
-        }
-        else
-        {
-            interactableButton.alpha = Mathf.MoveTowards(interactableButton.alpha, 0f, Time.deltaTime * fadeSpeed);
-
-            if (interactableButton.alpha <= 0.01f && interactableButton.gameObject.activeSelf)
-                interactableButton.gameObject.SetActive(false);
-        }
+        interactableButton.alpha = Mathf.MoveTowards(interactableButton.alpha, targetAlpha, fadeStep);
+        bool shouldShow = interactableButton.alpha > 0.01f;
+        if (interactableButton.gameObject.activeSelf != shouldShow)
+            interactableButton.gameObject.SetActive(shouldShow);
     }
 
     public void InteractIndicator()
     {
-        if (CurrentInteractable == null) return;
+        if (CurrentInteractable == null || IsInteracting) return;
 
         IsInteracting = true;
-        Debug.Log("Tương tác với: " + CurrentInteractable.GetObjectName());
+        originalPosition = transform.position;
+        originalRotation = transform.rotation;
+
+        Transform point = CurrentInteractable.GetInteractPoint();
+        if (point != null)
+            transform.SetPositionAndRotation(point.position, point.rotation);
+
+        string anim = CurrentInteractable.GetAnimationName();
+        control.animationHandler.SetBoolParameter(anim, true);
         CurrentInteractable.OnInteract();
+        StartCoroutine(HandleInteraction(anim, CurrentInteractable.GetDuration()));
     }
+
+    private IEnumerator HandleInteraction(string animName, float duration)
+    {
+        durationSlider.gameObject.SetActive(true);
+        durationSlider.value = 0f;
+
+        for (float t = 0f; t < duration; t += Time.deltaTime)
+        {
+            durationSlider.value = t / duration;
+            yield return null;
+        }
+
+        durationSlider.value = 1f;
+        durationSlider.gameObject.SetActive(false);
+
+        control.animationHandler.SetBoolParameter(animName, false);
+        transform.SetPositionAndRotation(originalPosition, originalRotation);
+
+        CurrentInteractable.OnStopInteract();
+
+        var data = CurrentInteractable.Data;
+
+        if (data != null)
+        {
+            if (data.experienceAmount > 0)
+                control.stats.GainExperience(data.experienceAmount);
+
+            switch (data.affectType)
+            {
+                case AffectType.Mood:
+                    control.stats.ApplyMoodChange(data.moodAmount);
+                    break;
+
+                case AffectType.Energy:
+                    control.stats.ApplyEnergyChange(data.energyAmount);
+                    break;
+
+                case AffectType.Both:
+                    control.stats.ApplyMoodChange(data.moodAmount);
+                    control.stats.ApplyEnergyChange(data.energyAmount);
+                    break;
+            }
+        }
+
+        yield return new WaitForSeconds(0.5f);
+        IsInteracting = false;
+    }
+
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position + Vector3.up * 0.25f, detectionRadius);
+        Gizmos.DrawWireSphere(transform.position + HeightOffset, detectionRadius);
     }
 }

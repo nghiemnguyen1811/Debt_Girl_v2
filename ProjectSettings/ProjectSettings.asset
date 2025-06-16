@@ -818,24 +818,24 @@ PlayerSettings:
   webGLCloseOnQuit: 0
   webWasm2023: 0
   scriptingDefineSymbols:
-    Android: URP_OUTLINE
-    EmbeddedLinux: URP_OUTLINE
-    GameCoreScarlett: URP_OUTLINE
-    GameCoreXboxOne: URP_OUTLINE
-    Kepler: URP_OUTLINE
-    LinuxHeadlessSimulation: URP_OUTLINE
-    Nintendo Switch: URP_OUTLINE
-    PS4: URP_OUTLINE
-    PS5: URP_OUTLINE
-    QNX: URP_OUTLINE
-    ReservedCFE: URP_OUTLINE
-    Standalone: ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ODIN_INSPECTOR_3_2;ODIN_INSPECTOR_3_3;URP_OUTLINE
-    VisionOS: URP_OUTLINE
-    WebGL: URP_OUTLINE
-    Windows Store Apps: URP_OUTLINE
-    XboxOne: URP_OUTLINE
-    iPhone: URP_OUTLINE
-    tvOS: URP_OUTLINE
+    Android: URP_OUTLINE;DOTWEEN
+    EmbeddedLinux: URP_OUTLINE;DOTWEEN
+    GameCoreScarlett: URP_OUTLINE;DOTWEEN
+    GameCoreXboxOne: URP_OUTLINE;DOTWEEN
+    Kepler: URP_OUTLINE;DOTWEEN
+    LinuxHeadlessSimulation: URP_OUTLINE;DOTWEEN
+    Nintendo Switch: URP_OUTLINE;DOTWEEN
+    PS4: URP_OUTLINE;DOTWEEN
+    PS5: URP_OUTLINE;DOTWEEN
+    QNX: URP_OUTLINE;DOTWEEN
+    ReservedCFE: URP_OUTLINE;DOTWEEN
+    Standalone: ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ODIN_INSPECTOR_3_2;ODIN_INSPECTOR_3_3;URP_OUTLINE;DOTWEEN
+    VisionOS: URP_OUTLINE;DOTWEEN
+    WebGL: URP_OUTLINE;DOTWEEN
+    Windows Store Apps: URP_OUTLINE;DOTWEEN
+    XboxOne: URP_OUTLINE;DOTWEEN
+    iPhone: URP_OUTLINE;DOTWEEN
+    tvOS: URP_OUTLINE;DOTWEEN
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:

@@ -9,14 +9,14 @@ public class DynamicJoystick : MonoBehaviour, IPointerDownHandler, IDragHandler,
     [SerializeField] private float moveRadius = 100f;
     [SerializeField] private float knobSmoothSpeed = 10f;
 
-    [Header(" UI ")]
-    [SerializeField] private RectTransform joystickRoot;
-    [SerializeField] private RectTransform knob;
-
     [HideInInspector] public Vector2 direction;
     private Vector2 startTouchPosition;
     private Vector2 targetKnobPosition;
     private bool isDragging = false;
+
+    [Header(" UI ")]
+    [SerializeField] private RectTransform joystickRoot;
+    [SerializeField] private RectTransform knob;
 
     void Start()
     {

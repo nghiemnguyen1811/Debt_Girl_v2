@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 94d51e4c72543f446b1b5428f3e3d9fb, type: 3}
@@ -56,23 +57,7 @@ PrefabInstance:
       value: Carpet_10
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 94d51e4c72543f446b1b5428f3e3d9fb, type: 3}
---- !u!1 &9183005745703619100 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 94d51e4c72543f446b1b5428f3e3d9fb, type: 3}
-  m_PrefabInstance: {fileID: 8336724501245212493}
-  m_PrefabAsset: {fileID: 0}
---- !u!64 &6304449919115635298
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9183005745703619100}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -7854093661193619964, guid: 94d51e4c72543f446b1b5428f3e3d9fb, type: 3}
