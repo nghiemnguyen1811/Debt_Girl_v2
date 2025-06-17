@@ -1,0 +1,186 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Atlas basic icons 512
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 4096
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 0
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 2800000, guid: 265c765fb1438410b81064a82445390d, type: 3}
+    - {fileID: 2800000, guid: d995fa65440d74081a09f285cae82ef5, type: 3}
+    - {fileID: 2800000, guid: 51bb3f4bf58694cb4acc9f3b53def6dd, type: 3}
+    - {fileID: 2800000, guid: c6e92a26b993e476e85aea7ec8164dce, type: 3}
+    - {fileID: 2800000, guid: 083789709f4924ae3bbee568e6930849, type: 3}
+    - {fileID: 2800000, guid: 1225856a83e384f6b9a556618e860927, type: 3}
+    - {fileID: 2800000, guid: 8d70464821cf3482ba5626bd32f586fd, type: 3}
+    - {fileID: 2800000, guid: 9515110ccbe31480087a741f9356f2c2, type: 3}
+    - {fileID: 2800000, guid: b17e35f923d9b439593856efea22a362, type: 3}
+    - {fileID: 2800000, guid: 9d4af06b48c2649099784a20d63acd77, type: 3}
+    - {fileID: 2800000, guid: e3e40f0bf7eb7404cb426744ed12b9dc, type: 3}
+    - {fileID: 2800000, guid: 666360af105194c78b4cba64604af13f, type: 3}
+    - {fileID: 2800000, guid: 8a98e1c9bdb1d45ff85846e9aa918d88, type: 3}
+    - {fileID: 2800000, guid: ea5180f3219d04163963ed29f1dcc3eb, type: 3}
+    - {fileID: 2800000, guid: 676f9e5fc6852436fa7026b2dfcd1cf8, type: 3}
+    - {fileID: 2800000, guid: 9026baac2329b459a90261a13b83a5df, type: 3}
+    - {fileID: 2800000, guid: 2ad57724fd7824edbace59c7b2b55f73, type: 3}
+    - {fileID: 2800000, guid: 0f84d8ba7511548bbbb923d31a7d8763, type: 3}
+    - {fileID: 2800000, guid: 8f61b1d51dd534edf9c2f9cc56b4e3a4, type: 3}
+    - {fileID: 2800000, guid: 97fae5b4d4da8488ca7b02707f83def0, type: 3}
+    - {fileID: 2800000, guid: 3b1ed777032da4ea2b8ab4cf7401576c, type: 3}
+    - {fileID: 2800000, guid: 58300cd15286d466d84774308fc7dcf5, type: 3}
+    - {fileID: 2800000, guid: c5bd71c3987f142f9b3aaa3ed31b8b83, type: 3}
+    - {fileID: 2800000, guid: 63e295f3861994eef9cb33840b39632b, type: 3}
+    - {fileID: 2800000, guid: 78be887dbd6cd4f729b3645141f7626f, type: 3}
+    - {fileID: 2800000, guid: b1268b2736f094f8c9b1dfa2eeeb003f, type: 3}
+    - {fileID: 2800000, guid: 69370b561de2f474a92e8ecabfbe6a40, type: 3}
+    - {fileID: 2800000, guid: 9bd4ff6ae23eb4891a70ddd5293cc21c, type: 3}
+    - {fileID: 2800000, guid: b3896eeb352ab471f87ae28001fc75c3, type: 3}
+    - {fileID: 2800000, guid: 46ee42526759b4eeb8c919db22d53dd9, type: 3}
+    - {fileID: 2800000, guid: a33206467b9cc41858d98349d921ba02, type: 3}
+    - {fileID: 2800000, guid: 059b6095edc314c828f07add962cc919, type: 3}
+    - {fileID: 2800000, guid: 8dc549d67a9ad4620bed859874aa4cd9, type: 3}
+    - {fileID: 2800000, guid: 68ee7740d35b841d68e23c04aad4cfa1, type: 3}
+    - {fileID: 2800000, guid: cc9ada141dc9b4e788f1d929d8b563ac, type: 3}
+    - {fileID: 2800000, guid: e96552f6693284c129f04f6cbe558254, type: 3}
+    - {fileID: 2800000, guid: 79cf1d0dbfb10415e8b7a20d62384551, type: 3}
+    - {fileID: 2800000, guid: d49975290800e4fbf85900e2448b2d72, type: 3}
+    - {fileID: 2800000, guid: bc115f4ac05dc44339bad737e8c8d122, type: 3}
+    - {fileID: 2800000, guid: f0908f2a1864f426db856f9f4e31fe53, type: 3}
+    - {fileID: 2800000, guid: 4b8cf9b572b5a43a19ac8c9b287bc118, type: 3}
+    - {fileID: 2800000, guid: e9e3b96a8ef904de7a6628d4d5df0bc0, type: 3}
+    - {fileID: 2800000, guid: d362493cc875243b4804d28847f18d13, type: 3}
+    - {fileID: 2800000, guid: 23ad76012208d4ef3b607be97ed46973, type: 3}
+    - {fileID: 2800000, guid: 16a989c98fdc1498e95c4bbed6784617, type: 3}
+    totalSpriteSurfaceArea: 11796480
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 68ee7740d35b841d68e23c04aad4cfa1, type: 3}
+  - {fileID: 21300000, guid: 083789709f4924ae3bbee568e6930849, type: 3}
+  - {fileID: 21300000, guid: 23ad76012208d4ef3b607be97ed46973, type: 3}
+  - {fileID: 21300000, guid: 58300cd15286d466d84774308fc7dcf5, type: 3}
+  - {fileID: 21300000, guid: 46ee42526759b4eeb8c919db22d53dd9, type: 3}
+  - {fileID: 21300000, guid: c5bd71c3987f142f9b3aaa3ed31b8b83, type: 3}
+  - {fileID: 21300000, guid: ea5180f3219d04163963ed29f1dcc3eb, type: 3}
+  - {fileID: 21300000, guid: 63e295f3861994eef9cb33840b39632b, type: 3}
+  - {fileID: 21300000, guid: cc9ada141dc9b4e788f1d929d8b563ac, type: 3}
+  - {fileID: 21300000, guid: 2ad57724fd7824edbace59c7b2b55f73, type: 3}
+  - {fileID: 21300000, guid: 97fae5b4d4da8488ca7b02707f83def0, type: 3}
+  - {fileID: 21300000, guid: d995fa65440d74081a09f285cae82ef5, type: 3}
+  - {fileID: 21300000, guid: 059b6095edc314c828f07add962cc919, type: 3}
+  - {fileID: 21300000, guid: 4b8cf9b572b5a43a19ac8c9b287bc118, type: 3}
+  - {fileID: 21300000, guid: 8f61b1d51dd534edf9c2f9cc56b4e3a4, type: 3}
+  - {fileID: 21300000, guid: c6e92a26b993e476e85aea7ec8164dce, type: 3}
+  - {fileID: 21300000, guid: a33206467b9cc41858d98349d921ba02, type: 3}
+  - {fileID: 21300000, guid: 69370b561de2f474a92e8ecabfbe6a40, type: 3}
+  - {fileID: 21300000, guid: 8dc549d67a9ad4620bed859874aa4cd9, type: 3}
+  - {fileID: 21300000, guid: e96552f6693284c129f04f6cbe558254, type: 3}
+  - {fileID: 21300000, guid: b1268b2736f094f8c9b1dfa2eeeb003f, type: 3}
+  - {fileID: 21300000, guid: 3b1ed777032da4ea2b8ab4cf7401576c, type: 3}
+  - {fileID: 21300000, guid: 8d70464821cf3482ba5626bd32f586fd, type: 3}
+  - {fileID: 21300000, guid: d49975290800e4fbf85900e2448b2d72, type: 3}
+  - {fileID: 21300000, guid: 8a98e1c9bdb1d45ff85846e9aa918d88, type: 3}
+  - {fileID: 21300000, guid: 16a989c98fdc1498e95c4bbed6784617, type: 3}
+  - {fileID: 21300000, guid: b17e35f923d9b439593856efea22a362, type: 3}
+  - {fileID: 21300000, guid: f0908f2a1864f426db856f9f4e31fe53, type: 3}
+  - {fileID: 21300000, guid: bc115f4ac05dc44339bad737e8c8d122, type: 3}
+  - {fileID: 21300000, guid: 1225856a83e384f6b9a556618e860927, type: 3}
+  - {fileID: 21300000, guid: e9e3b96a8ef904de7a6628d4d5df0bc0, type: 3}
+  - {fileID: 21300000, guid: 9bd4ff6ae23eb4891a70ddd5293cc21c, type: 3}
+  - {fileID: 21300000, guid: 0f84d8ba7511548bbbb923d31a7d8763, type: 3}
+  - {fileID: 21300000, guid: e3e40f0bf7eb7404cb426744ed12b9dc, type: 3}
+  - {fileID: 21300000, guid: 51bb3f4bf58694cb4acc9f3b53def6dd, type: 3}
+  - {fileID: 21300000, guid: 9d4af06b48c2649099784a20d63acd77, type: 3}
+  - {fileID: 21300000, guid: b3896eeb352ab471f87ae28001fc75c3, type: 3}
+  - {fileID: 21300000, guid: 9515110ccbe31480087a741f9356f2c2, type: 3}
+  - {fileID: 21300000, guid: d362493cc875243b4804d28847f18d13, type: 3}
+  - {fileID: 21300000, guid: 9026baac2329b459a90261a13b83a5df, type: 3}
+  - {fileID: 21300000, guid: 79cf1d0dbfb10415e8b7a20d62384551, type: 3}
+  - {fileID: 21300000, guid: 78be887dbd6cd4f729b3645141f7626f, type: 3}
+  - {fileID: 21300000, guid: 265c765fb1438410b81064a82445390d, type: 3}
+  - {fileID: 21300000, guid: 676f9e5fc6852436fa7026b2dfcd1cf8, type: 3}
+  - {fileID: 21300000, guid: 666360af105194c78b4cba64604af13f, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - Emoji sad
+  - Emoji beg
+  - Emoji wink
+  - Emoji hot
+  - Emoji money
+  - Emoji kiss 1
+  - Emoji dislike
+  - Emoji kiss 2
+  - Emoji sick 1
+  - Emoji eyes 2
+  - Emoji happy 2
+  - Emoji angel
+  - Emoji roar
+  - Emoji surprise
+  - Emoji happy 1
+  - Emoji aristocrat
+  - Emoji poo
+  - Emoji like
+  - Emoji roll eyes
+  - Emoji sick
+  - Emoji laugh 2
+  - Emoji heart
+  - Emoji cry 1
+  - Emoji sleep
+  - Emoji disgust
+  - Emoji with glasses
+  - Emoji cry 3
+  - Emoji stars
+  - Emoji smile
+  - Emoji crazy
+  - Emoji think
+  - Emoji love 1
+  - Emoji freez
+  - Emoji devil 1
+  - Emoji angry
+  - Emoji dead
+  - Emoji love
+  - Emoji cry 2
+  - Emoji tongue
+  - Emoji eyes 1
+  - Emoji sleep 1
+  - Emoji laugh 1
+  - Emoji amaze
+  - Emoji drunk
+  - Emoji devil
+  m_Tag: Atlas basic icons 512
+  m_IsVariant: 0

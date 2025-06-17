@@ -2,11 +2,10 @@
 
 public class LookAtCameraSmooth : MonoBehaviour
 {
-    [Header(" Elements ")]
-    private Transform cam;
-
-    [Header(" Settings ")]
+    [Header("Settings")]
     [SerializeField] private float rotationSpeed = 5f;
+
+    private Transform cam;
 
     void Start()
     {
@@ -17,12 +16,16 @@ public class LookAtCameraSmooth : MonoBehaviour
     {
         if (cam == null) return;
 
-        Vector3 lookDirection = transform.position - cam.position;
-        lookDirection.y = 0f; // Giữ cho UI không nghiêng lên/xuống nếu không cần
+        // Tính hướng từ đối tượng tới camera (chỉ trục Y)
+        Vector3 direction = cam.position - transform.position;
+        direction.y = 0f;
 
-        if (lookDirection.sqrMagnitude < 0.0001f) return;
+        if (direction.sqrMagnitude < 0.001f) return;
 
-        Quaternion targetRotation = Quaternion.LookRotation(lookDirection);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+        // Tính rotation theo camera, nhưng ở world space
+        Quaternion targetWorldRotation = Quaternion.LookRotation(direction);
+
+        // Smooth xoay trong world space (không bị cha ảnh hưởng)
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetWorldRotation, Time.deltaTime * rotationSpeed);
     }
 }

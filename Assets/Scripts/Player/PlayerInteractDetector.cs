@@ -89,6 +89,9 @@ public class PlayerInteractDetector : MonoBehaviour
         if (point != null)
             transform.SetPositionAndRotation(point.position, point.rotation);
 
+        // Set mood icon offset position if defined
+        control.visualizer?.OffsetMoodIcon(CurrentInteractable.MoodIconOffset);
+
         string anim = CurrentInteractable.GetAnimationName();
         control.animationHandler.SetBoolParameter(anim, true);
         CurrentInteractable.OnInteract();
@@ -138,10 +141,17 @@ public class PlayerInteractDetector : MonoBehaviour
             }
         }
 
+        var currentMood = MoodManager.Instance.GetActiveMood();
+
+        if (currentMood != null && currentMood.conditionType == data.conditionType)
+            MoodManager.Instance.ClearMood();
+
+        // Reset mood icon position
+        control.visualizer?.ResetMoodIconPosition();
+
         yield return new WaitForSeconds(0.5f);
         IsInteracting = false;
     }
-
 
     private void OnDrawGizmosSelected()
     {

@@ -161,6 +161,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactPoint: {fileID: 571840123318222536}
   data: {fileID: 11400000, guid: c34683a5baf63404c8b0d79f653faa54, type: 2}
+  moodIconOffset: {x: 0.15, y: 0.5, z: -0.46}
 --- !u!114 &7478044375614778813
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -189,7 +190,7 @@ MonoBehaviour:
   drawingMode: 1
   outlineLayer: 0
   outlineTargets:
-  - IsVisible: 0
+  - IsVisible: 1
     CutoutMask: 8
     edgeDilateAmount: 5
     frontEdgeDilateAmount: 5

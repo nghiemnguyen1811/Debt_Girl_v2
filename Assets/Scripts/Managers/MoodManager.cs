@@ -10,8 +10,8 @@ public class MoodManager : SingletonMonobehaviour<MoodManager>
     [Header("Mood Config")]
     [SerializeField] private List<MoodConditionDataSO> moodConditions;
 
-    [SerializeField] private float minTime = 180f; // 3 phút
-    [SerializeField] private float maxTime = 300f; // 5 phút
+    [SerializeField] private float minTime = 180f;
+    [SerializeField] private float maxTime = 300f;
 
     private MoodConditionDataSO activeMood;
     private Coroutine moodDecayRoutine;

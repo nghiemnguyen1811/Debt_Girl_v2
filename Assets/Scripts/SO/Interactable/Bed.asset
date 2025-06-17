@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c731a44fa0590af40b37813c2c0aafb2, type: 3}
   m_Name: Bed
   m_EditorClassIdentifier: 
+  conditionType: 4
   objectName: Bed
   animationName: Sleep
   interactionDuration: 8

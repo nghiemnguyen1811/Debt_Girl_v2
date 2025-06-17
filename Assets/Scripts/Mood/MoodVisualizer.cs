@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class MoodVisualizer : MonoBehaviour
 {
     [Header("UI References")]
+    [SerializeField] private GameObject moodIconRoot;
     [SerializeField] private Image moodIconImage;
 
     [Header("Face Materials")]
@@ -13,7 +15,24 @@ public class MoodVisualizer : MonoBehaviour
     [Header("Face Sprite Sets")]
     [SerializeField] private FaceMaterialSetSO[] faceMaterialSets;
 
+    [Header("Popup Effect")]
+    [SerializeField] private float popupScale = 1.3f;
+    [SerializeField] private float popupDuration = 0.4f;
+
     private MoodConditionDataSO currentMood;
+    private Tween moodTween;
+
+    // === MỚI: Lưu vị trí gốc của moodIconRoot ===
+    private Vector3 originalIconLocalPosition;
+
+    private void Start()
+    {
+        if (moodIconRoot != null)
+        {
+            originalIconLocalPosition = moodIconRoot.transform.localPosition;
+            moodIconRoot.SetActive(false); // Ẩn khi start
+        }
+    }
 
     public void SetMoodVisual(MoodConditionDataSO mood)
     {
@@ -25,16 +44,30 @@ public class MoodVisualizer : MonoBehaviour
             return;
         }
 
-        // Hiển thị icon UI
+        if (moodIconRoot != null)
+            moodIconRoot.SetActive(true);
+
         if (moodIconImage != null && mood.moodIcon != null)
         {
             moodIconImage.sprite = mood.moodIcon;
             moodIconImage.enabled = true;
+
+            moodIconImage.transform.localScale = Vector3.zero;
+            moodIconImage.color = new Color(1, 1, 1, 0);
+
+            moodTween?.Kill();
+            moodTween = moodIconImage.transform
+                .DOScale(popupScale, popupDuration)
+                .SetEase(Ease.OutBack)
+                .OnComplete(() =>
+                {
+                    moodIconImage.transform.DOScale(1f, 0.2f).SetEase(Ease.OutQuad);
+                });
+
+            moodIconImage.DOFade(1f, 0.3f).SetEase(Ease.InOutSine);
         }
 
-        // Gán texture từ sprite → material
-        FaceMaterialSetSO matchedSet = FindMaterialSet(mood.conditionType);
-
+        var matchedSet = FindMaterialSet(mood.conditionType);
         if (matchedSet != null)
         {
             if (eyeMat != null && matchedSet.eyeSprite != null)
@@ -48,16 +81,21 @@ public class MoodVisualizer : MonoBehaviour
     public void ClearMoodVisual()
     {
         currentMood = null;
+        moodTween?.Kill();
 
         if (moodIconImage != null)
         {
-            moodIconImage.sprite = null;
-            moodIconImage.enabled = false;
+            moodIconImage.DOFade(0f, 0.3f).OnComplete(() =>
+            {
+                moodIconImage.enabled = false;
+                moodIconImage.sprite = null;
+            });
         }
 
-        // Gán lại texture mặc định theo trạng thái "Normal"
-        FaceMaterialSetSO defaultSet = FindMaterialSet(MoodConditionType.Normal);
+        if (moodIconRoot != null)
+            moodIconRoot.SetActive(false);
 
+        var defaultSet = FindMaterialSet(MoodConditionType.Normal);
         if (defaultSet != null)
         {
             if (eyeMat != null && defaultSet.eyeSprite != null)
@@ -66,6 +104,8 @@ public class MoodVisualizer : MonoBehaviour
             if (mouthMat != null && defaultSet.mouthSprite != null)
                 mouthMat.mainTexture = defaultSet.mouthSprite.texture;
         }
+
+        ResetMoodIconPosition();
     }
 
     private FaceMaterialSetSO FindMaterialSet(MoodConditionType type)
@@ -77,5 +117,19 @@ public class MoodVisualizer : MonoBehaviour
         }
 
         return null;
+    }
+
+    public void OffsetMoodIcon(Vector3 offset)
+    {
+        if (moodIconRoot == null) return;
+
+        moodIconRoot.transform.localPosition = offset;
+    }
+
+    public void ResetMoodIconPosition()
+    {
+        if (moodIconRoot == null) return;
+
+        moodIconRoot.transform.localPosition = originalIconLocalPosition;
     }
 }

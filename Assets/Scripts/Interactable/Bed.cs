@@ -9,14 +9,18 @@ public class Bed : MonoBehaviour, IInteractable
     [Header(" Interactable Data ")]
     [SerializeField] private InteractableDataSO data;
 
+    [Header("Mood Icon Offset")]
+    [SerializeField] private Vector3 moodIconOffset;
+
 
     public Outlinable Outlinable => GetComponent<Outlinable>();
     public InteractableDataSO Data => data;
+    public Transform GetInteractPoint() => interactPoint;
+    public Vector3 MoodIconOffset => moodIconOffset;
 
     public string GetObjectName() => data != null ? data.objectName : "Unknown";
     public string GetAnimationName() => data != null ? data.animationName : string.Empty;
     public float GetDuration() => data != null ? data.interactionDuration : 0f;
-    public Transform GetInteractPoint() => interactPoint;
 
     private void Start()
     {
