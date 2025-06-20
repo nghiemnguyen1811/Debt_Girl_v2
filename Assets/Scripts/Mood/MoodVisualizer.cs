@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System.Collections;
 
 public class MoodVisualizer : MonoBehaviour
 {
@@ -19,19 +20,21 @@ public class MoodVisualizer : MonoBehaviour
     [SerializeField] private float popupScale = 1.3f;
     [SerializeField] private float popupDuration = 0.4f;
 
+    [Header("Mood Animation Loop")]
+    [SerializeField] private float minAnimDelay = 10f;
+    [SerializeField] private float maxAnimDelay = 20f;
+
+    private PlayerControl playerControl;
     private MoodConditionDataSO currentMood;
     private Tween moodTween;
-
-    // === MỚI: Lưu vị trí gốc của moodIconRoot ===
+    private Coroutine moodAnimRoutine;
     private Vector3 originalIconLocalPosition;
 
-    private void Start()
+    void Start()
     {
-        if (moodIconRoot != null)
-        {
-            originalIconLocalPosition = moodIconRoot.transform.localPosition;
-            moodIconRoot.SetActive(false); // Ẩn khi start
-        }
+        playerControl = GetComponent<PlayerControl>();
+        originalIconLocalPosition = moodIconRoot.transform.localPosition;
+        moodIconRoot.SetActive(false);
     }
 
     public void SetMoodVisual(MoodConditionDataSO mood)
@@ -44,38 +47,9 @@ public class MoodVisualizer : MonoBehaviour
             return;
         }
 
-        if (moodIconRoot != null)
-            moodIconRoot.SetActive(true);
-
-        if (moodIconImage != null && mood.moodIcon != null)
-        {
-            moodIconImage.sprite = mood.moodIcon;
-            moodIconImage.enabled = true;
-
-            moodIconImage.transform.localScale = Vector3.zero;
-            moodIconImage.color = new Color(1, 1, 1, 0);
-
-            moodTween?.Kill();
-            moodTween = moodIconImage.transform
-                .DOScale(popupScale, popupDuration)
-                .SetEase(Ease.OutBack)
-                .OnComplete(() =>
-                {
-                    moodIconImage.transform.DOScale(1f, 0.2f).SetEase(Ease.OutQuad);
-                });
-
-            moodIconImage.DOFade(1f, 0.3f).SetEase(Ease.InOutSine);
-        }
-
-        var matchedSet = FindMaterialSet(mood.conditionType);
-        if (matchedSet != null)
-        {
-            if (eyeMat != null && matchedSet.eyeSprite != null)
-                eyeMat.mainTexture = matchedSet.eyeSprite.texture;
-
-            if (mouthMat != null && matchedSet.mouthSprite != null)
-                mouthMat.mainTexture = matchedSet.mouthSprite.texture;
-        }
+        ApplyMoodIcon(mood);
+        ApplyFaceTextures(mood.conditionType);
+        StartMoodAnimationLoop();
     }
 
     public void ClearMoodVisual()
@@ -83,29 +57,80 @@ public class MoodVisualizer : MonoBehaviour
         currentMood = null;
         moodTween?.Kill();
 
-        if (moodIconImage != null)
+        moodIconImage.DOFade(0f, 0.3f).OnComplete(() =>
         {
-            moodIconImage.DOFade(0f, 0.3f).OnComplete(() =>
-            {
-                moodIconImage.enabled = false;
-                moodIconImage.sprite = null;
-            });
-        }
-
-        if (moodIconRoot != null)
             moodIconRoot.SetActive(false);
+            moodIconImage.sprite = null;
+        });
 
-        var defaultSet = FindMaterialSet(MoodConditionType.Normal);
-        if (defaultSet != null)
-        {
-            if (eyeMat != null && defaultSet.eyeSprite != null)
-                eyeMat.mainTexture = defaultSet.eyeSprite.texture;
-
-            if (mouthMat != null && defaultSet.mouthSprite != null)
-                mouthMat.mainTexture = defaultSet.mouthSprite.texture;
-        }
-
+        ApplyFaceTextures(MoodConditionType.Normal);
+        StopMoodAnimationLoop();
         ResetMoodIconPosition();
+    }
+
+    private void ApplyMoodIcon(MoodConditionDataSO mood)
+    {
+        if (moodIconImage == null || mood.moodIcon == null) return;
+
+        moodIconImage.sprite = mood.moodIcon;
+        moodIconRoot.SetActive(true);
+        moodIconRoot.transform.localScale = Vector3.zero;
+        moodIconImage.color = new Color(1, 1, 1, 0);
+
+        moodTween?.Kill();
+        moodTween = moodIconRoot.transform
+            .DOScale(popupScale, popupDuration)
+            .SetEase(Ease.OutBack)
+            .OnComplete(() =>
+            {
+                moodIconRoot.transform.DOScale(1f, 0.2f).SetEase(Ease.OutQuad);
+            });
+
+        moodIconImage.DOFade(1f, 0.3f).SetEase(Ease.InOutSine);
+    }
+
+    private void ApplyFaceTextures(MoodConditionType type)
+    {
+        var set = FindMaterialSet(type);
+
+        if (set == null) return;
+
+        if (eyeMat != null && set.eyeSprite != null)
+            eyeMat.mainTexture = set.eyeSprite.texture;
+
+        if (mouthMat != null && set.mouthSprite != null)
+            mouthMat.mainTexture = set.mouthSprite.texture;
+    }
+
+    private void StartMoodAnimationLoop()
+    {
+        if (moodAnimRoutine != null)
+            StopCoroutine(moodAnimRoutine);
+
+        moodAnimRoutine = StartCoroutine(MoodAnimationLoop());
+    }
+
+    private void StopMoodAnimationLoop()
+    {
+        if (moodAnimRoutine != null)
+        {
+            StopCoroutine(moodAnimRoutine);
+            moodAnimRoutine = null;
+        }
+    }
+
+    private IEnumerator MoodAnimationLoop()
+    {
+        while (currentMood != null)
+        {
+            yield return new WaitForSeconds(Random.Range(minAnimDelay, maxAnimDelay));
+
+            if (playerControl == null || currentMood == null ||
+                playerControl.interactDetector?.IsInteracting == true)
+                continue;
+
+            playerControl.animationHandler.SetMoodTrigger(currentMood.moodAnimName, currentMood.animatorLayerIndex);
+        }
     }
 
     private FaceMaterialSetSO FindMaterialSet(MoodConditionType type)
@@ -115,21 +140,18 @@ public class MoodVisualizer : MonoBehaviour
             if (set != null && set.conditionType == type)
                 return set;
         }
-
         return null;
     }
 
-    public void OffsetMoodIcon(Vector3 offset)
+    public void OffsetMoodIcon(Vector3 newLocalPosition)
     {
-        if (moodIconRoot == null) return;
-
-        moodIconRoot.transform.localPosition = offset;
+        if (moodIconRoot != null)
+            moodIconRoot.transform.localPosition = newLocalPosition;
     }
 
     public void ResetMoodIconPosition()
     {
-        if (moodIconRoot == null) return;
-
-        moodIconRoot.transform.localPosition = originalIconLocalPosition;
+        if (moodIconRoot != null)
+            moodIconRoot.transform.localPosition = originalIconLocalPosition;
     }
 }

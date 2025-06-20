@@ -454,6 +454,7 @@ Transform:
   m_Children:
   - {fileID: 1016262218011559672}
   - {fileID: 7060351148353096624}
+  - {fileID: 5833489214544169685}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!143 &7241287905826954341
@@ -533,6 +534,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dd78a40891dcbb44b8b8ec6c035ea73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moneyVFXPoint: {fileID: 5833489214544169685}
   detectionRadius: 0.25
   interactableLayer:
     serializedVersion: 2
@@ -610,6 +612,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d68346df9ffd3a647acb2532942d2567, type: 2}
   popupScale: 1.3
   popupDuration: 0.4
+  minAnimDelay: 7
+  maxAnimDelay: 10
 --- !u!1 &2032716628055840117
 GameObject:
   m_ObjectHideFlags: 0
@@ -1822,6 +1826,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 7672036742668014963}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6553455114243118676
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5833489214544169685}
+  m_Layer: 0
+  m_Name: MoneyVFX Spawn Point
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5833489214544169685
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6553455114243118676}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.7, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1343226205980574046}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6663888253819209713
 GameObject:
   m_ObjectHideFlags: 0
@@ -1864,6 +1899,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1016262218011559672}
   - component: {fileID: 7518891248655034215}
+  - component: {fileID: 6865274492460298912}
   m_Layer: 0
   m_Name: DeftGirl_Fun
   m_TagString: Untagged
@@ -1910,6 +1946,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6865274492460298912
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6749481838158771109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b01626e4f6a7e7847846d6b14a3aa88f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6758678044568112231
 GameObject:
   m_ObjectHideFlags: 0
@@ -2584,7 +2632,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23629a3b347343d40be026085a29a1c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 3
+  rotationSpeed: 8
 --- !u!114 &1585030678051366861
 MonoBehaviour:
   m_ObjectHideFlags: 0

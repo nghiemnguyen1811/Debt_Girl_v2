@@ -5,6 +5,9 @@ using System.Collections;
 [RequireComponent(typeof(PlayerControl))]
 public class PlayerInteractDetector : MonoBehaviour
 {
+    [Header(" Spawn Particle ")]
+    [SerializeField] private Transform moneyVFXPoint;
+
     [Header("Settings")]
     [SerializeField] private float detectionRadius = 2f;
     [SerializeField] private LayerMask interactableLayer;
@@ -86,6 +89,7 @@ public class PlayerInteractDetector : MonoBehaviour
         originalRotation = transform.rotation;
 
         Transform point = CurrentInteractable.GetInteractPoint();
+
         if (point != null)
             transform.SetPositionAndRotation(point.position, point.rotation);
 
@@ -140,6 +144,9 @@ public class PlayerInteractDetector : MonoBehaviour
                     break;
             }
         }
+
+        if (data.earnsMoney)
+            MoneyManager.Instance.AddCoins(data.moneyEarned, moneyVFXPoint.position);
 
         var currentMood = MoodManager.Instance.GetActiveMood();
 

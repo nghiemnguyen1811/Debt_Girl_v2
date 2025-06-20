@@ -31,6 +31,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (modelTransform != null)
                 modelTransform.localRotation = Quaternion.identity;
+
             return;
         }
 

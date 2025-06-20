@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c731a44fa0590af40b37813c2c0aafb2, type: 3}
   m_Name: Computer Desk
   m_EditorClassIdentifier: 
+  conditionType: 0
   objectName: Computer Desk
   animationName: Typing
   interactionDuration: 4
@@ -19,3 +20,5 @@ MonoBehaviour:
   affectType: 2
   moodAmount: 0
   energyAmount: -10
+  earnsMoney: 1
+  moneyEarned: 100
