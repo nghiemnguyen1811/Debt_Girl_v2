@@ -39,7 +39,8 @@ MonoBehaviour:
     probeVolumeBlendStatesCS: {fileID: 0}
   m_RendererFeatures:
   - {fileID: -1971208366774639872}
-  m_RendererFeatureMap: 00a31e306fdca4e4
+  - {fileID: 6881775898732821785}
+  m_RendererFeatureMap: 00a31e306fdca4e4197dd0fbb7fa805f
   m_UseNativeRenderPass: 1
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -65,3 +66,21 @@ MonoBehaviour:
   m_DepthTextureFormat: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 0
+--- !u!114 &6881775898732821785
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b715d75f51fb327459c7092bc6cbe73e, type: 3}
+  m_Name: ToonStylizeRenderFeature
+  m_EditorClassIdentifier: 
+  m_Active: 0
+  settings:
+    posterizeSteps: 4
+    outlineThickness: 1.2
+    outlineStrength: 1
+    shader: {fileID: 4800000, guid: 13ef569e44b6dab49a7781af50750670, type: 3}

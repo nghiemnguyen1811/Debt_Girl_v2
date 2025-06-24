@@ -14,4 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   conditionType: 2
   moodIcon: {fileID: 1466255043, guid: 4e2a8781c4ae171469315681a3eb2fd8, type: 3}
+  moodAnimName: 
+  animatorLayerIndex: 1
   moodDecayRate: 1
+  minTime: 10
+  maxTime: 15
