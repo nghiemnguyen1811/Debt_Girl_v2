@@ -4,6 +4,10 @@ using System.Collections.Generic;
 
 public class MoneyRainUI : MonoBehaviour
 {
+    [Header("Initial Spawn Counts")]
+    [SerializeField] private int initialMoneyCount = 2;
+    [SerializeField] private int initialCoinCount = 2;
+    [SerializeField] private int initialPaperCount = 2;
     [Header("Parent Containers")]
     [SerializeField] private RectTransform moneyParent;
     [SerializeField] private RectTransform coinParent;
@@ -54,6 +58,7 @@ public class MoneyRainUI : MonoBehaviour
         InitFromParent(coinParent, 150, 250, 0, 0, 360, ObjectType.Coin);
         InitFromParent(paperParent, 30, 80, 60, 100, 20, ObjectType.Paper);
 
+        ActivateInitialObjects(); // Activate some at start
         StartCoroutine(SpawnRoutine());
     }
 
@@ -149,10 +154,20 @@ public class MoneyRainUI : MonoBehaviour
         obj.isActive = false;
     }
 
-    bool FindSpawnPosition(RectTransform rect, out Vector2 result)
+    bool FindSpawnPosition(RectTransform rect, out Vector2 result, bool insideScreen = false)
     {
         Vector2 size = rect.rect.size;
-        float y = halfCanvasHeight + size.y * 0.5f + spawnOffsetY;
+        float y;
+        if (insideScreen)
+        {
+            float yMin = -halfCanvasHeight + size.y * 0.5f;
+            float yMax = halfCanvasHeight - size.y * 0.5f;
+            y = Random.Range(yMin, yMax);
+        }
+        else
+        {
+            y = halfCanvasHeight + size.y * 0.5f + spawnOffsetY;
+        }
 
         for (int i = 0; i < 10; i++)
         {
@@ -179,5 +194,25 @@ public class MoneyRainUI : MonoBehaviour
         }
 
         return allObjects.Find(obj => !obj.isActive);
+    }
+
+    void ActivateInitialObjects()
+    {
+        ActivateByType(ObjectType.Money, initialMoneyCount);
+        ActivateByType(ObjectType.Coin, initialCoinCount);
+        ActivateByType(ObjectType.Paper, initialPaperCount);
+    }
+
+    void ActivateByType(ObjectType type, int count)
+    {
+        int activated = 0;
+        foreach (var obj in allObjects)
+        {
+            if (activated >= count) break;
+            if (obj.isActive || obj.type != type) continue;
+            if (!FindSpawnPosition(obj.rect, out Vector2 pos, true)) continue;
+            Activate(obj, pos);
+            activated++;
+        }
     }
 }

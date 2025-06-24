@@ -4,13 +4,13 @@ using EPOOutline;
 
 public class ComputerDesk : MonoBehaviour, IInteractable
 {
-    [Header(" Elements ")]
+    [Header("Elements")]
     [SerializeField] private Transform interactPoint;
 
-    [Header(" Interactable Data ")]
+    [Header("Interactable Data")]
     [SerializeField] private InteractableDataSO data;
 
-    [Header(" Monitor Material ")]
+    [Header("Monitor Visuals")]
     [SerializeField] private Material monitorMaterial;
     [SerializeField] private Color monitorOnColor;
     [SerializeField] private float blinkInterval = 0.5f;
@@ -18,13 +18,18 @@ public class ComputerDesk : MonoBehaviour, IInteractable
     [Header("Mood Icon Offset")]
     [SerializeField] private Vector3 moodIconOffset;
 
+    [Header("Visual Effect")]
+    [SerializeField] private GameObject interactParticle;
+
     private Coroutine blinkCoroutine;
+    private Color originalMonitorColor;
 
-
+    // === IInteractable Properties ===
     public Outlinable Outlinable => GetComponent<Outlinable>();
     public InteractableDataSO Data => data;
     public Transform GetInteractPoint() => interactPoint;
     public Vector3 MoodIconOffset => moodIconOffset;
+    public GameObject InteractParticle => interactParticle;
 
     public string GetObjectName() => data != null ? data.objectName : "Unknown";
     public string GetAnimationName() => data != null ? data.animationName : string.Empty;
@@ -32,28 +37,19 @@ public class ComputerDesk : MonoBehaviour, IInteractable
 
     private void Start()
     {
-        if (Outlinable != null)
-            Outlinable.enabled = false;
+        originalMonitorColor = monitorMaterial.color;
+        SetOutline(true);
+        SetParticle(false);
     }
 
-    public void OnEnter()
-    {
-        if (Outlinable != null)
-            Outlinable.enabled = true;
-    }
-
-    public void OnExit()
-    {
-        if (Outlinable != null)
-            Outlinable.enabled = false;
-    }
+    public void OnEnter() => SetOutline(true);
+    public void OnExit() => SetOutline(false);
 
     public void OnInteract()
     {
         Debug.Log($"Đã nhấn vào: {GetObjectName()}");
 
-        if (Outlinable != null)
-            Outlinable.enabled = false;
+        SetOutline(false);
 
         if (blinkCoroutine != null)
             StopCoroutine(blinkCoroutine);
@@ -61,28 +57,40 @@ public class ComputerDesk : MonoBehaviour, IInteractable
         blinkCoroutine = StartCoroutine(BlinkMonitor());
     }
 
+    public void OnStopInteract()
+    {
+        SetOutline(true);
+        SetParticle(true);
+    }
+
     private IEnumerator BlinkMonitor()
     {
-        Color originalColor = monitorMaterial.color;
-        bool useOriginalColor = false;
+        bool useOriginal = false;
         float timer = 0f;
         WaitForSeconds wait = new WaitForSeconds(blinkInterval);
 
         while (timer < GetDuration())
         {
-            monitorMaterial.color = useOriginalColor ? originalColor : monitorOnColor;
-            useOriginalColor = !useOriginalColor;
+            monitorMaterial.color = useOriginal ? originalMonitorColor : monitorOnColor;
+            useOriginal = !useOriginal;
 
             yield return wait;
             timer += blinkInterval;
         }
 
-        monitorMaterial.color = originalColor;
+        monitorMaterial.color = originalMonitorColor;
     }
 
-    public void OnStopInteract()
+    // === Helper Methods ===
+    private void SetOutline(bool enabled)
     {
         if (Outlinable != null)
-            Outlinable.enabled = true;
+            Outlinable.enabled = enabled;
+    }
+
+    private void SetParticle(bool enabled)
+    {
+        if (interactParticle != null && interactParticle.activeSelf != enabled)
+            interactParticle.SetActive(enabled);
     }
 }
