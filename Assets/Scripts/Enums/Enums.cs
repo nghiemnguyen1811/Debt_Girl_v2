@@ -17,3 +17,11 @@ public enum MoodConditionType
     Bored,
     Stressed
 }
+
+public enum AudioGroup
+{
+    Music,
+    Sound,
+    Footstep,
+    Mood
+}

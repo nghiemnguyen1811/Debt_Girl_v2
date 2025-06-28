@@ -9,13 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2906d38c16a7bca4082cf89680b21d04, type: 3}
-  m_Name: Hungry
+  m_Script: {fileID: 11500000, guid: c731a44fa0590af40b37813c2c0aafb2, type: 3}
+  m_Name: Dirt
   m_EditorClassIdentifier: 
-  conditionType: 2
-  moodIcon: {fileID: 1466255043, guid: 4e2a8781c4ae171469315681a3eb2fd8, type: 3}
-  moodAnimName: 
-  animatorLayerIndex: 1
-  moodDecayRate: 1
-  minTime: 180
-  maxTime: 240
+  conditionType: 3
+  objectName: Dirt
+  animationName: Typing
+  interactionDuration: 2
+  experienceAmount: 1
+  affectType: 3
+  moodAmount: 0.5
+  energyAmount: 1
+  earnsMoney: 0
+  moneyEarned: 0

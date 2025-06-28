@@ -32,4 +32,9 @@ public class PlayerControl : MonoBehaviour
             statsUI.GetType().GetField("playerStats", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
                    ?.SetValue(statsUI, stats);
     }
+
+    private void Start()
+    {
+        AudioManager.Instance.PlayMusic(0);
+    }
 }

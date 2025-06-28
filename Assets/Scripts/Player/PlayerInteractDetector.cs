@@ -21,7 +21,7 @@ public class PlayerInteractDetector : MonoBehaviour
     private Vector3 originalPosition;
     private Quaternion originalRotation;
 
-    public IInteractable CurrentInteractable { get; private set; }
+    public InteractableBase CurrentInteractable { get; private set; }
     public bool IsInteracting { get; private set; }
 
     private static readonly Vector3 HeightOffset = Vector3.up * 0.25f;
@@ -59,7 +59,7 @@ public class PlayerInteractDetector : MonoBehaviour
         {
             foreach (var hit in hits)
             {
-                if (hit.TryGetComponent(out IInteractable interactable))
+                if (hit.TryGetComponent(out InteractableBase interactable))
                 {
                     CurrentInteractable = interactable;
                     interactable.OnEnter();
@@ -94,7 +94,8 @@ public class PlayerInteractDetector : MonoBehaviour
             transform.SetPositionAndRotation(point.position, point.rotation);
 
         // Set mood icon offset position if defined
-        control.visualizer?.OffsetMoodIcon(CurrentInteractable.MoodIconOffset);
+        if (CurrentInteractable.MoodIconOffset != Vector3.zero)
+            control.visualizer?.OffsetMoodIcon(CurrentInteractable.MoodIconOffset);
 
         string anim = CurrentInteractable.GetAnimationName();
         control.animationHandler.SetBoolParameter(anim, true);
@@ -148,10 +149,8 @@ public class PlayerInteractDetector : MonoBehaviour
         if (data.earnsMoney)
             MoneyManager.Instance.AddCoins(data.moneyEarned, moneyVFXPoint.position);
 
-        var currentMood = MoodManager.Instance.GetActiveMood();
-
-        if (currentMood != null && currentMood.conditionType == data.conditionType)
-            MoodManager.Instance.ClearMood();
+        if (data.conditionType != MoodConditionType.None)
+            MoodManager.Instance.ClearMood(data.conditionType);
 
         // Reset mood icon position
         control.visualizer?.ResetMoodIconPosition();

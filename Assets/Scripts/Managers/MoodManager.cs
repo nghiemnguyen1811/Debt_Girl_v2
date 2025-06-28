@@ -10,18 +10,13 @@ public class MoodManager : SingletonMonobehaviour<MoodManager>
     [Header("Mood Config")]
     [SerializeField] private List<MoodConditionDataSO> moodConditions;
 
-    [SerializeField] private float minTime = 180f;
-    [SerializeField] private float maxTime = 300f;
+    private Queue<MoodConditionType> moodQueue = new Queue<MoodConditionType>();
 
-    private MoodConditionDataSO activeMood;
-    private Coroutine moodDecayRoutine;
-    private Coroutine moodLoopRoutine;
+    private float totalDecayRate = 0f;
+    private Coroutine decayCoroutine;
 
     private void Start()
     {
-        if (playerControl == null)
-            playerControl = GetComponent<PlayerControl>();
-
         if (playerControl == null || playerControl.stats == null)
         {
             Debug.LogError("[MoodManager] Thiếu PlayerControl hoặc PlayerStats!");
@@ -29,64 +24,113 @@ public class MoodManager : SingletonMonobehaviour<MoodManager>
             return;
         }
 
-        moodLoopRoutine = StartCoroutine(MoodLoop());
+        foreach (var mood in moodConditions)
+            StartCoroutine(MoodTimerRoutine(mood));
     }
 
-    private IEnumerator MoodLoop()
+    private IEnumerator MoodTimerRoutine(MoodConditionDataSO moodData)
     {
         while (true)
         {
-            float waitTime = Random.Range(minTime, maxTime);
+            float waitTime = Random.Range(moodData.minTime, moodData.maxTime);
             yield return new WaitForSeconds(waitTime);
 
-            if (activeMood != null || moodConditions.Count == 0)
-                continue;
+            if (moodQueue.Contains(moodData.conditionType)) continue;
 
-            activeMood = moodConditions[Random.Range(0, moodConditions.Count)];
-            Debug.Log($"[MoodManager] Gán trạng thái mood: {activeMood.name}");
+            moodQueue.Enqueue(moodData.conditionType);
+            Debug.Log($"[MoodManager] Mood {moodData.conditionType} thêm vào queue.");
 
-            // Gọi Visualizer để cập nhật icon và biểu cảm
-            playerControl?.visualizer?.SetMoodVisual(activeMood);
+            // Nếu queue chỉ mới có 1 mood → set visual
+            if (moodQueue.Count == 1)
+                SetMoodVisual(moodData.conditionType);
 
-            moodDecayRoutine = StartCoroutine(ApplyMoodDecay(activeMood));
+            // Cộng decay rate vào tổng
+            totalDecayRate += moodData.moodDecayRate;
+            Debug.Log(totalDecayRate);
+            Debug.Log($"[MoodManager] Tổng decay rate: {totalDecayRate}");
+
+            // Nếu chưa có decay coroutine thì bật lên
+            if (decayCoroutine == null)
+                decayCoroutine = StartCoroutine(ApplyTotalMoodDecay());
         }
     }
 
-    private IEnumerator ApplyMoodDecay(MoodConditionDataSO moodData)
+    private void SetMoodVisual(MoodConditionType conditionType)
     {
-        while (activeMood == moodData)
+        MoodConditionDataSO moodData = GetMoodData(conditionType);
+        if (moodData == null) return;
+
+        Debug.Log($"[MoodManager] Gán trạng thái mood: {moodData.name}");
+        playerControl?.visualizer?.SetMoodVisual(moodData);
+    }
+
+    public void ClearMood(MoodConditionType conditionType)
+    {
+        if (moodQueue.Count == 0) return;
+
+        Queue<MoodConditionType> tempQueue = new Queue<MoodConditionType>();
+
+        while (moodQueue.Count > 0)
         {
-            playerControl.stats.ApplyMoodChange(-moodData.moodDecayRate * Time.deltaTime);
+            var mood = moodQueue.Dequeue();
+
+            if (mood != conditionType)
+                tempQueue.Enqueue(mood);
+
+            else
+            {
+                var data = GetMoodData(mood);
+
+                if (data != null)
+                {
+                    totalDecayRate -= data.moodDecayRate;
+                    Debug.Log($"[MoodManager] Giảm decay rate: {data.moodDecayRate}. Tổng còn: {totalDecayRate}");
+                }
+            }
+        }
+
+        moodQueue = tempQueue;
+
+        // Update visual
+        if (moodQueue.Count > 0)
+            SetMoodVisual(moodQueue.Peek());
+
+        else
+        {
+            playerControl?.visualizer?.ClearMoodVisual();
+            Debug.Log("[MoodManager] Không còn mood nào. Reset trạng thái visual.");
+        }
+
+        // Nếu tổng decay = 0 thì dừng coroutine
+        if (totalDecayRate <= 0f && decayCoroutine != null)
+        {
+            StopCoroutine(decayCoroutine);
+            decayCoroutine = null;
+            SetMoodVisual(MoodConditionType.Normal);
+            Debug.Log("[MoodManager] Dừng coroutine decay vì không còn mood nào.");
+        }
+    }
+
+    private IEnumerator ApplyTotalMoodDecay()
+    {
+        Debug.Log("[MoodManager] Bắt đầu coroutine decay tổng.");
+
+        while (true)
+        {
+            if (totalDecayRate > 0f)
+                playerControl.stats.ApplyMoodChange(-totalDecayRate * Time.deltaTime);
+
             yield return null;
         }
     }
 
-    public void ClearMood()
+    public MoodConditionType? GetCurrentMoodInQueue()
     {
-        if (activeMood == null) return;
-
-        Debug.Log($"[MoodManager] Xóa trạng thái mood: {activeMood.name}");
-
-        if (moodDecayRoutine != null)
-            StopCoroutine(moodDecayRoutine);
-
-        activeMood = null;
-        moodDecayRoutine = null;
-
-        // Reset biểu cảm nhân vật
-        playerControl?.visualizer?.ClearMoodVisual();
-
-        RestartMoodLoop();
+        return moodQueue.Count > 0 ? moodQueue.Peek() : (MoodConditionType?)null;
     }
 
-    private void RestartMoodLoop()
+    private MoodConditionDataSO GetMoodData(MoodConditionType type)
     {
-        if (moodLoopRoutine != null)
-            StopCoroutine(moodLoopRoutine);
-
-        moodLoopRoutine = StartCoroutine(MoodLoop());
+        return moodConditions.Find(m => m.conditionType == type);
     }
-
-    public MoodConditionDataSO GetActiveMood() => activeMood;
-    public bool HasActiveMood() => activeMood != null;
 }
