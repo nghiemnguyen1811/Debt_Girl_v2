@@ -5,7 +5,7 @@ using DG.Tweening;
 public class MoneyManager : SingletonMonobehaviour<MoneyManager>
 {
     [Header("Coin Settings")]
-    private int totalCoins = 0;
+    private double totalCoins = 0;
 
     [Header("DoTween Settings")]
     [SerializeField] private float punchScale = 1.2f;
@@ -24,7 +24,7 @@ public class MoneyManager : SingletonMonobehaviour<MoneyManager>
         UpdateCoinUI(immediate: true);
     }
 
-    public void AddCoins(int amount, Vector3 worldPosition)
+    public void AddCoins(double amount, Vector3 worldPosition)
     {
         totalCoins += amount;
         UpdateCoinUI();
@@ -46,7 +46,7 @@ public class MoneyManager : SingletonMonobehaviour<MoneyManager>
         UpdateCoinUI();
     }
 
-    public int GetCoins()
+    public double GetCoins()
     {
         return totalCoins;
     }
@@ -55,7 +55,7 @@ public class MoneyManager : SingletonMonobehaviour<MoneyManager>
     {
         if (moneyText == null) return;
 
-        moneyText.text = totalCoins.ToString("N0");
+        moneyText.text = DoubleUtilities.ToIdleNotation(totalCoins); ;
 
         // Animate punch scale
         if (!immediate)

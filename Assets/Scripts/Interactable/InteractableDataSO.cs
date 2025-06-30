@@ -41,5 +41,5 @@ public class InteractableDataSO : ScriptableObject
     [ShowIf(nameof(earnsMoney))]
     [LabelText("Money Earned")]
     [Min(0)]
-    public int moneyEarned = 0;
+    public double moneyEarned = 0;
 }

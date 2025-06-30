@@ -6,8 +6,8 @@ public class MoneyParticle : MonoBehaviour
     [Header(" UI ")]
     [SerializeField] private TextMeshPro moneyText;
 
-    public void Configure(int carrotMultiplier)
+    public void Configure(double carrotMultiplier)
     {
-        moneyText.text = "+" + carrotMultiplier;
+        moneyText.text = "+" + DoubleUtilities.ToIdleNotation(carrotMultiplier);
     }
 }
