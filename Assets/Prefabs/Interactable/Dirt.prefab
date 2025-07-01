@@ -74,6 +74,7 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 5aaf81490e061f944ac5630e503da964, type: 2}
   moodIconOffset: {x: 0, y: 0, z: 0}
   interactParticle: {fileID: 0}
+  soundId: -1
   detectionRadius: 0.4
 --- !u!114 &7066875925575128251
 MonoBehaviour:
@@ -89,8 +90,56 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   complexMaskingMode: 0
   drawingMode: 1
-  outlineLayer: 0
-  outlineTargets: []
+  outlineLayer: 5
+  outlineTargets:
+  - IsVisible: 1
+    CutoutMask: 8
+    edgeDilateAmount: 5
+    frontEdgeDilateAmount: 5
+    backEdgeDilateAmount: 5
+    renderer: {fileID: 5115757065632499870}
+    SubmeshIndex: 0
+    BoundsMode: 0
+    Bounds:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0.5, y: 0.5, z: 0.5}
+    CutoutThreshold: 0.5
+    CullMode: 2
+    cutoutTextureName: 
+    DilateRenderingMode: 0
+    cutoutTextureIndex: 0
+  - IsVisible: 1
+    CutoutMask: 8
+    edgeDilateAmount: 5
+    frontEdgeDilateAmount: 5
+    backEdgeDilateAmount: 5
+    renderer: {fileID: 8324884417197006862}
+    SubmeshIndex: 0
+    BoundsMode: 0
+    Bounds:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0.5, y: 0.5, z: 0.5}
+    CutoutThreshold: 0.5
+    CullMode: 2
+    cutoutTextureName: 
+    DilateRenderingMode: 0
+    cutoutTextureIndex: 0
+  - IsVisible: 1
+    CutoutMask: 8
+    edgeDilateAmount: 5
+    frontEdgeDilateAmount: 5
+    backEdgeDilateAmount: 5
+    renderer: {fileID: 8324884417196994146}
+    SubmeshIndex: 0
+    BoundsMode: 0
+    Bounds:
+      m_Center: {x: 0, y: 0, z: 0}
+      m_Extent: {x: 0.5, y: 0.5, z: 0.5}
+    CutoutThreshold: 0.5
+    CullMode: 2
+    cutoutTextureName: 
+    DilateRenderingMode: 0
+    cutoutTextureIndex: 0
   renderStyle: 2
   outlineParameters:
     enabled: 1
@@ -305,10 +354,60 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 187952, guid: c05e92eaee7a00844867e5edc8e0dde1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4398306152514069121}
+    - targetCorrespondingSourceObject: {fileID: 110668, guid: c05e92eaee7a00844867e5edc8e0dde1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3391044075793912007}
   m_SourcePrefab: {fileID: 100100000, guid: c05e92eaee7a00844867e5edc8e0dde1, type: 3}
+--- !u!1 &8324884417178252922 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 110668, guid: c05e92eaee7a00844867e5edc8e0dde1, type: 3}
+  m_PrefabInstance: {fileID: 8324884417178338870}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3391044075793912007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8324884417178252922}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &8324884417178458118 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 187952, guid: c05e92eaee7a00844867e5edc8e0dde1, type: 3}
+  m_PrefabInstance: {fileID: 8324884417178338870}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &4398306152514069121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8324884417178458118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &8324884417178761774 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 424984, guid: c05e92eaee7a00844867e5edc8e0dde1, type: 3}
+  m_PrefabInstance: {fileID: 8324884417178338870}
+  m_PrefabAsset: {fileID: 0}
+--- !u!199 &8324884417196994146 stripped
+ParticleSystemRenderer:
+  m_CorrespondingSourceObject: {fileID: 19900500, guid: c05e92eaee7a00844867e5edc8e0dde1, type: 3}
+  m_PrefabInstance: {fileID: 8324884417178338870}
+  m_PrefabAsset: {fileID: 0}
+--- !u!199 &8324884417197006862 stripped
+ParticleSystemRenderer:
+  m_CorrespondingSourceObject: {fileID: 19916344, guid: c05e92eaee7a00844867e5edc8e0dde1, type: 3}
   m_PrefabInstance: {fileID: 8324884417178338870}
   m_PrefabAsset: {fileID: 0}

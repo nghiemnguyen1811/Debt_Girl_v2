@@ -23,6 +23,14 @@ public abstract class InteractableBase : MonoBehaviour
     [Header("Visual Effect")]
     [SerializeField] protected GameObject interactParticle;
 
+    [Header("Sound")]
+    [SerializeField] protected int soundId = -1;
+
+    protected virtual void Start()
+    {
+        SetOutline(false);
+        SetParticle(false);
+    }
 
     //========================//
     //      Properties
@@ -52,6 +60,11 @@ public abstract class InteractableBase : MonoBehaviour
     /// The particle to play during interaction.
     /// </summary>
     public virtual GameObject InteractParticle => interactParticle;
+
+    /// <summary>
+    /// Returns the sound ID associated with this interaction.
+    /// </summary>
+    public virtual int SoundId => soundId;
 
 
     //========================//
@@ -102,7 +115,7 @@ public abstract class InteractableBase : MonoBehaviour
 
 
     //========================//
-    //       Visual Tools
+    //       Visual / Audio Tools
     //========================//
 
     /// <summary>
@@ -121,5 +134,21 @@ public abstract class InteractableBase : MonoBehaviour
     {
         if (interactParticle != null && interactParticle.activeSelf != enabled)
             interactParticle.SetActive(enabled);
+    }
+
+    /// <summary>
+    /// Play or stop the assigned sound based on interaction state.
+    /// </summary>
+    /// <param name="play">True to play the sound; false to stop it.</param>
+    protected void HandleSound(bool play)
+    {
+        if (SoundId <= -1)
+        {
+            Debug.Log("No sound available to play.");
+            return;
+        }
+
+        if (play) AudioManager.Instance.PlayInteractSound(SoundId);
+        else AudioManager.Instance.StopSound(SoundId);
     }
 }

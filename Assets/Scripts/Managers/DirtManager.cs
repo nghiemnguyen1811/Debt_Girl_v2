@@ -9,7 +9,6 @@ public class DirtManager : MonoBehaviour
     [Header("Spawn Settings")]
     [SerializeField] private GameObject dirtPrefab;
     [SerializeField] private int maxAttemptsPerSpawn = 20;
-    [SerializeField] private float spawnCheckHeightOffset = 0.5f;
     [SerializeField] private LayerMask detectionLayer;
 
     [Header("Timing")]

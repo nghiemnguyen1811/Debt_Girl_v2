@@ -7,12 +7,6 @@ public class Dirt : InteractableBase
 
     public float GetDetectionRadius() => detectionRadius;
 
-    private void Start()
-    {
-        SetOutline(true);
-        SetParticle(false);
-    }
-
     public override void OnInteract()
     {
         Debug.Log($"Đã nhấn vào: {GetObjectName()}");

@@ -5,9 +5,6 @@ using System.Collections;
 [RequireComponent(typeof(PlayerControl))]
 public class PlayerInteractDetector : MonoBehaviour
 {
-    [Header(" Spawn Particle ")]
-    [SerializeField] private Transform moneyVFXPoint;
-
     [Header("Settings")]
     [SerializeField] private float detectionRadius = 2f;
     [SerializeField] private LayerMask interactableLayer;
@@ -126,8 +123,8 @@ public class PlayerInteractDetector : MonoBehaviour
 
         if (data != null)
         {
-            if (data.experienceAmount > 0)
-                control.stats.GainExperience(data.experienceAmount);
+            //if (data.experienceAmount > 0)
+                //control.stats.GainExperience(data.experienceAmount);
 
             switch (data.affectType)
             {
@@ -147,7 +144,7 @@ public class PlayerInteractDetector : MonoBehaviour
         }
 
         if (data.earnsMoney)
-            MoneyManager.Instance.AddCoins(data.moneyEarned, moneyVFXPoint.position);
+            MoneyManager.Instance.ChangeMoneys(data.moneyEarned);
 
         if (data.conditionType != MoodConditionType.None)
             MoodManager.Instance.ClearMood(data.conditionType);

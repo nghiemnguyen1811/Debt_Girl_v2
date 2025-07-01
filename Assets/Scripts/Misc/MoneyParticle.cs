@@ -8,6 +8,7 @@ public class MoneyParticle : MonoBehaviour
 
     public void Configure(double carrotMultiplier)
     {
-        moneyText.text = "+" + DoubleUtilities.ToIdleNotation(carrotMultiplier);
+        moneyText.text = (carrotMultiplier >= 0 ? "+" : "-") + DoubleUtilities.ToIdleNotation(Mathf.Abs((float)carrotMultiplier));
+        moneyText.color = carrotMultiplier >= 0 ? Color.white : Color.red;
     }
 }

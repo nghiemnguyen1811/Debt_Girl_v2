@@ -1,67 +1,61 @@
-using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
-using DG.Tweening;
 
 public class MoneyManager : SingletonMonobehaviour<MoneyManager>
 {
+    [Header(" Spawn Particle ")]
+    [SerializeField] private Transform moneyVFXPoint;
+
     [Header("Coin Settings")]
-    private double totalCoins = 0;
-
-    [Header("DoTween Settings")]
-    [SerializeField] private float punchScale = 1.2f;
-    [SerializeField] private float punchDuration = 0.3f;
-
-    private Tween punchTween;
-
-    [Header("UI & Display")]
-    [SerializeField] private TextMeshProUGUI moneyText;
+    private double totalMoneys = 0;
 
     [Header("Particle Effect")]
     [SerializeField] private GameObject moneyParticlePrefab;
 
-    void Start()
+    // ======================== Unity Methods ========================
+    private void Start()
     {
-        UpdateCoinUI(immediate: true);
+        SetMoneys(0);
     }
 
-    public void AddCoins(double amount, Vector3 worldPosition)
+    // ======================== Public Methods ========================
+    public void ChangeMoneys(double amount)
     {
-        totalCoins += amount;
-        UpdateCoinUI();
+        totalMoneys += amount;
+        UpdateMoneyUI();
 
-        // Spawn coin particle
-        if (moneyParticlePrefab != null)
+        // Chỉ spawn particle khi cộng tiền và prefab có gán
+        if (moneyParticlePrefab != null && moneyVFXPoint != null)
         {
-            MoneyParticle moneyParticle = (MoneyParticle)PoolManager.Instance.
-                ReuseComponent(moneyParticlePrefab, worldPosition, Quaternion.identity);
+            MoneyParticle moneyParticle = (MoneyParticle)PoolManager.Instance
+                .ReuseComponent(moneyParticlePrefab, moneyVFXPoint.position, Quaternion.identity);
 
             moneyParticle.Configure(amount);
             moneyParticle.gameObject.SetActive(true);
         }
+
+        DebtManager.Instance.RefreshPayButton();
     }
 
-    public void SetCoins(int value)
+    public void SetMoneys(double value)
     {
-        totalCoins = value;
-        UpdateCoinUI();
+        totalMoneys = value;
+        UpdateMoneyUI(immediate: true);
     }
 
-    public double GetCoins()
+    public double GetMoneys()
     {
-        return totalCoins;
+        return totalMoneys;
     }
 
-    private void UpdateCoinUI(bool immediate = false)
+    public bool HasEnoughMoney(double amount)
     {
-        if (moneyText == null) return;
+        return totalMoneys >= amount;
+    }
 
-        moneyText.text = DoubleUtilities.ToIdleNotation(totalCoins); ;
-
-        // Animate punch scale
-        if (!immediate)
-            punchTween?.Kill();
-        punchTween = moneyText.transform
-            .DOPunchScale(Vector3.one * punchScale, punchDuration, vibrato: 5, elasticity: 0.8f)
-            .SetEase(Ease.OutBack);
+    // ======================== Private Methods ========================
+    private void UpdateMoneyUI(bool immediate = false)
+    {
+        UIManager.Instance?.UpdateMoney(totalMoneys, !immediate);
     }
 }

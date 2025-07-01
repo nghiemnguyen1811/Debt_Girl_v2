@@ -11,12 +11,10 @@ public class ComputerDesk : InteractableBase
     private Coroutine blinkCoroutine;
     private Color originalMonitorColor;
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
         originalMonitorColor = monitorMaterial.color;
-
-        SetOutline(true);
-        SetParticle(false);
     }
 
     public override void OnInteract()
@@ -31,7 +29,7 @@ public class ComputerDesk : InteractableBase
     {
         SetOutline(true);
         SetParticle(true);
-        AudioManager.Instance.PlayInteractSound(0);
+        HandleSound(play: true);
     }
 
     private IEnumerator BlinkMonitor()
