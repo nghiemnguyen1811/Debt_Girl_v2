@@ -1,21 +1,35 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Bed interactable — triggers sound and VFX when interacted with.
+/// </summary>
 public class Bed : InteractableBase
 {
+    #region === Interaction Events ===
+
+    /// <summary>
+    /// Called when the player starts interacting with the bed.
+    /// Disables outline, enables particles, and plays sound.
+    /// </summary>
     public override void OnInteract()
     {
-        Debug.Log($"Đã nhấn vào: {GetObjectName()}");
+        Debug.Log($"Interacted with: {GetObjectName()}");
+
         SetOutline(false);
         SetParticle(true);
-
         HandleSound(play: true);
     }
 
+    /// <summary>
+    /// Called when the player stops interacting with the bed.
+    /// Re-enables outline, disables particles, and stops sound.
+    /// </summary>
     public override void OnStopInteract()
     {
         SetOutline(true);
         SetParticle(false);
-
         HandleSound(play: false);
     }
+
+    #endregion
 }

@@ -10,6 +10,8 @@
 [RequireComponent(typeof(MoodVisualizer))]
 public class PlayerControl : MonoBehaviour
 {
+    #region === Subsystem References ===
+
     public PlayerInputHandler inputHandler { get; private set; }
     public PlayerAnimation animationHandler { get; private set; }
     public PlayerInteractDetector interactDetector { get; private set; }
@@ -18,6 +20,11 @@ public class PlayerControl : MonoBehaviour
     public PlayerStatsUI statsUI { get; private set; }
     public MoodVisualizer visualizer { get; private set; }
 
+    #endregion
+
+    #region === Unity Lifecycle ===
+
+    // Assign all required component references
     private void Awake()
     {
         inputHandler = GetComponent<PlayerInputHandler>();
@@ -28,13 +35,14 @@ public class PlayerControl : MonoBehaviour
         statsUI = GetComponent<PlayerStatsUI>();
         visualizer = GetComponent<MoodVisualizer>();
 
+        // Manually link private 'playerStats' field in statsUI using reflection
         if (statsUI != null && stats != null)
-            statsUI.GetType().GetField("playerStats", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+        {
+            statsUI.GetType()
+                   .GetField("playerStats", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
                    ?.SetValue(statsUI, stats);
+        }
     }
 
-    private void Start()
-    {
-        AudioManager.Instance.PlayMusic(0);
-    }
+    #endregion
 }

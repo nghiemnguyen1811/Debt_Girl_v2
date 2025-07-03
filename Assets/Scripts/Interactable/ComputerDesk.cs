@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class ComputerDesk : InteractableBase
 {
+    #region === Monitor Visuals ===
+
     [Header("Monitor Visuals")]
     [SerializeField] private Material monitorMaterial;
     [SerializeField] private Color monitorOnColor;
@@ -11,20 +13,36 @@ public class ComputerDesk : InteractableBase
     private Coroutine blinkCoroutine;
     private Color originalMonitorColor;
 
+    #endregion
+
+    #region === Unity Events ===
+
+    // Cache original monitor color
     protected override void Start()
     {
         base.Start();
         originalMonitorColor = monitorMaterial.color;
     }
 
+    #endregion
+
+    #region === Interactable Overrides ===
+
+    // Triggered when player interacts with the desk
     public override void OnInteract()
     {
-        Debug.Log($"Đã nhấn vào: {GetObjectName()}");
+        Debug.Log($"Interacted with: {GetObjectName()}");
+
         SetOutline(false);
-        if (blinkCoroutine != null) StopCoroutine(blinkCoroutine);
+
+        // Restart blinking if already running
+        if (blinkCoroutine != null)
+            StopCoroutine(blinkCoroutine);
+
         blinkCoroutine = StartCoroutine(BlinkMonitor());
     }
 
+    // Triggered when player stops interacting
     public override void OnStopInteract()
     {
         SetOutline(true);
@@ -32,6 +50,11 @@ public class ComputerDesk : InteractableBase
         HandleSound(play: true);
     }
 
+    #endregion
+
+    #region === Monitor Logic ===
+
+    // Coroutine to blink monitor color between on/off
     private IEnumerator BlinkMonitor()
     {
         bool useOriginal = false;
@@ -46,6 +69,9 @@ public class ComputerDesk : InteractableBase
             timer += blinkInterval;
         }
 
+        // Reset to original color after blinking ends
         monitorMaterial.color = originalMonitorColor;
     }
+
+    #endregion
 }

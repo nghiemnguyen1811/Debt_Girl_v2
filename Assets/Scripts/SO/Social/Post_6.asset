@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a33c371dde416e24f9396e3319c8b957, type: 3}
+  m_Name: Post_6
+  m_EditorClassIdentifier: 
+  caption: Another day, another story.
+  image: {fileID: 21300000, guid: 69a21733ad140b948b5c0da3fad245a5, type: 3}

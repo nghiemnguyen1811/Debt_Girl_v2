@@ -7,9 +7,7 @@ using EPOOutline;
 /// </summary>
 public abstract class InteractableBase : MonoBehaviour
 {
-    //========================//
-    //      Serialized Fields
-    //========================//
+    #region === Serialized Fields ===
 
     [Header("Elements")]
     [SerializeField] protected Transform interactPoint;
@@ -26,15 +24,19 @@ public abstract class InteractableBase : MonoBehaviour
     [Header("Sound")]
     [SerializeField] protected int soundId = -1;
 
+    #endregion
+
+    #region === Unity Events ===
+
     protected virtual void Start()
     {
         SetOutline(false);
         SetParticle(false);
     }
 
-    //========================//
-    //      Properties
-    //========================//
+    #endregion
+
+    #region === Properties ===
 
     /// <summary>
     /// Optional outline visual for highlighting.
@@ -66,10 +68,9 @@ public abstract class InteractableBase : MonoBehaviour
     /// </summary>
     public virtual int SoundId => soundId;
 
+    #endregion
 
-    //========================//
-    //      Interaction Info
-    //========================//
+    #region === Interaction Info ===
 
     /// <summary>
     /// Object name used for debug or UI display.
@@ -86,10 +87,9 @@ public abstract class InteractableBase : MonoBehaviour
     /// </summary>
     public virtual float GetDuration() => data != null ? data.interactionDuration : 0f;
 
+    #endregion
 
-    //========================//
-    //    Interaction Events
-    //========================//
+    #region === Interaction Events ===
 
     /// <summary>
     /// Called when the player enters interaction range.
@@ -113,10 +113,9 @@ public abstract class InteractableBase : MonoBehaviour
     /// </summary>
     public abstract void OnStopInteract();
 
+    #endregion
 
-    //========================//
-    //       Visual / Audio Tools
-    //========================//
+    #region === Visual / Audio Tools ===
 
     /// <summary>
     /// Toggle the outline component on or off.
@@ -151,4 +150,6 @@ public abstract class InteractableBase : MonoBehaviour
         if (play) AudioManager.Instance.PlayInteractSound(SoundId);
         else AudioManager.Instance.StopSound(SoundId);
     }
+
+    #endregion
 }

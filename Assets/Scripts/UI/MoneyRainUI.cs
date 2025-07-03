@@ -1,13 +1,19 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
+/// <summary>
+/// Handles animated falling UI elements (money, coins, papers) with physics-like behavior on a Canvas.
+/// </summary>
 public class MoneyRainUI : MonoBehaviour
 {
+    #region === Inspector Settings ===
+
     [Header("Initial Spawn Counts")]
     [SerializeField] private int initialMoneyCount = 2;
     [SerializeField] private int initialCoinCount = 2;
     [SerializeField] private int initialPaperCount = 2;
+
     [Header("Parent Containers")]
     [SerializeField] private RectTransform moneyParent;
     [SerializeField] private RectTransform coinParent;
@@ -20,6 +26,10 @@ public class MoneyRainUI : MonoBehaviour
     [SerializeField] private float spawnInterval = 0.5f;
     [SerializeField] private float spawnOffsetY = 100f;
     [SerializeField] private float despawnOffsetY = 100f;
+
+    #endregion
+
+    #region === Internal Fields ===
 
     private float halfCanvasWidth;
     private float halfCanvasHeight;
@@ -41,7 +51,11 @@ public class MoneyRainUI : MonoBehaviour
     private readonly List<FallingObject> allObjects = new();
     private readonly List<Rect> activeRects = new();
 
-    void Start()
+    #endregion
+
+    #region === Unity Events ===
+
+    private void Start()
     {
         if (spawnAreaCanvas == null)
         {
@@ -54,15 +68,16 @@ public class MoneyRainUI : MonoBehaviour
         halfCanvasWidth = canvasSize.x * 0.5f;
         halfCanvasHeight = canvasSize.y * 0.5f;
 
+        // Initialize objects from each container
         InitFromParent(moneyParent, 50, 150, 20, 50, 30, ObjectType.Money);
         InitFromParent(coinParent, 150, 250, 0, 0, 360, ObjectType.Coin);
         InitFromParent(paperParent, 30, 80, 60, 100, 20, ObjectType.Paper);
 
-        ActivateInitialObjects(); // Activate some at start
+        ActivateInitialObjects();
         StartCoroutine(SpawnRoutine());
     }
 
-    void Update()
+    private void Update()
     {
         float time = Time.time;
         float bottomY = -halfCanvasHeight - despawnOffsetY;
@@ -82,6 +97,10 @@ public class MoneyRainUI : MonoBehaviour
                 Deactivate(obj);
         }
     }
+
+    #endregion
+
+    #region === Initialization ===
 
     void InitFromParent(RectTransform parent, float minSpeed, float maxSpeed, float minSway, float maxSway, float rotationSpeed, ObjectType type)
     {
@@ -106,17 +125,9 @@ public class MoneyRainUI : MonoBehaviour
         }
     }
 
-    IEnumerator SpawnRoutine()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(Random.Range(spawnInterval * 0.8f, spawnInterval * 1.5f));
-            var obj = GetInactiveObject();
-            if (obj == null || !FindSpawnPosition(obj.rect, out Vector2 pos)) continue;
+    #endregion
 
-            Activate(obj, pos);
-        }
-    }
+    #region === Update and Movement ===
 
     void UpdateFallingObject(FallingObject obj, float time)
     {
@@ -130,12 +141,17 @@ public class MoneyRainUI : MonoBehaviour
                 obj.rect.anchoredPosition += Vector2.right * Mathf.Sin(t) * obj.swayAmount * Time.deltaTime;
                 obj.rect.localRotation = Quaternion.Euler(0f, 0f, Mathf.Sin(t) * obj.rotationSpeed);
                 break;
+
             case ObjectType.Coin:
                 float angle = (t * obj.rotationSpeed + obj.rotationOffset) % 360f;
                 obj.rect.localRotation = Quaternion.Euler(0f, 0f, angle);
                 break;
         }
     }
+
+    #endregion
+
+    #region === Activation & Deactivation ===
 
     void Activate(FallingObject obj, Vector2 pos)
     {
@@ -154,10 +170,43 @@ public class MoneyRainUI : MonoBehaviour
         obj.isActive = false;
     }
 
+    #endregion
+
+    #region === Spawning ===
+
+    IEnumerator SpawnRoutine()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(Random.Range(spawnInterval * 0.8f, spawnInterval * 1.5f));
+            var obj = GetInactiveObject();
+            if (obj == null || !FindSpawnPosition(obj.rect, out Vector2 pos)) continue;
+
+            Activate(obj, pos);
+        }
+    }
+
+    FallingObject GetInactiveObject()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            int index = Random.Range(0, allObjects.Count);
+            if (!allObjects[index].isActive)
+                return allObjects[index];
+        }
+
+        return allObjects.Find(obj => !obj.isActive);
+    }
+
+    #endregion
+
+    #region === Spawn Position Utility ===
+
     bool FindSpawnPosition(RectTransform rect, out Vector2 result, bool insideScreen = false)
     {
         Vector2 size = rect.rect.size;
         float y;
+
         if (insideScreen)
         {
             float yMin = -halfCanvasHeight + size.y * 0.5f;
@@ -173,6 +222,7 @@ public class MoneyRainUI : MonoBehaviour
         {
             float x = Random.Range(-halfCanvasWidth + size.x * 0.5f, halfCanvasWidth - size.x * 0.5f);
             Rect candidate = new(x - size.x * 0.5f, y - size.y * 0.5f, size.x, size.y);
+
             if (!activeRects.Exists(r => r.Overlaps(candidate)))
             {
                 result = new Vector2(x, y);
@@ -184,17 +234,9 @@ public class MoneyRainUI : MonoBehaviour
         return false;
     }
 
-    FallingObject GetInactiveObject()
-    {
-        for (int i = 0; i < 10; i++)
-        {
-            int index = Random.Range(0, allObjects.Count);
-            if (!allObjects[index].isActive)
-                return allObjects[index];
-        }
+    #endregion
 
-        return allObjects.Find(obj => !obj.isActive);
-    }
+    #region === Initial Activation ===
 
     void ActivateInitialObjects()
     {
@@ -211,8 +253,11 @@ public class MoneyRainUI : MonoBehaviour
             if (activated >= count) break;
             if (obj.isActive || obj.type != type) continue;
             if (!FindSpawnPosition(obj.rect, out Vector2 pos, true)) continue;
+
             Activate(obj, pos);
             activated++;
         }
     }
+
+    #endregion
 }

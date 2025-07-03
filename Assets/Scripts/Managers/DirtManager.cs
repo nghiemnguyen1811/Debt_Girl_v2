@@ -1,8 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Manages periodic spawning of Dirt objects across a floor area,
+/// using spatial detection to avoid overlap.
+/// </summary>
 public class DirtManager : MonoBehaviour
 {
+    #region === Floor & Spawn Settings ===
+
     [Header("Floor Settings")]
     [SerializeField] private BoxCollider floorCollider;
 
@@ -17,11 +23,22 @@ public class DirtManager : MonoBehaviour
     [SerializeField] private int minDirtPerCycle = 1;
     [SerializeField] private int maxDirtPerCycle = 3;
 
+    #endregion
+
+    #region === Unity Events ===
+
     private void Start()
     {
         StartCoroutine(SpawnLoop());
     }
 
+    #endregion
+
+    #region === Spawning Logic ===
+
+    /// <summary>
+    /// Continuously spawns dirt at random intervals and random quantities.
+    /// </summary>
     private IEnumerator SpawnLoop()
     {
         while (true)
@@ -32,12 +49,14 @@ public class DirtManager : MonoBehaviour
             int dirtToSpawn = Random.Range(minDirtPerCycle, maxDirtPerCycle + 1);
 
             for (int i = 0; i < dirtToSpawn; i++)
-            {
                 TrySpawnDirt();
-            }
         }
     }
 
+    /// <summary>
+    /// Attempts to spawn a single Dirt object in a valid location.
+    /// Uses overlap detection to avoid spawning on top of other objects.
+    /// </summary>
     public void TrySpawnDirt()
     {
         if (floorCollider == null || dirtPrefab == null)
@@ -50,21 +69,22 @@ public class DirtManager : MonoBehaviour
 
         for (int attempt = 0; attempt < maxAttemptsPerSpawn; attempt++)
         {
+            // Generate a random point within the floor bounds
             Vector3 randomPoint = new Vector3(
                 Random.Range(bounds.min.x, bounds.max.x),
                 0f,
                 Random.Range(bounds.min.z, bounds.max.z)
             );
 
-            // Tạm thời tạo 1 Dirt giả để lấy radius
+            // Temporarily get detection radius from a Dirt component
             float radius = dirtPrefab.GetComponent<Dirt>().GetDetectionRadius();
 
-            // Kiểm tra xem có vật thể nào gần đó không
+            // Check for nearby colliders within detection radius
             Collider[] overlaps = Physics.OverlapSphere(randomPoint, radius, detectionLayer);
 
             if (overlaps.Length == 0)
             {
-                // Nếu khu vực trống, mới tạo Dirt thực tế từ pool
+                // If area is free, spawn the Dirt from pool
                 Dirt dirt = (Dirt)PoolManager.Instance.ReuseComponent(dirtPrefab, randomPoint, Quaternion.identity);
 
                 if (dirt == null)
@@ -82,4 +102,5 @@ public class DirtManager : MonoBehaviour
         Debug.LogWarning("[DirtManager] Failed to spawn dirt in a valid location.");
     }
 
+    #endregion
 }

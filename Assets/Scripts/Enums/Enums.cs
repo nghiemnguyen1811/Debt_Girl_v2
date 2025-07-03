@@ -25,3 +25,11 @@ public enum AudioGroup
     Footstep,
     Mood
 }
+
+public enum EngagementLevel
+{
+    Low,
+    Medium,
+    High,
+    VeryHigh
+}

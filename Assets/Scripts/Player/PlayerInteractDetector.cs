@@ -2,9 +2,14 @@
 using UnityEngine.UI;
 using System.Collections;
 
+/// <summary>
+/// Detects interactable objects around the player and manages interaction logic.
+/// </summary>
 [RequireComponent(typeof(PlayerControl))]
 public class PlayerInteractDetector : MonoBehaviour
 {
+    #region === Serialized Fields ===
+
     [Header("Settings")]
     [SerializeField] private float detectionRadius = 2f;
     [SerializeField] private LayerMask interactableLayer;
@@ -14,14 +19,26 @@ public class PlayerInteractDetector : MonoBehaviour
     [SerializeField] private CanvasGroup interactableButton;
     [SerializeField] private Slider durationSlider;
 
+    #endregion
+
+    #region === Private Fields ===
+
     private PlayerControl control;
     private Vector3 originalPosition;
     private Quaternion originalRotation;
 
+    private static readonly Vector3 HeightOffset = Vector3.up * 0.25f;
+
+    #endregion
+
+    #region === Public Properties ===
+
     public InteractableBase CurrentInteractable { get; private set; }
     public bool IsInteracting { get; private set; }
 
-    private static readonly Vector3 HeightOffset = Vector3.up * 0.25f;
+    #endregion
+
+    #region === Unity Events ===
 
     private void Start()
     {
@@ -38,11 +55,18 @@ public class PlayerInteractDetector : MonoBehaviour
         ToggleUI(CurrentInteractable != null);
     }
 
+    #endregion
+
+    #region === Detection ===
+
+    /// <summary>
+    /// Scans for nearby interactables within a radius.
+    /// </summary>
     private void DetectInteractable()
     {
         var hits = Physics.OverlapSphere(transform.position + HeightOffset, detectionRadius, interactableLayer);
 
-        if (hits.Length <= 0)
+        if (hits.Length == 0)
         {
             if (CurrentInteractable != null)
             {
@@ -66,6 +90,13 @@ public class PlayerInteractDetector : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region === UI Handling ===
+
+    /// <summary>
+    /// Smoothly toggles the visibility of the interact UI.
+    /// </summary>
     private void ToggleUI(bool visible, bool instant = false)
     {
         float targetAlpha = visible ? 1f : 0f;
@@ -73,10 +104,18 @@ public class PlayerInteractDetector : MonoBehaviour
 
         interactableButton.alpha = Mathf.MoveTowards(interactableButton.alpha, targetAlpha, fadeStep);
         bool shouldShow = interactableButton.alpha > 0.01f;
+
         if (interactableButton.gameObject.activeSelf != shouldShow)
             interactableButton.gameObject.SetActive(shouldShow);
     }
 
+    #endregion
+
+    #region === Interaction Handling ===
+
+    /// <summary>
+    /// Begins interaction with the current interactable.
+    /// </summary>
     public void InteractIndicator()
     {
         if (CurrentInteractable == null || IsInteracting) return;
@@ -86,20 +125,22 @@ public class PlayerInteractDetector : MonoBehaviour
         originalRotation = transform.rotation;
 
         Transform point = CurrentInteractable.GetInteractPoint();
-
         if (point != null)
             transform.SetPositionAndRotation(point.position, point.rotation);
 
-        // Set mood icon offset position if defined
         if (CurrentInteractable.MoodIconOffset != Vector3.zero)
             control.visualizer?.OffsetMoodIcon(CurrentInteractable.MoodIconOffset);
 
         string anim = CurrentInteractable.GetAnimationName();
         control.animationHandler.SetBoolParameter(anim, true);
         CurrentInteractable.OnInteract();
+
         StartCoroutine(HandleInteraction(anim, CurrentInteractable.GetDuration()));
     }
 
+    /// <summary>
+    /// Executes interaction duration, applies effects, and resets state.
+    /// </summary>
     private IEnumerator HandleInteraction(string animName, float duration)
     {
         durationSlider.gameObject.SetActive(true);
@@ -116,16 +157,12 @@ public class PlayerInteractDetector : MonoBehaviour
 
         control.animationHandler.SetBoolParameter(animName, false);
         transform.SetPositionAndRotation(originalPosition, originalRotation);
-
         CurrentInteractable.OnStopInteract();
 
         var data = CurrentInteractable.Data;
 
         if (data != null)
         {
-            //if (data.experienceAmount > 0)
-                //control.stats.GainExperience(data.experienceAmount);
-
             switch (data.affectType)
             {
                 case AffectType.Mood:
@@ -141,24 +178,29 @@ public class PlayerInteractDetector : MonoBehaviour
                     control.stats.ApplyEnergyChange(data.energyAmount);
                     break;
             }
+
+            if (data.earnsMoney)
+                MoneyManager.Instance.ChangeMoneys(data.moneyEarned);
+
+            if (data.conditionType != MoodConditionType.None)
+                MoodManager.Instance.ClearMood(data.conditionType);
         }
 
-        if (data.earnsMoney)
-            MoneyManager.Instance.ChangeMoneys(data.moneyEarned);
-
-        if (data.conditionType != MoodConditionType.None)
-            MoodManager.Instance.ClearMood(data.conditionType);
-
-        // Reset mood icon position
         control.visualizer?.ResetMoodIconPosition();
 
         yield return new WaitForSeconds(0.5f);
         IsInteracting = false;
     }
 
+    #endregion
+
+    #region === Debug ===
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireSphere(transform.position + HeightOffset, detectionRadius);
     }
+
+    #endregion
 }
