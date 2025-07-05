@@ -266,7 +266,7 @@ public class ReactionAndFollowerFX : MonoBehaviour
         );
         Vector2 p2 = new Vector2(
             Random.Range(-50f, 50f),
-            canvasSize.y * 0.5f + Random.Range(50f, 120f)
+            canvasSize.y * 0.5f + Random.Range(160f, 220f)
         );
 
         float duration = Random.Range(minFlyDuration, maxFlyDuration);
@@ -333,6 +333,7 @@ public class ReactionAndFollowerFX : MonoBehaviour
             if (!obj.rect.gameObject.activeSelf && obj.type == type)
                 return obj;
         }
+
         return null;
     }
 

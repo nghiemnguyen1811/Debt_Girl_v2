@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using System.Collections;
 
 [RequireComponent(typeof(PlayerControl))]
 public class PlayerStats : MonoBehaviour
@@ -37,6 +38,12 @@ public class PlayerStats : MonoBehaviour
         InitializeStats();
         UpdateStatsUI();
 
+        StartCoroutine(DelayedInvoke());
+    }
+
+    private IEnumerator DelayedInvoke()
+    {
+        yield return null;
         OnStatsInitialized?.Invoke();
     }
 

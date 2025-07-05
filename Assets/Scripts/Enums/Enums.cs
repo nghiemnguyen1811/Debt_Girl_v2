@@ -1,3 +1,10 @@
+public enum StatType
+{
+    IncomeRate,
+    Productivity,
+    Mood
+}
+
 public enum AffectType
 {
     None,

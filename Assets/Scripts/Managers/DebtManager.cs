@@ -36,13 +36,12 @@ public class DebtManager : SingletonMonobehaviour<DebtManager>
         if (MoneyManager.Instance.HasEnoughMoney(currentDebt))
         {
             MoneyManager.Instance.ChangeMoneys(-currentDebt);
+            StatUpgradeManager.Instance.AddStatPoint();
             IncreaseDebt();
             AudioManager.Instance.PlayInteractSound(1);
         }
-        else
-        {
-            Debug.Log("Not enough coins to pay the debt!");
-        }
+
+        else Debug.Log("Not enough coins to pay the debt!");
     }
 
     /// <summary>

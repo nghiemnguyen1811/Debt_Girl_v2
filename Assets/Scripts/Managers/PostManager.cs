@@ -168,7 +168,7 @@ public class PostManager : SingletonMonobehaviour<PostManager>
 
             float currentValue = playerControl.stats.engagement.current;
             var level = GetEngagementLevel(currentValue);
-            int multiplier = playerControl.stats.playerStatsSO.engagementLevel;
+            int multiplier = StatUpgradeManager.Instance.GetLevelOf(StatType.IncomeRate);
             double bonus = GetMoneyBonusByEngagementLevel(level);
             double totalMoney = moneyPerInterval * bonus * multiplier;
 
@@ -184,7 +184,7 @@ public class PostManager : SingletonMonobehaviour<PostManager>
     // Update flying reactions and refresh post UI
     private void UpdateFXAndPosts()
     {
-        float currentValue = playerControl.stats.engagement.current;
+        float currentValue = playerControl.stats.engagement.GetPercentage();
         var level = GetEngagementLevel(currentValue);
 
         UpdateReactions(level);
@@ -202,28 +202,34 @@ public class PostManager : SingletonMonobehaviour<PostManager>
         switch (level)
         {
             case EngagementLevel.Low:
-                angryCount += Random.Range(deltaMin, deltaMax + 1);
+                likeCount -= Random.Range(deltaMin, deltaMax + 1);
+                heartCount -= Random.Range(deltaMin, deltaMax + 1);
+                angryCount += Random.Range(deltaMax + 1, deltaMax + 4);
                 break;
 
             case EngagementLevel.Medium:
-                likeCount += Random.Range(deltaMin, deltaMax + 1);
+                likeCount += Random.Range(deltaMin, deltaMax + 2);
+                heartCount += Random.Range(deltaMin, deltaMax + 2);
+                angryCount += Random.Range(deltaMin, deltaMax + 1);
                 break;
 
             case EngagementLevel.High:
-                heartCount += Random.Range(deltaMin, deltaMax + 1);
-                likeCount += Random.Range(deltaMin, deltaMax + 1);
+                likeCount += Random.Range(deltaMax, deltaMax + 3);
+                heartCount += Random.Range(deltaMax, deltaMax + 3);
+                angryCount -= Random.Range(deltaMin, deltaMax);
                 break;
 
             case EngagementLevel.VeryHigh:
-                heartCount += Random.Range(deltaMin + 2, deltaMax + 3);
-                likeCount += Random.Range(deltaMin + 2, deltaMax + 3);
+                likeCount += Random.Range(deltaMax + 2, deltaMax + 5);
+                heartCount += Random.Range(deltaMax + 2, deltaMax + 5);
+                angryCount -= Random.Range(deltaMax, deltaMax + 4);
                 break;
         }
 
         int max = 10000;
-        likeCount = Mathf.Min(likeCount, max);
-        heartCount = Mathf.Min(heartCount, max);
-        angryCount = Mathf.Min(angryCount, max);
+        likeCount = Mathf.Clamp(likeCount, 0, max);
+        heartCount = Mathf.Clamp(heartCount, 0, max);
+        angryCount = Mathf.Clamp(angryCount, 0, max);
 
         UpdateReactionUI();
     }
@@ -231,8 +237,8 @@ public class PostManager : SingletonMonobehaviour<PostManager>
     // Refresh reaction UI texts
     private void UpdateReactionUI()
     {
-        likeText.text = likeCount.ToString();
         heartText.text = heartCount.ToString();
+        likeText.text = likeCount.ToString();
         angryText.text = angryCount.ToString();
     }
 
@@ -243,9 +249,9 @@ public class PostManager : SingletonMonobehaviour<PostManager>
     // Convert engagement float to tier
     private EngagementLevel GetEngagementLevel(float value)
     {
-        if (value <= 30f) return EngagementLevel.Low;
-        if (value <= 60f) return EngagementLevel.Medium;
-        if (value <= 90f) return EngagementLevel.High;
+        if (value <= .3f) return EngagementLevel.Low;
+        if (value <= .6f) return EngagementLevel.Medium;
+        if (value <= .9f) return EngagementLevel.High;
         return EngagementLevel.VeryHigh;
     }
 
