@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
@@ -15,6 +16,9 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
     [SerializeField] private int statPoints = 0;
     private int tempStatPoints = 0;
 
+    [Header("Buttons")]
+    [SerializeField] private Button applyButton;
+
     private readonly List<StatContainer> spawnedContainers = new();
 
     // ─────────────────────────────────────────────────────
@@ -24,6 +28,13 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
     private void Start()
     {
         InitializeStatUI();
+        SetupListeners();
+    }
+
+    private void SetupListeners()
+    {
+        if (applyButton != null)
+            applyButton.onClick.AddListener(ApplyAll);
     }
 
     // ─────────────────────────────────────────────────────
@@ -41,11 +52,20 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
             spawnedContainers.Add(container);
         }
 
-        UpdateAllStatButtons();
+        UpdateStatUpgradeUI();
         UpdateStatPointUI();
     }
 
-    public void UpdateAllStatButtons()
+    /// <summary>
+    /// Update button states and apply button interactability for all stat upgrades.
+    /// </summary>
+    public void UpdateStatUpgradeUI()
+    {
+        UpdateAllStatButtons();
+        UpdateApplyButtonState();
+    }
+
+    private void UpdateAllStatButtons()
     {
         foreach (var container in spawnedContainers)
             container.UpdateButtonStates();
@@ -54,6 +74,24 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
     public void UpdateStatPointUI()
     {
         UIManager.Instance?.UpdateStatPoints(GetRemainingPoints());
+    }
+
+    private void UpdateApplyButtonState()
+    {
+        if (applyButton == null) return;
+
+        bool hasPendingUpgrade = false;
+
+        foreach (var container in spawnedContainers)
+        {
+            if (container.GetPendingLevel() > 0)
+            {
+                hasPendingUpgrade = true;
+                break;
+            }
+        }
+
+        applyButton.interactable = hasPendingUpgrade;
     }
 
     // ─────────────────────────────────────────────────────
@@ -66,8 +104,10 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
             container.CommitPendingLevel();
 
         ApplyStatPoints();
-        UpdateAllStatButtons();
+        UpdateStatUpgradeUI();
         UpdateStatPointUI();
+
+        playerControl.stats.UpdateScaledStats();
     }
 
     public void ResetAll()
@@ -76,7 +116,7 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
             container.ResetPendingLevel();
 
         ResetTempStatPoints();
-        UpdateAllStatButtons();
+        UpdateStatUpgradeUI();
         UpdateStatPointUI();
     }
 
@@ -86,7 +126,7 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
             container.ResetPendingLevel();
 
         ResetTempStatPoints();
-        UpdateAllStatButtons();
+        UpdateStatUpgradeUI();
         UpdateStatPointUI();
     }
 
@@ -97,7 +137,7 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
     public void AddStatPoint()
     {
         statPoints++;
-        UpdateAllStatButtons();
+        UpdateStatUpgradeUI();
         UpdateStatPointUI();
     }
 

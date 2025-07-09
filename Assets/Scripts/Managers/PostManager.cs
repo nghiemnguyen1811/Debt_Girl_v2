@@ -87,7 +87,7 @@ public class PostManager : SingletonMonobehaviour<PostManager>
         if (!canPost) return;
 
         CreatePost();
-        playerControl.stats.ApplyEngagementChange(rewardOnPost);
+        playerControl.stats.ApplyStatChange(StatType.IncomeRate, rewardOnPost);
 
         if (!hasPostedFirstTime)
             hasPostedFirstTime = true;
@@ -139,7 +139,7 @@ public class PostManager : SingletonMonobehaviour<PostManager>
 
         while (true)
         {
-            playerControl.stats.ApplyEngagementChange(-decayRate * Time.deltaTime);
+            playerControl.stats.ApplyStatChange(StatType.IncomeRate, -decayRate * Time.deltaTime);
             timer += Time.deltaTime;
 
             if (timer >= fxUpdateInterval)

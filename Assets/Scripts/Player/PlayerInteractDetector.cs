@@ -19,6 +19,17 @@ public class PlayerInteractDetector : MonoBehaviour
     [SerializeField] private CanvasGroup interactableButton;
     [SerializeField] private Slider durationSlider;
 
+    [Header("Energy Warning Messages")]
+    [TextArea(2, 5)]
+    [SerializeField]
+    private string[] energyWarningMessages = {
+        "Not enough energy.",
+        "You're too tired for that.",
+        "Better rest first.",
+        "This action requires more energy.",
+        "Your energy is too low."
+    };
+
     #endregion
 
     #region === Private Fields ===
@@ -120,11 +131,19 @@ public class PlayerInteractDetector : MonoBehaviour
     {
         if (CurrentInteractable == null || IsInteracting) return;
 
+        if (control.stats.energy.current < -CurrentInteractable.GetEnergyAmount())
+        {
+            string warning = energyWarningMessages[Random.Range(0, energyWarningMessages.Length)];
+            UIManager.Instance.ShowWarningText(warning);
+            return;
+        }
+
         IsInteracting = true;
         originalPosition = transform.position;
         originalRotation = transform.rotation;
 
         Transform point = CurrentInteractable.GetInteractPoint();
+
         if (point != null)
             transform.SetPositionAndRotation(point.position, point.rotation);
 
@@ -166,16 +185,16 @@ public class PlayerInteractDetector : MonoBehaviour
             switch (data.affectType)
             {
                 case AffectType.Mood:
-                    control.stats.ApplyMoodChange(data.moodAmount);
+                    control.stats.ApplyStatChange(StatType.Mood, data.moodAmount);
                     break;
 
                 case AffectType.Energy:
-                    control.stats.ApplyEnergyChange(data.energyAmount);
+                    control.stats.ApplyStatChange(StatType.Productivity, data.energyAmount);
                     break;
 
                 case AffectType.Both:
-                    control.stats.ApplyMoodChange(data.moodAmount);
-                    control.stats.ApplyEnergyChange(data.energyAmount);
+                    control.stats.ApplyStatChange(StatType.Mood, data.moodAmount);
+                    control.stats.ApplyStatChange(StatType.Productivity, data.energyAmount);
                     break;
             }
 

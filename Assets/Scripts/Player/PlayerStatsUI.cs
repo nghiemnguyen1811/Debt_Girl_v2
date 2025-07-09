@@ -2,10 +2,6 @@
 using UnityEngine.UI;
 using DG.Tweening;
 
-/// <summary>
-/// Controls the UI display of player stats: Mood, Energy, and Engagement.
-/// Uses DOTween to animate slider transitions.
-/// </summary>
 [RequireComponent(typeof(PlayerControl))]
 public class PlayerStatsUI : MonoBehaviour
 {
@@ -44,7 +40,7 @@ public class PlayerStatsUI : MonoBehaviour
     #region === Public Methods ===
 
     /// <summary>
-    /// Initializes the UI sliders and sets their max values based on player stats.
+    /// Initialize the maximum values for all stat sliders based on player stats.
     /// </summary>
     public void InitUI()
     {
@@ -54,68 +50,90 @@ public class PlayerStatsUI : MonoBehaviour
             return;
         }
 
-        if (engagementSlider != null)
-            engagementSlider.maxValue = playerStats.playerStatsSO.maxEngagement;
-
-        if (moodSlider != null)
-            moodSlider.maxValue = playerStats.playerStatsSO.maxMood;
-
-        if (energySlider != null)
-            energySlider.maxValue = playerStats.playerStatsSO.maxEnergy;
+        SetSliderMaxValue(StatType.IncomeRate);
+        SetSliderMaxValue(StatType.Productivity);
+        SetSliderMaxValue(StatType.Mood);
 
         UpdateAll();
     }
 
     /// <summary>
-    /// Smoothly updates the engagement slider.
+    /// Update a specific stat slider based on the given StatType.
     /// </summary>
-    public void UpdateEngagementUI()
+    /// <param name="type">The type of stat to update.</param>
+    public void UpdateStatUI(StatType type)
     {
-        if (engagementSlider != null)
+        switch (type)
         {
-            engagementTween?.Kill();
-            engagementTween = engagementSlider
-                .DOValue(playerStats.engagement.current, tweenDuration)
-                .SetEase(Ease.OutCubic);
+            case StatType.IncomeRate:
+                UpdateSliderValue(ref engagementTween, engagementSlider, playerStats.engagement.current);
+                break;
+
+            case StatType.Productivity:
+                UpdateSliderValue(ref energyTween, energySlider, playerStats.energy.current);
+                break;
+
+            case StatType.Mood:
+                UpdateSliderValue(ref moodTween, moodSlider, playerStats.mood.current);
+                break;
         }
     }
 
     /// <summary>
-    /// Smoothly updates the mood slider.
-    /// </summary>
-    public void UpdateMoodUI()
-    {
-        if (moodSlider != null)
-        {
-            moodTween?.Kill();
-            moodTween = moodSlider
-                .DOValue(playerStats.mood.current, tweenDuration)
-                .SetEase(Ease.OutCubic);
-        }
-    }
-
-    /// <summary>
-    /// Smoothly updates the energy slider.
-    /// </summary>
-    public void UpdateEnergyUI()
-    {
-        if (energySlider != null)
-        {
-            energyTween?.Kill();
-            energyTween = energySlider
-                .DOValue(playerStats.energy.current, tweenDuration)
-                .SetEase(Ease.OutCubic);
-        }
-    }
-
-    /// <summary>
-    /// Updates all three stat sliders (mood, energy, engagement).
+    /// Update all stat sliders (Mood, Energy, Engagement).
     /// </summary>
     public void UpdateAll()
     {
-        UpdateMoodUI();
-        UpdateEnergyUI();
-        UpdateEngagementUI();
+        UpdateStatUI(StatType.IncomeRate);
+        UpdateStatUI(StatType.Productivity);
+        UpdateStatUI(StatType.Mood);
+    }
+
+    #endregion
+
+    #region === Private Methods ===
+
+    /// <summary>
+    /// Set the maximum value for a specific stat slider based on player stats.
+    /// </summary>
+    /// <param name="type">The type of stat to configure.</param>
+    private void SetSliderMaxValue(StatType type)
+    {
+        if (playerStats == null) return;
+
+        switch (type)
+        {
+            case StatType.IncomeRate:
+                if (engagementSlider != null)
+                    engagementSlider.maxValue = playerStats.playerStatsSO.maxEngagement;
+                break;
+
+            case StatType.Productivity:
+                if (energySlider != null)
+                    energySlider.maxValue = playerStats.GetScaledStatValue(playerStats.playerStatsSO.maxEnergy);
+                break;
+
+            case StatType.Mood:
+                if (moodSlider != null)
+                    moodSlider.maxValue = playerStats.GetScaledStatValue(playerStats.playerStatsSO.maxMood);
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Animate a slider's value smoothly using DOTween.
+    /// </summary>
+    /// <param name="tween">Reference to the tween instance for this slider.</param>
+    /// <param name="slider">The UI slider to update.</param>
+    /// <param name="value">The target value to animate to.</param>
+    private void UpdateSliderValue(ref Tween tween, Slider slider, float value)
+    {
+        if (slider == null) return;
+
+        tween?.Kill();
+        tween = slider
+            .DOValue(value, tweenDuration)
+            .SetEase(Ease.OutCubic);
     }
 
     #endregion

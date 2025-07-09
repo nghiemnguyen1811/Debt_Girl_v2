@@ -81,7 +81,7 @@ public class MoodManager : SingletonMonobehaviour<MoodManager>
         while (true)
         {
             if (totalDecayRate > 0f)
-                playerControl.stats.ApplyMoodChange(-totalDecayRate * Time.deltaTime);
+                playerControl.stats.ApplyStatChange(StatType.Mood, -totalDecayRate * Time.deltaTime);
 
             yield return null;
         }

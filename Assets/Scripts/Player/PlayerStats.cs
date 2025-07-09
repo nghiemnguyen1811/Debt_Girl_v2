@@ -28,7 +28,6 @@ public class PlayerStats : MonoBehaviour
 
     #region === Unity Events ===
 
-    // Called when the object is initialized
     private void Start()
     {
         control = GetComponent<PlayerControl>();
@@ -49,9 +48,94 @@ public class PlayerStats : MonoBehaviour
 
     #endregion
 
-    #region === Initialization ===
+    #region === Public Methods ===
 
-    // Ensure playerStatsSO is assigned
+    /// <summary>
+    /// Apply a stat value change based on StatType and amount.
+    /// </summary>
+    public void ApplyStatChange(StatType type, float amount)
+    {
+        if (amount == 0) return;
+
+        switch (type)
+        {
+            case StatType.Mood:
+                ModifyStat(ref mood, amount);
+                break;
+
+            case StatType.Productivity:
+                ModifyStat(ref energy, amount);
+                break;
+
+            case StatType.IncomeRate:
+                ModifyStat(ref engagement, amount);
+                break;
+        }
+
+        control.statsUI?.UpdateStatUI(type);
+    }
+
+    /// <summary>
+    /// Re-initialize max values for a specific stat based on upgrades.
+    /// </summary>
+    public void InitializeStatByType(StatType type)
+    {
+        switch (type)
+        {
+            case StatType.Mood:
+                mood.SetMax(GetScaledStatValue(playerStatsSO.maxMood));
+                break;
+
+            case StatType.Productivity:
+                energy.SetMax(GetScaledStatValue(playerStatsSO.maxEnergy));
+                break;
+        }
+    }
+
+    /// <summary>
+    /// Re-initialize all upgradable stats and update UI.
+    /// </summary>
+    public void UpdateScaledStats()
+    {
+        InitializeStatByType(StatType.Mood);
+        InitializeStatByType(StatType.Productivity);
+        UpdateStatsUI();
+    }
+
+    /// <summary>
+    /// Initialize and refresh stat UI elements.
+    /// </summary>
+    public void UpdateStatsUI()
+    {
+        control.statsUI?.InitUI();
+    }
+
+    /// <summary>
+    /// Calculate a scaled stat value based on base value and IncomeRate upgrade level.
+    /// </summary>
+    public float GetScaledStatValue(float baseValue)
+    {
+        int incomeRateLevel = StatUpgradeManager.Instance.GetLevelOf(StatType.IncomeRate);
+        return baseValue + 10 * (incomeRateLevel - 1);
+    }
+
+    #endregion
+
+    #region === Private Methods ===
+
+    /// <summary>
+    /// Initialize all stat values.
+    /// </summary>
+    private void InitializeStats()
+    {
+        engagement.Init(playerStatsSO.maxEngagement, 50f);
+        energy.Init(GetScaledStatValue(playerStatsSO.maxEnergy));
+        mood.Init(GetScaledStatValue(playerStatsSO.maxMood));
+    }
+
+    /// <summary>
+    /// Validate that PlayerStatsSO is assigned.
+    /// </summary>
     private bool ValidateSetup()
     {
         if (playerStatsSO == null)
@@ -60,66 +144,16 @@ public class PlayerStats : MonoBehaviour
             enabled = false;
             return false;
         }
-
         return true;
     }
 
-    // Initialize all stat values
-    private void InitializeStats()
+    /// <summary>
+    /// Add or subtract a value from a stat.
+    /// </summary>
+    private void ModifyStat(ref StatValue stat, float amount)
     {
-        engagement.Init(playerStatsSO.maxEngagement, 50f); // Start at 50%
-        mood.Init(playerStatsSO.maxMood);
-        energy.Init(playerStatsSO.maxEnergy);
-    }
-
-    // Initialize and refresh stat UI elements
-    private void UpdateStatsUI()
-    {
-        control.statsUI?.InitUI();
-        control.statsUI?.UpdateAll();
-    }
-
-    #endregion
-
-    #region === Stat Modifiers ===
-
-    // Modify mood value and update UI
-    public void ApplyMoodChange(float amount)
-    {
-        if (amount == 0) return;
-
-        if (amount > 0)
-            mood.Add(amount);
-        else
-            mood.Subtract(-amount);
-
-        control.statsUI?.UpdateMoodUI();
-    }
-
-    // Modify energy value and update UI
-    public void ApplyEnergyChange(float amount)
-    {
-        if (amount == 0) return;
-
-        if (amount > 0)
-            energy.Add(amount);
-        else
-            energy.Subtract(-amount);
-
-        control.statsUI?.UpdateEnergyUI();
-    }
-
-    // Modify engagement value and update UI
-    public void ApplyEngagementChange(float amount)
-    {
-        if (amount == 0) return;
-
-        if (amount > 0)
-            engagement.Add(amount);
-        else
-            engagement.Subtract(-amount);
-
-        control.statsUI?.UpdateEngagementUI();
+        if (amount > 0) stat.Add(amount);
+        else stat.Subtract(-amount);
     }
 
     #endregion
@@ -133,46 +167,39 @@ public class StatValue
     public float current;
     public float max;
 
-    // Initialize with full value
     public void Init(float value)
     {
         current = value;
         max = value;
     }
 
-    // Initialize with custom current and max
     public void Init(float maxValue, float currentValue)
     {
         max = maxValue;
         current = Mathf.Clamp(currentValue, 0, max);
     }
 
-    // Set new max while clamping current
     public void SetMax(float newMax)
     {
         max = newMax;
         current = Mathf.Clamp(current, 0, max);
     }
 
-    // Add to current with clamping
     public void Add(float amount)
     {
         current = Mathf.Clamp(current + amount, 0, max);
     }
 
-    // Subtract from current with clamping
     public void Subtract(float amount)
     {
         current = Mathf.Clamp(current - amount, 0, max);
     }
 
-    // Get current value as a percentage of max
     public float GetPercentage()
     {
         return max == 0 ? 0 : current / max;
     }
 
-    // Check if the stat changed enough to matter
     public bool IsDifferentEnough(float previous, float threshold = 0.01f)
     {
         return Mathf.Abs(current - previous) > threshold;

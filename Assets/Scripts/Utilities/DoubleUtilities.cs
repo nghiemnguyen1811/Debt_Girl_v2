@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
 
 public static class DoubleUtilities
 {
@@ -11,7 +9,7 @@ public static class DoubleUtilities
     public static string ToIdleNotation(double value)
     {
         if (value < 1000)
-            return value.ToString();
+            return Math.Round(value).ToString();
 
         double tValue = value;
         int abbreviationIndex = -1;
@@ -25,6 +23,7 @@ public static class DoubleUtilities
         // Nếu vượt quá giới hạn abbreviation có sẵn thì dùng ScientificNotation
         if (abbreviationIndex == -1)
             return value.ToString();
+
         else if (abbreviationIndex >= abbreviations.Length)
             return ToScientificNotation(value);
 

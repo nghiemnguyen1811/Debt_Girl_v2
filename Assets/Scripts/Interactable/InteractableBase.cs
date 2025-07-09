@@ -49,6 +49,11 @@ public abstract class InteractableBase : MonoBehaviour
     public virtual InteractableDataSO Data => data;
 
     /// <summary>
+    /// Returns the energy amount provided by this interactable.
+    /// </summary>
+    public virtual float GetEnergyAmount() => data != null ? data.energyAmount : 0f;
+
+    /// <summary>
     /// Returns the point used to align the player when interacting.
     /// </summary>
     public virtual Transform GetInteractPoint() => interactPoint;

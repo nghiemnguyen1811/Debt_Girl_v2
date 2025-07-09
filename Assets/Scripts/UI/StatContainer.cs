@@ -40,12 +40,11 @@ public class StatContainer : MonoBehaviour
 
     private void OnPlusClicked()
     {
-        if (StatUpgradeManager.Instance.TrySpendTempPoint())
-        {
-            pendingLevel++;
-            UpdatePendingUI();
-            StatUpgradeManager.Instance.UpdateAllStatButtons();
-        }
+        if (!StatUpgradeManager.Instance.TrySpendTempPoint()) return;
+
+        pendingLevel++;
+        UpdatePendingUI();
+        StatUpgradeManager.Instance.UpdateStatUpgradeUI();
     }
 
     private void OnMinusClicked()
@@ -55,7 +54,7 @@ public class StatContainer : MonoBehaviour
         pendingLevel--;
         StatUpgradeManager.Instance.RefundTempPoint();
         UpdatePendingUI();
-        StatUpgradeManager.Instance.UpdateAllStatButtons();
+        StatUpgradeManager.Instance.UpdateStatUpgradeUI();
     }
 
     private void UpdatePendingUI()
@@ -93,4 +92,5 @@ public class StatContainer : MonoBehaviour
     public int GetCurrentLevel() => statData != null ? statData.level : 0;
     public StatType GetStatType() => statData != null ? statData.statType : default;
     public StatDataSO GetStatData() => statData;
+    public int GetPendingLevel() => pendingLevel;
 }
