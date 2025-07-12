@@ -40,3 +40,11 @@ public enum EngagementLevel
     High,
     VeryHigh
 }
+
+public enum ItemType
+{
+    Consumable,
+    Material,
+    Equipment,
+    QuestItem
+}

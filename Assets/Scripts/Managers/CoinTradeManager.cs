@@ -129,6 +129,7 @@ public class CoinTradeManager : MonoBehaviour
         fluctuationCoroutine = StartCoroutine(CoinFluctuationLoop());
 
         UpdateUI();
+        AudioManager.Instance.PlayInteractSound(3);
     }
 
     private void HandleSell()
@@ -154,6 +155,7 @@ public class CoinTradeManager : MonoBehaviour
         }
 
         UpdateUI();
+        AudioManager.Instance.PlayInteractSound(1);
     }
 
     // ─────────────────────────────────────────────────────
