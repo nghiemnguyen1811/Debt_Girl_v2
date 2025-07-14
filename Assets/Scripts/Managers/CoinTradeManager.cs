@@ -44,13 +44,6 @@ public class CoinTradeManager : MonoBehaviour
 
     // ─────────────────────────────────────────────────────
 
-    private void OnEnable()
-    {
-        buyAmount = 0;
-        sellAmount = 0;
-        UpdateUI();
-    }
-
     private void Start()
     {
         InitializeCoinValue();

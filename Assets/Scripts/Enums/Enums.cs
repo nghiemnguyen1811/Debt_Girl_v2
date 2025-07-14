@@ -43,8 +43,22 @@ public enum EngagementLevel
 
 public enum ItemType
 {
-    Consumable,
     Material,
+    CraftedFood,
+    Consumable,
     Equipment,
     QuestItem
+}
+
+public enum IngredientType
+{
+    None,
+    Meat,
+    Fish,
+    Butter,
+    Peanut,
+    Flour,
+    Sugar,
+    Egg,
+    Milk
 }
