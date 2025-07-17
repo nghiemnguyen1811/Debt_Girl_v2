@@ -47,6 +47,7 @@ public class MoneyManager : SingletonMonobehaviour<MoneyManager>
         }
 
         DebtManager.Instance.RefreshPayButton();
+        ShopManager.Instance.UpdateAllUI();
     }
 
     /// <summary>

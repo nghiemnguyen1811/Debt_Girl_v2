@@ -182,21 +182,8 @@ public class PlayerInteractDetector : MonoBehaviour
 
         if (data != null)
         {
-            switch (data.affectType)
-            {
-                case AffectType.Mood:
-                    control.stats.ApplyStatChange(StatType.Mood, data.moodAmount);
-                    break;
-
-                case AffectType.Energy:
-                    control.stats.ApplyStatChange(StatType.Productivity, data.energyAmount);
-                    break;
-
-                case AffectType.Both:
-                    control.stats.ApplyStatChange(StatType.Mood, data.moodAmount);
-                    control.stats.ApplyStatChange(StatType.Productivity, data.energyAmount);
-                    break;
-            }
+            control.stats.ApplyStatChange(StatType.Mood, data.moodAmount);
+            control.stats.ApplyStatChange(StatType.Productivity, data.energyAmount);
 
             if (data.earnsMoney)
                 MoneyManager.Instance.ChangeMoneys(data.moneyEarned);

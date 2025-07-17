@@ -6,7 +6,7 @@ using System.Collections;
 /// <summary>
 /// Manages coin trading with delayed hidden price fluctuation logic.
 /// </summary>
-public class CoinTradeManager : MonoBehaviour
+public class CoinTradeManager : SingletonMonobehaviour<CoinTradeManager>
 {
     [Header("Coin UI")]
     [SerializeField] private Image coinTrendImage;
@@ -149,6 +149,20 @@ public class CoinTradeManager : MonoBehaviour
 
         UpdateUI();
         AudioManager.Instance.PlayInteractSound(1);
+    }
+
+    // ─────────────────────────────────────────────────────
+    // Reset Logic
+    // ─────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Resets coin trading state to initial values.
+    /// </summary>
+    public void ResetAll()
+    {
+        buyAmount = 0;
+        sellAmount = 0;
+        UpdateUI();
     }
 
     // ─────────────────────────────────────────────────────

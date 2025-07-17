@@ -1,16 +1,23 @@
-﻿using UnityEngine;
+﻿using NUnit.Framework.Interfaces;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class ShopManager : SingletonMonobehaviour<ShopManager>
 {
     [Header("References")]
-    [SerializeField] private Transform containerParent;
+    [SerializeField] private Transform foodContainerParent;
 
     [Header("Data & Prefab")]
-    [SerializeField] private List<ItemData> itemList;
+    [SerializeField] private List<ItemDataSO> shopItemList;
     [SerializeField] private ShopItemContainer shopItemPrefab;
 
-    private readonly List<ShopItemContainer> spawnedContainers = new();
+    [Header("Buttons")]
+    [SerializeField] private Button purchaseButton;
+
+    private readonly List<ShopItemContainer> spawnedFoodContainers = new();
+    private double tempTotalPrice;
 
     // ─────────────────────────────────────────────────────
     // Mono
@@ -18,52 +25,177 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
 
     private void Start()
     {
-        InitializeItemUI();
+        InitializeFoodUI();
+        SetupListeners();
+    }
+
+    private void SetupListeners()
+    {
+        if (purchaseButton != null)
+            purchaseButton.onClick.AddListener(ApplyPurchase);
     }
 
     // ─────────────────────────────────────────────────────
     // UI Initialization
     // ─────────────────────────────────────────────────────
 
-    private void InitializeItemUI()
+    private bool IsFoodItem(ItemDataSO item)
     {
-        ClearExistingItems();
-
-        foreach (ItemData itemData in itemList)
-        {
-            var container = Instantiate(shopItemPrefab, containerParent);
-            container.Configure(itemData);
-            spawnedContainers.Add(container);
-        }
+        return item.itemType == ItemType.Material || item.itemType == ItemType.Consumable;
     }
 
-    private void ClearExistingItems()
+    private void InitializeFoodUI()
     {
-        foreach (var container in spawnedContainers)
+        ClearExistingContainers();
+
+        var filteredItems = shopItemList.Where(IsFoodItem);
+
+        foreach (var item in filteredItems)
+        {
+            var container = Instantiate(shopItemPrefab, foodContainerParent);
+            container.Configure(item);
+            spawnedFoodContainers.Add(container);
+        }
+
+        UpdateAllUI();
+    }
+
+    private void ClearExistingContainers()
+    {
+        foreach (var container in spawnedFoodContainers)
         {
             if (container != null)
                 Destroy(container.gameObject);
         }
 
-        spawnedContainers.Clear();
+        spawnedFoodContainers.Clear();
+    }
+
+    public void UpdateAllUI()
+    {
+        UpdateAllItemButtons();
+        UpdatePurchaseButtonState();
+        UpdateTotalPriceUI();
+    }
+
+    private void UpdateAllItemButtons()
+    {
+        foreach (var container in spawnedFoodContainers)
+            container.UpdateButtonStates();
+    }
+
+    private void UpdatePurchaseButtonState()
+    {
+        if (purchaseButton == null) return;
+
+        bool hasItemToBuy = false;
+
+        foreach (var container in spawnedFoodContainers)
+        {
+            if (container.GetCurrentQuantity() > 0)
+            {
+                hasItemToBuy = true;
+                break;
+            }
+        }
+
+        purchaseButton.interactable = hasItemToBuy;
+    }
+
+    private void UpdateTotalPriceUI()
+    {
+        UIManager.Instance?.UpdateTotalPriceUI(tempTotalPrice);
+    }
+
+    // ─────────────────────────────────────────────────────
+    // Purchase Logic
+    // ─────────────────────────────────────────────────────
+
+    public void ApplyPurchase()
+    {
+        foreach (var container in spawnedFoodContainers)
+        {
+            ItemDataSO itemData = container.GetItemData();
+            int quantity = container.GetCurrentQuantity();
+
+            Inventory.Instance.AddItem(itemData, quantity);
+            container.ConfirmPurchase();
+        }
+
+        DeductTotalPrice();
+        UpdateAllUI();
+    }
+
+    public void ResetAllSelections()
+    {
+        foreach (var container in spawnedFoodContainers)
+            container.ResetSelection();
+
+        ResetTempTotalPrice();
+        UpdateAllUI();
+    }
+
+    private void DeductTotalPrice()
+    {
+        MoneyManager.Instance.ChangeMoneys(-tempTotalPrice);
+        tempTotalPrice = 0;
+
+        AudioManager.Instance.PlayInteractSound(1);
+    }
+
+    private void ResetTempTotalPrice()
+    {
+        tempTotalPrice = 0;
+    }
+
+    // ─────────────────────────────────────────────────────
+    // Temporary Price Control
+    // ─────────────────────────────────────────────────────
+
+    public bool TryAddToTempPrice(double price)
+    {
+        if (MoneyManager.Instance.HasEnoughMoney(tempTotalPrice + price))
+        {
+            tempTotalPrice += price;
+            UpdateTotalPriceUI();
+            return true;
+        }
+
+        return false;
+    }
+
+    public void RefundFromTempPrice(double price)
+    {
+        if (tempTotalPrice > 0)
+        {
+            tempTotalPrice -= price;
+            UpdateTotalPriceUI();
+        }
+    }
+
+    public bool HasSufficientFunds(double price)
+    {
+        return MoneyManager.Instance.GetMoneys() - tempTotalPrice > price;
     }
 
     // ─────────────────────────────────────────────────────
     // Lookup & Utility
     // ─────────────────────────────────────────────────────
 
-    public ShopItemContainer GetContainerByItem(ItemData itemData)
+    public ShopItemContainer GetContainerByItem(ItemDataSO itemData)
     {
-        return spawnedContainers.Find(c => c.name == itemData.name);
+        return spawnedFoodContainers.Find(c => c.name == itemData.name);
     }
 
-    public List<ShopItemContainer> GetAllContainers()
-    {
-        return spawnedContainers;
-    }
+    public List<ShopItemContainer> GetAllContainers() => spawnedFoodContainers;
 
     public void RefreshShop()
     {
-        InitializeItemUI();
+        InitializeFoodUI();
+    }
+
+    public void ForceUIRefresh()
+    {
+        UpdateAllUI();
     }
 }

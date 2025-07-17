@@ -105,7 +105,7 @@ public class PlayerStats : MonoBehaviour
     /// <summary>
     /// Initialize and refresh stat UI elements.
     /// </summary>
-    public void UpdateStatsUI()
+    private void UpdateStatsUI()
     {
         control.statsUI?.InitUI();
     }

@@ -5,14 +5,6 @@ public enum StatType
     Mood
 }
 
-public enum AffectType
-{
-    None,
-    Mood,
-    Energy,
-    Both
-}
-
 public enum MoodConditionType
 {
     None,
@@ -60,5 +52,7 @@ public enum IngredientType
     Flour,
     Sugar,
     Egg,
-    Milk
+    Milk,
+    Pizza,
+    DrinkCup
 }

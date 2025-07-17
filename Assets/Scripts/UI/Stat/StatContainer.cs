@@ -69,7 +69,7 @@ public class StatContainer : MonoBehaviour
 
     public void CommitPendingLevel()
     {
-        if (pendingLevel == 0) return;
+        if (pendingLevel <= 0) return;
 
         statData.level += pendingLevel;
         pendingLevel = 0;

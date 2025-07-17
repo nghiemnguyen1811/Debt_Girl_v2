@@ -14,7 +14,7 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
 
     [Header("Stat Points")]
     [SerializeField] private int statPoints = 0;
-    private int tempStatPoints = 0;
+    private int tempStatPoints;
 
     [Header("Buttons")]
     [SerializeField] private Button applyButton;
@@ -71,7 +71,7 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
             container.UpdateButtonStates();
     }
 
-    public void UpdateStatPointUI()
+    private void UpdateStatPointUI()
     {
         UIManager.Instance?.UpdateStatPoints(GetRemainingPoints());
     }
@@ -111,16 +111,6 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
     }
 
     public void ResetAll()
-    {
-        foreach (var container in spawnedContainers)
-            container.ResetPendingLevel();
-
-        ResetTempStatPoints();
-        UpdateStatUpgradeUI();
-        UpdateStatPointUI();
-    }
-
-    public void CancelUpgrade()
     {
         foreach (var container in spawnedContainers)
             container.ResetPendingLevel();

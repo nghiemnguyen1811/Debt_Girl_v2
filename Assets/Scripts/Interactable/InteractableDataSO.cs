@@ -22,10 +22,6 @@ public class InteractableDataSO : ScriptableObject
     [LabelText("Experience Gained")]
     public int experienceAmount = 0;
 
-    [Title("Affect Settings")]
-    [LabelText("Affect Type")]
-    public AffectType affectType = AffectType.None;
-
     [LabelText("Mood Amount")]
     [Range(-100f, 100f)]
     public float moodAmount = 0f;

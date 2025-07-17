@@ -1,14 +1,14 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
 public class ShopItemContainer : MonoBehaviour
 {
     [Header("UI References")]
-    [SerializeField] private Image itemIcon;
-    [SerializeField] private TextMeshProUGUI itemName;
-    [SerializeField] private TextMeshProUGUI itemDescription;
-    [SerializeField] private TextMeshProUGUI priceText;
+    [SerializeField] private Image itemIconImage;
+    [SerializeField] private TextMeshProUGUI itemNameText;
+    [SerializeField] private TextMeshProUGUI itemDescriptionText;
+    [SerializeField] private TextMeshProUGUI itemPriceText;
     [SerializeField] private TextMeshProUGUI quantityText;
     [SerializeField] private TextMeshProUGUI energyText;
     [SerializeField] private TextMeshProUGUI moodText;
@@ -16,73 +16,126 @@ public class ShopItemContainer : MonoBehaviour
     [SerializeField] private Button plusButton;
     [SerializeField] private Transform statGroupRoot;
 
-    private int currentQuantity = 1;
-    private int itemPrice = 0;
+    private ItemDataSO itemData;
+    private int currentQuantity;
+    private double itemPrice;
 
-    // Called when the object is initialized
+    // ─────────────────────────────────────────────────────
+    // Mono
+    // ─────────────────────────────────────────────────────
+
     private void Start()
     {
-        minusButton.onClick.AddListener(() => ChangeQuantity(-1));
-        plusButton.onClick.AddListener(() => ChangeQuantity(1));
+        plusButton.onClick.AddListener(OnPlusClicked);
+        minusButton.onClick.AddListener(OnMinusClicked);
         UpdateQuantityUI();
     }
 
-    // Configures the shop item UI with given item data
-    public void Configure(ItemData itemData)
+    // ─────────────────────────────────────────────────────
+    // Setup
+    // ─────────────────────────────────────────────────────
+
+    public void Configure(ItemDataSO data)
     {
+        itemData = data;
+        currentQuantity = 0;
+
         if (itemData == null) return;
 
-        itemIcon.sprite = itemData.icon;
-        itemName.text = itemData.itemName;
-        itemDescription.text = itemData.description;
-        itemPrice = itemData.price;
-        priceText.text = $"{itemPrice}$";
+        itemIconImage.sprite = data.icon;
+        itemNameText.text = data.itemName;
+        itemDescriptionText.text = data.description;
+        itemPrice = data.price;
+        itemPriceText.text = $"{itemPrice}$";
 
-        HandleStatDisplay(itemData);
-        currentQuantity = 1;
+        DisplayStatUI(data);
         UpdateQuantityUI();
     }
 
-    // Displays energy/mood stats if applicable
-    private void HandleStatDisplay(ItemData itemData)
+    private void DisplayStatUI(ItemDataSO data)
     {
         foreach (Transform stat in statGroupRoot)
             stat.gameObject.SetActive(false);
 
-        bool hasEnergy = itemData.energy > 0;
-        bool hasMood = itemData.mood > 0;
+        bool hasEnergy = data.energy > 0;
+        bool hasMood = data.mood > 0;
 
         if (hasEnergy)
         {
             statGroupRoot.GetChild(0).gameObject.SetActive(true);
-            energyText.text = itemData.energy.ToString();
+            energyText.text = data.energy.ToString();
         }
 
         if (hasMood)
         {
             statGroupRoot.GetChild(1).gameObject.SetActive(true);
-            moodText.text = itemData.mood.ToString();
+            moodText.text = data.mood.ToString();
         }
 
         statGroupRoot.gameObject.SetActive(hasEnergy || hasMood);
     }
 
-    // Changes the quantity and updates the UI
-    private void ChangeQuantity(int delta)
+    // ─────────────────────────────────────────────────────
+    // Button Handlers
+    // ─────────────────────────────────────────────────────
+
+    private void OnPlusClicked()
     {
-        currentQuantity = Mathf.Max(1, currentQuantity + delta);
+        if (!ShopManager.Instance.TryAddToTempPrice(itemPrice)) return;
+
+        currentQuantity++;
         UpdateQuantityUI();
+        ShopManager.Instance.UpdateAllUI();
     }
 
-    // Updates the quantity text
+    private void OnMinusClicked()
+    {
+        if (currentQuantity <= 0) return;
+
+        currentQuantity--;
+        ShopManager.Instance.RefundFromTempPrice(itemPrice);
+        UpdateQuantityUI();
+        ShopManager.Instance.UpdateAllUI();
+    }
+
+    // ─────────────────────────────────────────────────────
+    // UI Update
+    // ─────────────────────────────────────────────────────
+
     private void UpdateQuantityUI()
     {
         quantityText.text = currentQuantity.ToString();
     }
 
-    // Returns the current quantity
-    public int GetCurrentQuantity() => currentQuantity;
+    public void UpdateButtonStates()
+    {
+        plusButton.interactable = ShopManager.Instance.HasSufficientFunds(itemPrice);
+        minusButton.interactable = currentQuantity > 0;
+    }
 
-    // Returns the total price based on quantity
-    public int GetTotalPrice() => currentQuantity * itemPrice;
+    // ─────────────────────────────────────────────────────
+    // Purchase Logic
+    // ─────────────────────────────────────────────────────
+
+    public void ConfirmPurchase()
+    {
+        if (currentQuantity <= 0) return;
+
+        currentQuantity = 0;
+        UpdateQuantityUI();
+    }
+
+    public void ResetSelection()
+    {
+        currentQuantity = 0;
+        UpdateQuantityUI();
+    }
+
+    // ─────────────────────────────────────────────────────
+    // Accessors
+    // ─────────────────────────────────────────────────────
+
+    public int GetCurrentQuantity() => currentQuantity;
+    public double GetTotalPrice() => currentQuantity * itemPrice;
+    public ItemDataSO GetItemData() => itemData;
 }

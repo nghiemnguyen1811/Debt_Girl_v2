@@ -3,7 +3,7 @@ using Sirenix.OdinInspector;
 using System.Collections.Generic;
 
 [CreateAssetMenu(fileName = "New Item", menuName = "Inventory/Item")]
-public class ItemData : ScriptableObject
+public class ItemDataSO : ScriptableObject
 {
     // ─────────────────────────────────────────────────────
     // Item Display Info
@@ -27,7 +27,7 @@ public class ItemData : ScriptableObject
     [LabelText("Item Type")]
     public ItemType itemType;
 
-    [ShowIf("@this.itemType == ItemType.Material")]
+    [ShowIf("@this.itemType == ItemType.Material || itemType == ItemType.Consumable")]
     [LabelText("Ingredient Type")]
     public IngredientType ingredientType = IngredientType.None;
 
@@ -35,20 +35,20 @@ public class ItemData : ScriptableObject
     [LabelText("Ingredients Needed")]
     public List<IngredientAmount> requiredIngredients = new List<IngredientAmount>();
 
-    [ShowIf("@this.itemType == ItemType.Consumable")]
+    [ShowIf("@itemType == ItemType.Consumable || itemType == ItemType.CraftedFood")]
     [LabelText("Energy Restored")]
     [Range(0, 100)]
     [SuffixLabel("pts", true)]
     public int energy = 0;
 
-    [ShowIf("@this.itemType == ItemType.Consumable")]
+    [ShowIf("@itemType == ItemType.Consumable || itemType == ItemType.CraftedFood")]
     [LabelText("Mood Boost")]
     [Range(0, 100)]
     [SuffixLabel("pts", true)]
     public int mood = 0;
 
     [LabelText("Price"), SuffixLabel("$", true), MinValue(0)]
-    public int price = 0;
+    public double price = 0;
 
     [ToggleLeft]
     [LabelText("Stackable")]

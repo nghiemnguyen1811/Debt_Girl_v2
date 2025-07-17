@@ -13,12 +13,15 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     [Header("Other UI Texts")]
     [SerializeField] private TextMeshProUGUI debtText;
     [SerializeField] private TextMeshProUGUI statPointText;
+    [SerializeField] private TextMeshProUGUI totalPriceText;
     [SerializeField] private TextMeshProUGUI warningText;
 
     [Header("UI Panels")]
     [SerializeField] private GameObject postPanel;
     [SerializeField] private GameObject upgradePanel;
     [SerializeField] private GameObject coinTradePanel;
+    [SerializeField] private GameObject shoppingPanel;
+    [SerializeField] private GameObject inventoryPanel;
 
     [Header("UI Buttons")]
     [SerializeField] private GameObject payDebtButton;
@@ -67,6 +70,12 @@ public class UIManager : SingletonMonobehaviour<UIManager>
             statPointText.text = $"Stat Points: {total}";
     }
 
+    public void UpdateTotalPriceUI(double total)
+    {
+        if (totalPriceText != null)
+            totalPriceText.text = DoubleUtilities.ToIdleNotation(total) + "$";
+    }
+
     #endregion
 
     // ─────────────────────────────────────────────────────
@@ -84,15 +93,38 @@ public class UIManager : SingletonMonobehaviour<UIManager>
 
     public void ToggleUpgradePanel(bool show)
     {
-        if (upgradePanel == null) return;
-
-        upgradePanel.SetActive(show);
-        if (!show) StatUpgradeManager.Instance.CancelUpgrade();
+        TogglePanel(upgradePanel, show, () => StatUpgradeManager.Instance.ResetAll());
     }
 
-    public void ToggleCoinTradePanel(bool show) => coinTradePanel?.SetActive(show);
+    public void ToggleCoinTradePanel(bool show)
+    {
+        TogglePanel(coinTradePanel, show, () => CoinTradeManager.Instance.ResetAll());
+    }
+
+    public void ToggleShoppingPanel(bool show)
+    {
+        TogglePanel(shoppingPanel, show, () => ShopManager.Instance.ResetAllSelections());
+    }
+
+    public void ToggleInventoryPanel(bool show)
+    {
+        TogglePanel(inventoryPanel, show, () => Inventory.Instance.DeSelectItem());
+    }
 
     public void TogglePayDebtButton(bool show) => payDebtButton?.SetActive(show);
+
+
+    /// <summary>
+    /// Generic panel toggler with optional callback when hiding.
+    /// </summary>
+    private void TogglePanel(GameObject panel, bool show, System.Action onHideCallback = null)
+    {
+        if (panel == null) return;
+
+        panel.SetActive(show);
+        if (!show)
+            onHideCallback?.Invoke();
+    }
 
     #endregion
 
