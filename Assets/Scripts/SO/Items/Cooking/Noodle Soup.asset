@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6acbbd15e75140948b9abbe0097c4bec, type: 3}
+  m_Name: Noodle Soup
+  m_EditorClassIdentifier: 
+  icon: {fileID: -108870395, guid: 4e2a8781c4ae171469315681a3eb2fd8, type: 3}
+  itemName: Noodle Soup
+  description: 'Instant noodles with meat and hot broth.
+
+'
+  itemType: 1
+  ingredientType: 14
+  requiredIngredients:
+  - ingredientType: 9
+    icon: {fileID: -1980084057, guid: 4e2a8781c4ae171469315681a3eb2fd8, type: 3}
+    amount: 1
+  - ingredientType: 1
+    icon: {fileID: -1582682049, guid: 4e2a8781c4ae171469315681a3eb2fd8, type: 3}
+    amount: 1
+  - ingredientType: 11
+    icon: {fileID: 833449269, guid: 4e2a8781c4ae171469315681a3eb2fd8, type: 3}
+    amount: 1
+  canBeSold: 0
+  sellPrice: 0
+  energy: 20
+  mood: 20
+  purchaseCost: 0
+  canStackItem: 0
+  maxStackAmount: 1

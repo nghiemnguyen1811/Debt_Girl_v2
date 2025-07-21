@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 4755114154761276438}
     m_Modifications:
     - target: {fileID: 111226878567151018, guid: 77968b965c9af954eb6e7029335e664f, type: 3}
@@ -21,11 +22,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 774892833248653072, guid: 77968b965c9af954eb6e7029335e664f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.205
+      value: 0.096
       objectReference: {fileID: 0}
     - target: {fileID: 774892833248653072, guid: 77968b965c9af954eb6e7029335e664f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.529
+      value: 0.275
       objectReference: {fileID: 0}
     - target: {fileID: 774892833248653072, guid: 77968b965c9af954eb6e7029335e664f, type: 3}
       propertyPath: m_LocalRotation.w
@@ -56,12 +57,21 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 77968b965c9af954eb6e7029335e664f, type: 3}
+--- !u!4 &1597176859144409810 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 774892833248653072, guid: 77968b965c9af954eb6e7029335e664f, type: 3}
+  m_PrefabInstance: {fileID: 2083679026962955714}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5077586874491939837
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 688564c8680b25047b7050e7fb2340cb, type: 3}
@@ -86,7 +96,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 688564c8680b25047b7050e7fb2340cb, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 688564c8680b25047b7050e7fb2340cb, type: 3}
       propertyPath: m_LocalRotation.y
@@ -112,7 +122,20 @@ PrefabInstance:
       propertyPath: m_Name
       value: Kitchen_E_06
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 688564c8680b25047b7050e7fb2340cb, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 688564c8680b25047b7050e7fb2340cb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1597176859144409810}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 688564c8680b25047b7050e7fb2340cb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5617491597341450221}
   m_SourcePrefab: {fileID: 100100000, guid: 688564c8680b25047b7050e7fb2340cb, type: 3}
 --- !u!4 &4755114154761276438 stripped
 Transform:
@@ -124,17 +147,24 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 688564c8680b25047b7050e7fb2340cb, type: 3}
   m_PrefabInstance: {fileID: 5077586874491939837}
   m_PrefabAsset: {fileID: 0}
---- !u!64 &-7403300077514356323
-MeshCollider:
+--- !u!65 &5617491597341450221
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5383595467358213804}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 2938526162309995569, guid: 688564c8680b25047b7050e7fb2340cb, type: 3}
+  serializedVersion: 3
+  m_Size: {x: 0.3699993, y: 0.43749884, z: 0.28500003}
+  m_Center: {x: -0.000000014901161, y: 0.21874942, z: 0.14249998}

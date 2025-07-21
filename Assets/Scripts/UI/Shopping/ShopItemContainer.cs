@@ -45,7 +45,7 @@ public class ShopItemContainer : MonoBehaviour
         itemIconImage.sprite = data.icon;
         itemNameText.text = data.itemName;
         itemDescriptionText.text = data.description;
-        itemPrice = data.price;
+        itemPrice = data.purchaseCost;
         itemPriceText.text = $"{itemPrice}$";
 
         DisplayStatUI(data);

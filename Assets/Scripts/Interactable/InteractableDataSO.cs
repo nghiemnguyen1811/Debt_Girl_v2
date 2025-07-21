@@ -1,13 +1,12 @@
-using Sirenix.OdinInspector;
+﻿using Sirenix.OdinInspector;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewInteractableData", menuName = "Interactables/Interactable Data")]
 public class InteractableDataSO : ScriptableObject
 {
-    [Title("Mood Condition")]
-    [LabelText("Target Mood Type")]
-    public MoodConditionType conditionType = MoodConditionType.None;
-
+    // ─────────────────────────────────────────────────────
+    // Interaction Settings
+    // ─────────────────────────────────────────────────────
     [Title("General Settings")]
     [LabelText("Object Name")]
     public string objectName = "Object";
@@ -16,11 +15,18 @@ public class InteractableDataSO : ScriptableObject
     public string animationName = "Idle";
 
     [LabelText("Interaction Duration (s)")]
+    [Min(0f)]
     public float interactionDuration = 2f;
 
-    [Range(0, 500)]
-    [LabelText("Experience Gained")]
-    public int experienceAmount = 0;
+    [LabelText("Play Animation Immediately")]
+    public bool playAnimationImmediately = true;
+
+    // ─────────────────────────────────────────────────────
+    // Mood & Energy Effects
+    // ─────────────────────────────────────────────────────
+    [Title("Mood & Energy Effects")]
+    [LabelText("Target Mood Type")]
+    public MoodConditionType conditionType = MoodConditionType.None;
 
     [LabelText("Mood Amount")]
     [Range(-100f, 100f)]
@@ -30,6 +36,9 @@ public class InteractableDataSO : ScriptableObject
     [Range(-100f, 100f)]
     public float energyAmount = 0f;
 
+    // ─────────────────────────────────────────────────────
+    // Income Settings
+    // ─────────────────────────────────────────────────────
     [Title("Income Settings")]
     [LabelText("Earns Money")]
     public bool earnsMoney = false;
@@ -38,4 +47,12 @@ public class InteractableDataSO : ScriptableObject
     [LabelText("Money Earned")]
     [Min(0)]
     public double moneyEarned = 0;
+
+#if UNITY_EDITOR
+    private void OnValidate()
+    {
+        if (interactionDuration < 0f)
+            interactionDuration = 0f;
+    }
+#endif
 }

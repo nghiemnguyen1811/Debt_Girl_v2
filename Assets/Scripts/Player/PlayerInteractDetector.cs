@@ -84,6 +84,7 @@ public class PlayerInteractDetector : MonoBehaviour
                 CurrentInteractable.OnExit();
                 CurrentInteractable = null;
             }
+
             return;
         }
 
@@ -151,10 +152,14 @@ public class PlayerInteractDetector : MonoBehaviour
             control.visualizer?.OffsetMoodIcon(CurrentInteractable.MoodIconOffset);
 
         string anim = CurrentInteractable.GetAnimationName();
-        control.animationHandler.SetBoolParameter(anim, true);
+
+        if (!string.IsNullOrEmpty(anim))
+            control.animationHandler.SetBoolParameter(anim, true);
+
         CurrentInteractable.OnInteract();
 
-        StartCoroutine(HandleInteraction(anim, CurrentInteractable.GetDuration()));
+        if (CurrentInteractable.ShouldPlayAnimationImmediately())
+            StartCoroutine(HandleInteraction(anim, CurrentInteractable.GetDuration()));
     }
 
     /// <summary>
@@ -195,6 +200,17 @@ public class PlayerInteractDetector : MonoBehaviour
         control.visualizer?.ResetMoodIconPosition();
 
         yield return new WaitForSeconds(0.5f);
+        IsInteracting = false;
+    }
+
+    /// <summary>
+    /// Immediately stops current interaction and resets state.
+    /// </summary>
+    public void StopCurrentInteraction()
+    {
+        if (CurrentInteractable != null)
+            CurrentInteractable.OnStopInteract();
+
         IsInteracting = false;
     }
 

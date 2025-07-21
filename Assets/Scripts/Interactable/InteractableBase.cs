@@ -92,6 +92,11 @@ public abstract class InteractableBase : MonoBehaviour
     /// </summary>
     public virtual float GetDuration() => data != null ? data.interactionDuration : 0f;
 
+    /// <summary>
+    /// Whether this interaction plays animation immediately or waits for user action (like UI selection).
+    /// </summary>
+    public virtual bool ShouldPlayAnimationImmediately() => data != null && data.playAnimationImmediately;
+
     #endregion
 
     #region === Interaction Events ===

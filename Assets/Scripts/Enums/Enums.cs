@@ -1,4 +1,4 @@
-public enum StatType
+﻿public enum StatType
 {
     IncomeRate,
     Productivity,
@@ -45,6 +45,8 @@ public enum ItemType
 public enum IngredientType
 {
     None,
+
+    // ───── Material ─────
     Meat,
     Fish,
     Butter,
@@ -53,6 +55,16 @@ public enum IngredientType
     Sugar,
     Egg,
     Milk,
+    InstantNoodles,
+    SpicyNoodles,
+    BottleWater,
+
+    // ───── Consumable ─────
     Pizza,
-    DrinkCup
+    DrinkCup,
+
+    // ───── CraftedFood ─────
+    NoodleSoup,
+    SpongeCake,
+    GrilledMeat
 }

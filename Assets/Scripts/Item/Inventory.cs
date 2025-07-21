@@ -38,7 +38,7 @@ public class Inventory : SingletonMonobehaviour<Inventory>
     [SerializeField] private Button dropButton;
 
     // ─────────────────────────────────────────────────────
-    // Messages
+    // Full Inventory Messages
     // ─────────────────────────────────────────────────────
     [Header("Full Inventory Messages")]
     [TextArea(2, 5)]
@@ -64,12 +64,11 @@ public class Inventory : SingletonMonobehaviour<Inventory>
     {
         useButton.onClick.AddListener(() => UseSelectedItem());
         dropButton.onClick.AddListener(() => DropSelectedItem());
-
         InitializeSlots();
     }
 
     /// <summary>
-    /// Instantiate all inventory slots and reset selection UI.
+    /// Create all inventory slots and initialize UI.
     /// </summary>
     private void InitializeSlots()
     {
@@ -87,11 +86,11 @@ public class Inventory : SingletonMonobehaviour<Inventory>
     }
 
     // ─────────────────────────────────────────────────────
-    // Public API
+    // Public API - Item Access & Modification
     // ─────────────────────────────────────────────────────
 
     /// <summary>
-    /// Add item to inventory, stacking if possible, otherwise using empty slot.
+    /// Add an item to inventory, stack if possible, or use an empty slot.
     /// </summary>
     public void AddItem(ItemDataSO itemData, int quantity)
     {
@@ -116,11 +115,77 @@ public class Inventory : SingletonMonobehaviour<Inventory>
                 return;
             }
 
-            // Inventory full
             string warning = inventoryFullMessages[Random.Range(0, inventoryFullMessages.Length)];
             UIManager.Instance.ShowWarningText(warning);
         }
     }
+
+    /// <summary>
+    /// Check whether the inventory has enough of a specific ingredient.
+    /// </summary>
+    public bool HasItems(RequiredIngredient requiredIngredient)
+    {
+        int amount = 0;
+
+        for (int i = 0; i < slots.Count; i++)
+        {
+            if (slots[i].IsEmpty()) continue;
+
+            if (slots[i].ItemData.ingredientType == requiredIngredient.ingredientType)
+                amount += slots[i].Quantity;
+
+            if (amount >= requiredIngredient.amount)
+                return true;
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    /// Remove one unit of a specific ingredient from inventory.
+    /// </summary>
+    public void RemoveItem(RequiredIngredient requiredIngredient)
+    {
+        for (int i = 0; i < slots.Count; i++)
+        {
+            if (slots[i].IsEmpty()) continue;
+
+            if (slots[i].ItemData.ingredientType == requiredIngredient.ingredientType)
+            {
+                slots[i].DecreaseQuantity();
+
+                if (slots[i].Quantity == 0)
+                {
+                    slots[i].SetEmpty();
+                    DeSelectItem();
+                }
+
+                return;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Get the total quantity of a specific ingredient type in inventory.
+    /// </summary>
+    public int GetTotalQuantityOfItem(IngredientType ingredientType)
+    {
+        int total = 0;
+
+        foreach (var slot in slots)
+        {
+            if (slot.IsEmpty()) continue;
+
+            if (slot.ItemData.ingredientType == ingredientType)
+                total += slot.Quantity;
+        }
+
+        return total;
+    }
+
+    // ─────────────────────────────────────────────────────
+    // Public API - Selection & Usage
+    // ─────────────────────────────────────────────────────
 
     /// <summary>
     /// Called when a slot is selected — display item info, enable buttons.
@@ -167,11 +232,15 @@ public class Inventory : SingletonMonobehaviour<Inventory>
         ClearAllHighlights();
     }
 
+    // ─────────────────────────────────────────────────────
+    // Private Helpers
+    // ─────────────────────────────────────────────────────
+
     /// <summary>
     /// Uses the selected consumable item and applies its stat effects to the player.
     /// This method is called by the "Use" button in the inventory UI.
     /// </summary>
-    public void UseSelectedItem()
+    private void UseSelectedItem()
     {
         if (selectedItem.ItemData.itemType != ItemType.Consumable) return;
 
@@ -188,11 +257,10 @@ public class Inventory : SingletonMonobehaviour<Inventory>
     /// Decreases the quantity of the selected item.
     /// /// This method is indirectly triggered by the inventory UI when an item is used.
     /// </summary>
-    public void DropSelectedItem()
+    private void DropSelectedItem()
     {
         RemoveSelectedItem();
     }
-
 
     /// <summary>
     /// Decreases the quantity of the selected item. 
@@ -208,10 +276,6 @@ public class Inventory : SingletonMonobehaviour<Inventory>
             DeSelectItem();
         }
     }
-
-    // ─────────────────────────────────────────────────────
-    // Private Helpers
-    // ─────────────────────────────────────────────────────
 
     /// <summary>
     /// Refresh all item slot visuals.
@@ -289,8 +353,6 @@ public class Inventory : SingletonMonobehaviour<Inventory>
         }
 
         statGroupRoot.gameObject.SetActive(hasEnergy || hasMood);
-
-        // Force layout update to fix spacing issues
         StartCoroutine(RebuildLayoutNextFrame(itemInfoContainer));
     }
 

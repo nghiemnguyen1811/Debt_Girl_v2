@@ -22,6 +22,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     [SerializeField] private GameObject coinTradePanel;
     [SerializeField] private GameObject shoppingPanel;
     [SerializeField] private GameObject inventoryPanel;
+    [SerializeField] private GameObject cookingPanel;
 
     [Header("UI Buttons")]
     [SerializeField] private GameObject payDebtButton;
@@ -109,6 +110,15 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     public void ToggleInventoryPanel(bool show)
     {
         TogglePanel(inventoryPanel, show, () => Inventory.Instance.DeSelectItem());
+    }
+
+    public void ToggleCookingPanel(bool show)
+    {
+        if (cookingPanel == null) return;
+
+        cookingPanel.SetActive(show);
+
+        if (show) CookingManager.Instance.RefreshAllCookingContainers();
     }
 
     public void TogglePayDebtButton(bool show) => payDebtButton?.SetActive(show);

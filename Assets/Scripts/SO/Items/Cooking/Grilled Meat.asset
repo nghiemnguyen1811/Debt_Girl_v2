@@ -10,18 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6acbbd15e75140948b9abbe0097c4bec, type: 3}
-  m_Name: Pizza
+  m_Name: Grilled Meat
   m_EditorClassIdentifier: 
-  icon: {fileID: -92017918, guid: 4e2a8781c4ae171469315681a3eb2fd8, type: 3}
-  itemName: Pizza
-  description: Consumable Pizza
-  itemType: 2
-  ingredientType: 12
-  requiredIngredients: []
-  canBeSold: 1
+  icon: {fileID: -2105879074, guid: 4e2a8781c4ae171469315681a3eb2fd8, type: 3}
+  itemName: Grilled Meat
+  description: 'Juicy, smoky meat grilled to perfection over open flame.
+
+'
+  itemType: 1
+  ingredientType: 15
+  requiredIngredients:
+  - ingredientType: 1
+    icon: {fileID: -1582682049, guid: 4e2a8781c4ae171469315681a3eb2fd8, type: 3}
+    amount: 3
+  canBeSold: 0
   sellPrice: 0
   energy: 15
-  mood: 2
-  purchaseCost: 350
+  mood: 10
+  purchaseCost: 0
   canStackItem: 0
   maxStackAmount: 1

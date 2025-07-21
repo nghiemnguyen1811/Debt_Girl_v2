@@ -16,10 +16,12 @@ MonoBehaviour:
   itemName: Drink Cup
   description: Consumable Drink Cup
   itemType: 2
-  ingredientType: 10
+  ingredientType: 13
   requiredIngredients: []
+  canBeSold: 1
+  sellPrice: 0
   energy: 10
   mood: 5
-  price: 150
+  purchaseCost: 60
   canStackItem: 0
   maxStackAmount: 1
