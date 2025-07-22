@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using TMPro;
 
 public class MoneyManager : SingletonMonobehaviour<MoneyManager>
 {
@@ -22,6 +21,12 @@ public class MoneyManager : SingletonMonobehaviour<MoneyManager>
     private void Start()
     {
         SetMoneys(0);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.M))
+            ChangeMoneys(1000);
     }
 
     #endregion

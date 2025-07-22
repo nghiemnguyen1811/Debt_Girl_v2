@@ -112,10 +112,7 @@ public class CookingContainer : MonoBehaviour
                 Inventory.Instance.RemoveItem(ingredient);
         }
 
-        // Add item to recipe
-        if (!itemData.canBeSold)
-            Inventory.Instance.AddItem(itemData, 1);
-
+        Inventory.Instance.AddItem(itemData, 1);
         UIManager.Instance.ToggleCookingPanel(false);
     }
 

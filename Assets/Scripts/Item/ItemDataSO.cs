@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class ItemDataSO : ScriptableObject
 {
     // ─────────────────────────────────────────────────────
-    // Item Display Info
+    // Display Info
     // ─────────────────────────────────────────────────────
     [Title("Item Info")]
     [HorizontalGroup("Top")]
@@ -21,7 +21,7 @@ public class ItemDataSO : ScriptableObject
     public string description;
 
     // ─────────────────────────────────────────────────────
-    // Item Classification
+    // Classification
     // ─────────────────────────────────────────────────────
     [Title("Item Properties")]
     [LabelText("Item Type")]
@@ -32,7 +32,7 @@ public class ItemDataSO : ScriptableObject
     public IngredientType ingredientType = IngredientType.None;
 
     // ─────────────────────────────────────────────────────
-    // For CraftedFood only
+    // Crafting
     // ─────────────────────────────────────────────────────
     [ShowIf("@itemType == ItemType.CraftedFood")]
     [LabelText("Ingredients Needed")]
@@ -46,10 +46,10 @@ public class ItemDataSO : ScriptableObject
 
     [ShowIf("@itemType == ItemType.CraftedFood && canBeSold")]
     [LabelText("Sell Price"), SuffixLabel("$", true), MinValue(0)]
-    public double sellPrice = 0;
+    [SerializeField] private double sellPrice = 0;
 
     // ─────────────────────────────────────────────────────
-    // Consumable effects
+    // Consumption Effects
     // ─────────────────────────────────────────────────────
     [ShowIf("@itemType == ItemType.Consumable || (itemType == ItemType.CraftedFood && !canBeSold)")]
     [LabelText("Energy Restored")]
@@ -64,7 +64,7 @@ public class ItemDataSO : ScriptableObject
     public int mood = 0;
 
     // ─────────────────────────────────────────────────────
-    // Pricing & Stack
+    // Pricing & Stackability
     // ─────────────────────────────────────────────────────
     [ShowIf("@itemType == ItemType.Material || itemType == ItemType.Consumable")]
     [LabelText("Purchase Cost"), SuffixLabel("$", true), MinValue(0)]
@@ -79,16 +79,46 @@ public class ItemDataSO : ScriptableObject
     public int maxStackAmount = 1;
 
     // ─────────────────────────────────────────────────────
-    // Helper methods
+    // Logic Properties
     // ─────────────────────────────────────────────────────
-    private bool IsIngredientCategory()
+
+    /// <summary>
+    /// Determines if the item can be used (consumed).
+    /// </summary>
+    public bool CanBeUsed =>
+        itemType == ItemType.Consumable ||
+        (itemType == ItemType.CraftedFood && !canBeSold);
+
+    /// <summary>
+    /// Determines if the item can be sold.
+    /// </summary>
+    public bool CanBeSold =>
+        itemType == ItemType.Material ||
+        (itemType == ItemType.CraftedFood && canBeSold);
+
+    /// <summary>
+    /// Gets the final sell price of the item based on its type.
+    /// - CraftedFood: use sellPrice.
+    /// - Material: 50% of purchaseCost.
+    /// - Others: 0.
+    /// </summary>
+    public double SellPrice
     {
-        return itemType == ItemType.Material ||
-            itemType == ItemType.Consumable ||
-            itemType == ItemType.CraftedFood;
+        get
+        {
+            if (itemType == ItemType.CraftedFood && canBeSold)
+                return sellPrice;
+
+            if (itemType == ItemType.Material)
+                return purchaseCost * 0.5;
+
+            return 0;
+        }
     }
 
-
+    // ─────────────────────────────────────────────────────
+    // Editor-only logic
+    // ─────────────────────────────────────────────────────
 #if UNITY_EDITOR
     /// <summary>
     /// Ensures only up to 3 ingredients for CraftedFood.
@@ -106,6 +136,16 @@ public class ItemDataSO : ScriptableObject
         }
     }
 #endif
+
+    // ─────────────────────────────────────────────────────
+    // Private Helpers
+    // ─────────────────────────────────────────────────────
+    private bool IsIngredientCategory()
+    {
+        return itemType == ItemType.Material ||
+               itemType == ItemType.Consumable ||
+               itemType == ItemType.CraftedFood;
+    }
 }
 
 [System.Serializable]

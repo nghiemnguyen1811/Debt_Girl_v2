@@ -17,7 +17,7 @@ public class Inventory : SingletonMonobehaviour<Inventory>
     // Slot Settings
     // ─────────────────────────────────────────────────────
     [Header("Slot Settings")]
-    [SerializeField] private int slotCount = 50;
+    [SerializeField] private int slotCount = 52;
     [SerializeField] private ItemSlot slotPrefab;
     [SerializeField] private Transform slotContainer;
     private readonly List<ItemSlot> slots = new();
@@ -29,13 +29,18 @@ public class Inventory : SingletonMonobehaviour<Inventory>
     [SerializeField] private TextMeshProUGUI itemNameText;
     [SerializeField] private TextMeshProUGUI itemQuantityText;
     [SerializeField] private TextMeshProUGUI itemDescriptionText;
+    [SerializeField] private TextMeshProUGUI sellPriceText;
     [SerializeField] private TextMeshProUGUI energyText;
     [SerializeField] private TextMeshProUGUI moodText;
+    [SerializeField] private TextMeshProUGUI slotUsageText;
     [SerializeField] private Image itemIconImage;
     [SerializeField] private Transform statGroupRoot;
     [SerializeField] private GameObject infoDisplayGroup;
+    [SerializeField] private GameObject sellPriceGroup;
     [SerializeField] private Button useButton;
+    [SerializeField] private Button sellButton;
     [SerializeField] private Button dropButton;
+    [SerializeField] private Button closeButton;
 
     // ─────────────────────────────────────────────────────
     // Full Inventory Messages
@@ -56,6 +61,7 @@ public class Inventory : SingletonMonobehaviour<Inventory>
     // ─────────────────────────────────────────────────────
     private ItemSlot selectedItem;
     private int selectedIndex = -1;
+    private int filledSlotCount;
 
     // ─────────────────────────────────────────────────────
     // Unity Lifecycle
@@ -63,7 +69,10 @@ public class Inventory : SingletonMonobehaviour<Inventory>
     private void Start()
     {
         useButton.onClick.AddListener(() => UseSelectedItem());
+        sellButton.onClick.AddListener(() => SellSelectedItem());
         dropButton.onClick.AddListener(() => DropSelectedItem());
+        closeButton.onClick.AddListener(() => playerControl.interactDetector.StopCurrentInteraction());
+
         InitializeSlots();
     }
 
@@ -83,6 +92,7 @@ public class Inventory : SingletonMonobehaviour<Inventory>
         }
 
         DeSelectItem();
+        UpdateUsedSlotCount();
     }
 
     // ─────────────────────────────────────────────────────
@@ -102,8 +112,7 @@ public class Inventory : SingletonMonobehaviour<Inventory>
                 if (stackSlot != null)
                 {
                     stackSlot.IncreaseQuantity();
-                    UpdateUI();
-                    return;
+                    continue;
                 }
             }
 
@@ -111,14 +120,16 @@ public class Inventory : SingletonMonobehaviour<Inventory>
             if (emptySlot != null)
             {
                 emptySlot.SetItemData(itemData, 1);
-                UpdateUI();
-                return;
+                IncrementFilledSlot();
+                continue;
             }
 
             string warning = inventoryFullMessages[Random.Range(0, inventoryFullMessages.Length)];
             UIManager.Instance.ShowWarningText(warning);
+            break;
         }
     }
+
 
     /// <summary>
     /// Check whether the inventory has enough of a specific ingredient.
@@ -158,6 +169,7 @@ public class Inventory : SingletonMonobehaviour<Inventory>
                 {
                     slots[i].SetEmpty();
                     DeSelectItem();
+                    DecrementFilledSlot();
                 }
 
                 return;
@@ -192,24 +204,29 @@ public class Inventory : SingletonMonobehaviour<Inventory>
     /// </summary>
     public void SelectItem(int index)
     {
-        if (slots[index].IsEmpty())
-            return;
+        if (slots[index].IsEmpty()) return;
 
         selectedItem = slots[index];
         selectedIndex = index;
 
+        var data = selectedItem.ItemData;
+
         ClearAllHighlights();
         selectedItem.SetSelected(true);
 
-        itemIconImage.sprite = selectedItem.ItemData.icon;
-        itemNameText.text = selectedItem.ItemData.itemName;
-        itemDescriptionText.text = selectedItem.ItemData.description;
+        itemIconImage.sprite = data.icon;
+        itemNameText.text = data.itemName;
+        itemQuantityText.text = selectedItem.Quantity.ToString();
+        itemDescriptionText.text = data.description;
+        sellPriceText.text = data.SellPrice.ToString();
 
-        DisplayStatUI(selectedItem.ItemData);
+        DisplayStatUI(data);
 
-        useButton.gameObject.SetActive(selectedItem.ItemData.itemType == ItemType.Consumable);
+        useButton.gameObject.SetActive(data.CanBeUsed);
+        sellButton.gameObject.SetActive(data.CanBeSold);
         dropButton.gameObject.SetActive(true);
 
+        sellPriceGroup.SetActive(data.CanBeSold);
         infoDisplayGroup.SetActive(true);
     }
 
@@ -242,13 +259,28 @@ public class Inventory : SingletonMonobehaviour<Inventory>
     /// </summary>
     private void UseSelectedItem()
     {
-        if (selectedItem.ItemData.itemType != ItemType.Consumable) return;
-
         var data = selectedItem.ItemData;
+        if (!data.CanBeUsed) return;
+
         var stats = playerControl.stats;
 
         stats.ApplyStatChange(StatType.Productivity, data.energy);
         stats.ApplyStatChange(StatType.Mood, data.mood);
+
+        RemoveSelectedItem();
+    }
+
+    /// <summary>
+    /// Sells the selected item and adds its sell value to the player's money.
+    /// This method is called by the "Sell" button in the inventory UI.
+    /// </summary>
+    private void SellSelectedItem()
+    {
+        var data = selectedItem.ItemData;
+        if (!data.CanBeSold) return;
+
+        MoneyManager.Instance.ChangeMoneys(data.SellPrice);
+        AudioManager.Instance.PlayInteractSound(1);
 
         RemoveSelectedItem();
     }
@@ -274,7 +306,37 @@ public class Inventory : SingletonMonobehaviour<Inventory>
         {
             selectedItem.SetEmpty();
             DeSelectItem();
+            DecrementFilledSlot();
+            return;
         }
+
+        SelectItem(selectedIndex);
+    }
+
+    /// <summary>
+    /// Updates the inventory slot usage text UI to display the current number 
+    /// </summary>
+    private void UpdateUsedSlotCount()
+    {
+        slotUsageText.text = $"{filledSlotCount} / {slotCount}";
+    }
+
+    /// <summary>
+    /// Increments the filled slot count and updates the UI.
+    /// </summary>
+    private void IncrementFilledSlot()
+    {
+        filledSlotCount++;
+        UpdateUsedSlotCount();
+    }
+
+    /// <summary>
+    /// Decrements the filled slot count (not below 0) and updates the UI.
+    /// </summary>
+    private void DecrementFilledSlot()
+    {
+        filledSlotCount = Mathf.Max(0, filledSlotCount - 1);
+        UpdateUsedSlotCount();
     }
 
     /// <summary>
@@ -289,6 +351,8 @@ public class Inventory : SingletonMonobehaviour<Inventory>
 
             else slot.SetEmpty();
         }
+
+        UpdateUsedSlotCount();
     }
 
     /// <summary>
