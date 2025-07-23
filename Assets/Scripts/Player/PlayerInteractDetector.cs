@@ -34,7 +34,7 @@ public class PlayerInteractDetector : MonoBehaviour
 
     #region === Private Fields ===
 
-    private PlayerControl control;
+    private PlayerControl playerControl;
     private Vector3 originalPosition;
     private Quaternion originalRotation;
 
@@ -51,9 +51,11 @@ public class PlayerInteractDetector : MonoBehaviour
 
     #region === Unity Events ===
 
+
     private void Start()
     {
-        control = GetComponent<PlayerControl>();
+        playerControl = GetComponent<PlayerControl>();
+
         ToggleUI(false, true);
         durationSlider.gameObject.SetActive(false);
     }
@@ -68,10 +70,137 @@ public class PlayerInteractDetector : MonoBehaviour
 
     #endregion
 
+    #region === Public Interaction API ===
+
+    /// <summary>
+    /// Called when player activates interaction (e.g., presses a key).
+    /// Checks energy and starts interaction if valid.
+    /// </summary>
+    public void InteractIndicator()
+    {
+        if (CurrentInteractable == null || IsInteracting) return;
+
+        if (playerControl.stats.energy.current < -CurrentInteractable.GetEnergyAmount())
+        {
+            string warning = energyWarningMessages[Random.Range(0, energyWarningMessages.Length)];
+            UIManager.Instance.ShowWarningText(warning);
+            return;
+        }
+
+        IsInteracting = true;
+        originalPosition = transform.position;
+        originalRotation = transform.rotation;
+
+        Transform point = CurrentInteractable.GetInteractPoint();
+        if (point != null)
+            transform.SetPositionAndRotation(point.position, point.rotation);
+
+        if (CurrentInteractable.MoodIconOffset != Vector3.zero)
+            playerControl.visualizer?.OffsetMoodIcon(CurrentInteractable.MoodIconOffset);
+
+
+        if (!CurrentInteractable.ShouldPlayAnimationImmediately())
+        {
+            CurrentInteractable.OnInteract(false);
+            return;
+        }
+
+        PlayInteractionIfValid();
+    }
+
+    /// <summary>
+    /// Forcibly begins interaction animation and coroutine without checking energy.
+    /// Useful for scripted triggers or debug purposes.
+    /// </summary>
+    public void ForceStartInteraction()
+    {
+        if (CurrentInteractable == null) return;
+
+        PlayInteractionIfValid();
+    }
+
+    /// <summary>
+    /// Immediately cancels the current interaction and resets state.
+    /// </summary>
+    public void StopCurrentInteraction()
+    {
+        if (CurrentInteractable != null)
+            CurrentInteractable.OnStopInteract();
+
+        IsInteracting = false;
+    }
+
+    #endregion
+
+    #region === Private Interaction Logic ===
+
+    /// <summary>
+    /// Plays the animation and starts the interaction coroutine
+    /// only if the interactable is set to play animation immediately.
+    /// </summary>
+    private void PlayInteractionIfValid()
+    {
+        CurrentInteractable.OnInteract();
+
+        string anim = CurrentInteractable.GetAnimationName();
+
+        if (!string.IsNullOrEmpty(anim))
+            playerControl.animationHandler.SetBoolParameter(anim, true);
+
+        StartCoroutine(HandleInteraction(anim, CurrentInteractable.GetDuration()));
+    }
+
+    /// <summary>
+    /// Runs the interaction duration, shows slider, applies effects, resets state.
+    /// </summary>
+    /// <param name="animName">The animation name to stop at the end.</param>
+    /// <param name="duration">How long the interaction lasts.</param>
+    private IEnumerator HandleInteraction(string animName, float duration)
+    {
+        durationSlider.gameObject.SetActive(true);
+        durationSlider.value = 0f;
+
+        for (float t = 0f; t < duration; t += Time.deltaTime)
+        {
+            durationSlider.value = t / duration;
+            yield return null;
+        }
+
+        durationSlider.value = 1f;
+        durationSlider.gameObject.SetActive(false);
+
+        if (!string.IsNullOrEmpty(animName))
+            playerControl.animationHandler.SetBoolParameter(animName, false);
+
+        transform.SetPositionAndRotation(originalPosition, originalRotation);
+        CurrentInteractable.OnStopInteract();
+
+        var data = CurrentInteractable.Data;
+
+        if (data != null)
+        {
+            playerControl.stats.ApplyStatChange(StatType.Mood, data.moodAmount);
+            playerControl.stats.ApplyStatChange(StatType.Productivity, data.energyAmount);
+
+            if (data.earnsMoney)
+                MoneyManager.Instance.ChangeMoneys(data.moneyEarned);
+
+            if (data.conditionType != MoodConditionType.None)
+                MoodManager.Instance.ClearMood(data.conditionType);
+        }
+
+        playerControl.visualizer?.ResetMoodIconPosition();
+
+        yield return new WaitForSeconds(0.5f);
+        IsInteracting = false;
+    }
+
+    #endregion
+
     #region === Detection ===
 
     /// <summary>
-    /// Scans for nearby interactables within a radius.
+    /// Scans for nearby interactable objects using overlap sphere.
     /// </summary>
     private void DetectInteractable()
     {
@@ -107,8 +236,10 @@ public class PlayerInteractDetector : MonoBehaviour
     #region === UI Handling ===
 
     /// <summary>
-    /// Smoothly toggles the visibility of the interact UI.
+    /// Smoothly fades in/out the interact UI.
     /// </summary>
+    /// <param name="visible">Whether the UI should be visible.</param>
+    /// <param name="instant">Skip fade animation if true.</param>
     private void ToggleUI(bool visible, bool instant = false)
     {
         float targetAlpha = visible ? 1f : 0f;
@@ -123,101 +254,11 @@ public class PlayerInteractDetector : MonoBehaviour
 
     #endregion
 
-    #region === Interaction Handling ===
-
-    /// <summary>
-    /// Begins interaction with the current interactable.
-    /// </summary>
-    public void InteractIndicator()
-    {
-        if (CurrentInteractable == null || IsInteracting) return;
-
-        if (control.stats.energy.current < -CurrentInteractable.GetEnergyAmount())
-        {
-            string warning = energyWarningMessages[Random.Range(0, energyWarningMessages.Length)];
-            UIManager.Instance.ShowWarningText(warning);
-            return;
-        }
-
-        IsInteracting = true;
-        originalPosition = transform.position;
-        originalRotation = transform.rotation;
-
-        Transform point = CurrentInteractable.GetInteractPoint();
-
-        if (point != null)
-            transform.SetPositionAndRotation(point.position, point.rotation);
-
-        if (CurrentInteractable.MoodIconOffset != Vector3.zero)
-            control.visualizer?.OffsetMoodIcon(CurrentInteractable.MoodIconOffset);
-
-        string anim = CurrentInteractable.GetAnimationName();
-
-        if (!string.IsNullOrEmpty(anim))
-            control.animationHandler.SetBoolParameter(anim, true);
-
-        CurrentInteractable.OnInteract();
-
-        if (CurrentInteractable.ShouldPlayAnimationImmediately())
-            StartCoroutine(HandleInteraction(anim, CurrentInteractable.GetDuration()));
-    }
-
-    /// <summary>
-    /// Executes interaction duration, applies effects, and resets state.
-    /// </summary>
-    private IEnumerator HandleInteraction(string animName, float duration)
-    {
-        durationSlider.gameObject.SetActive(true);
-        durationSlider.value = 0f;
-
-        for (float t = 0f; t < duration; t += Time.deltaTime)
-        {
-            durationSlider.value = t / duration;
-            yield return null;
-        }
-
-        durationSlider.value = 1f;
-        durationSlider.gameObject.SetActive(false);
-
-        control.animationHandler.SetBoolParameter(animName, false);
-        transform.SetPositionAndRotation(originalPosition, originalRotation);
-        CurrentInteractable.OnStopInteract();
-
-        var data = CurrentInteractable.Data;
-
-        if (data != null)
-        {
-            control.stats.ApplyStatChange(StatType.Mood, data.moodAmount);
-            control.stats.ApplyStatChange(StatType.Productivity, data.energyAmount);
-
-            if (data.earnsMoney)
-                MoneyManager.Instance.ChangeMoneys(data.moneyEarned);
-
-            if (data.conditionType != MoodConditionType.None)
-                MoodManager.Instance.ClearMood(data.conditionType);
-        }
-
-        control.visualizer?.ResetMoodIconPosition();
-
-        yield return new WaitForSeconds(0.5f);
-        IsInteracting = false;
-    }
-
-    /// <summary>
-    /// Immediately stops current interaction and resets state.
-    /// </summary>
-    public void StopCurrentInteraction()
-    {
-        if (CurrentInteractable != null)
-            CurrentInteractable.OnStopInteract();
-
-        IsInteracting = false;
-    }
-
-    #endregion
-
     #region === Debug ===
 
+    /// <summary>
+    /// Draws detection radius in editor.
+    /// </summary>
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.yellow;

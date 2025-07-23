@@ -11,7 +11,7 @@ public class MoodManager : SingletonMonobehaviour<MoodManager>
     #region === Inspector Fields ===
 
     [Header(" Elements ")]
-    [SerializeField] private PlayerControl playerControl;
+    private PlayerControl playerControl;
 
     [Header(" Mood Config ")]
     [SerializeField] private List<MoodConditionDataSO> moodConditions;
@@ -30,6 +30,8 @@ public class MoodManager : SingletonMonobehaviour<MoodManager>
 
     private void Start()
     {
+        playerControl = PlayerControl.Instance;
+
         if (playerControl == null || playerControl.stats == null)
         {
             Debug.LogError("[MoodManager] Missing PlayerControl or PlayerStats!");

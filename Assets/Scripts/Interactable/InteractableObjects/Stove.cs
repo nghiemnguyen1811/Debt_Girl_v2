@@ -8,13 +8,13 @@ public class Stove : InteractableBase
     /// Called when the player starts interacting with the fridge.
     /// Disables outline, enables particles, and plays sound.
     /// </summary>
-    public override void OnInteract()
+    public override void OnInteract(bool playSound = true)
     {
         Debug.Log($"Interacted with: {GetObjectName()}");
 
         SetOutline(false);
         SetParticle(true);
-        HandleSound(play: true);
+        HandleSound(playSound);
 
         UIManager.Instance.ToggleCookingPanel(true);
     }

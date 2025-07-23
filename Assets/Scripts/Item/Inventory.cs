@@ -218,7 +218,7 @@ public class Inventory : SingletonMonobehaviour<Inventory>
         itemNameText.text = data.itemName;
         itemQuantityText.text = selectedItem.Quantity.ToString();
         itemDescriptionText.text = data.description;
-        sellPriceText.text = data.SellPrice.ToString();
+        sellPriceText.text = data.SellPrice + "$";
 
         DisplayStatUI(data);
 

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Stove
   m_EditorClassIdentifier: 
   objectName: Stove
-  animationName: 
-  interactionDuration: 0
+  animationName: Cooking
+  interactionDuration: 10
   playAnimationImmediately: 0
   conditionType: 0
   moodAmount: 10

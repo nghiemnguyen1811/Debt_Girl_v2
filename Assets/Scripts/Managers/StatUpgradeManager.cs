@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
 {
     [Header("References")]
-    [SerializeField] private PlayerControl playerControl;
+    private PlayerControl playerControl;
 
     [Header("Data & Prefab")]
     [SerializeField] private StatDataSO[] statDataList;
@@ -27,6 +27,8 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
 
     private void Start()
     {
+        playerControl = PlayerControl.Instance;
+
         InitializeStatUI();
         SetupListeners();
     }

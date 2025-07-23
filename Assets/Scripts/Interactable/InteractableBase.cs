@@ -115,7 +115,7 @@ public abstract class InteractableBase : MonoBehaviour
     /// Called when interaction begins.
     /// Implement this in derived classes.
     /// </summary>
-    public abstract void OnInteract();
+    public abstract void OnInteract(bool playSound = true);
 
     /// <summary>
     /// Called when interaction stops.
@@ -149,7 +149,7 @@ public abstract class InteractableBase : MonoBehaviour
     /// Play or stop the assigned sound based on interaction state.
     /// </summary>
     /// <param name="play">True to play the sound; false to stop it.</param>
-    protected void HandleSound(bool play)
+    public void HandleSound(bool play)
     {
         if (SoundId <= -1)
         {

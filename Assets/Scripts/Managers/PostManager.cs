@@ -9,12 +9,13 @@ public class PostManager : SingletonMonobehaviour<PostManager>
     #region === Inspector Fields ===
 
     [Header("References")]
-    [SerializeField] private PlayerControl playerControl;
     [SerializeField] private ReactionAndFollowerFX reactionFX;
     [SerializeField] private PostContainer postPrefab;
     [SerializeField] private PostDataSO[] postDataArray;
     [SerializeField] private Transform postParent;
     [SerializeField] private Button postButton;
+
+    private PlayerControl playerControl;
 
     [Header("Settings")]
     [SerializeField] private Vector2 cooldownRange = new Vector2(15f, 25f);
@@ -50,13 +51,12 @@ public class PostManager : SingletonMonobehaviour<PostManager>
 
     private void Start()
     {
-        postButton.onClick.AddListener(OnPostButtonClicked);
+        playerControl = PlayerControl.Instance;
+
         postButton.interactable = false;
+        postButton.onClick.AddListener(OnPostButtonClicked);
 
-        // Start money gain only after first post
         moneyRoutine = StartCoroutine(AutoAddMoney());
-
-        // Wait for PlayerStats to be ready
         playerControl.stats.OnStatsInitialized += OnStatsReady;
     }
 

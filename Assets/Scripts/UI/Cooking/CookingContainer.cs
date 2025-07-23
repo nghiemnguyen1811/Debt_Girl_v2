@@ -112,6 +112,8 @@ public class CookingContainer : MonoBehaviour
                 Inventory.Instance.RemoveItem(ingredient);
         }
 
+        //PlayerControl.Instance
+        PlayerControl.Instance.interactDetector.ForceStartInteraction();
         Inventory.Instance.AddItem(itemData, 1);
         UIManager.Instance.ToggleCookingPanel(false);
     }

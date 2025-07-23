@@ -24,7 +24,7 @@ public class Dirt : InteractableBase
     /// Called when the player interacts with the dirt.
     /// Plays VFX and disables outline.
     /// </summary>
-    public override void OnInteract()
+    public override void OnInteract(bool playSound = true)
     {
         Debug.Log($"Interacted with: {GetObjectName()}");
         SetOutline(false);

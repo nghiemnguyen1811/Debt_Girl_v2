@@ -8,7 +8,7 @@
 [RequireComponent(typeof(PlayerStats))]
 [RequireComponent(typeof(PlayerStatsUI))]
 [RequireComponent(typeof(MoodVisualizer))]
-public class PlayerControl : MonoBehaviour
+public class PlayerControl : SingletonMonobehaviour<PlayerControl>
 {
     #region === Subsystem References ===
 
@@ -25,8 +25,10 @@ public class PlayerControl : MonoBehaviour
     #region === Unity Lifecycle ===
 
     // Assign all required component references
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         inputHandler = GetComponent<PlayerInputHandler>();
         animationHandler = GetComponent<PlayerAnimation>();
         interactDetector = GetComponent<PlayerInteractDetector>();
