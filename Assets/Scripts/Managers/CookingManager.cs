@@ -3,35 +3,55 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 
+/// <summary>
+/// Manages cooking UI and container setup for non-sellable crafted food.
+/// </summary>
 public class CookingManager : SingletonMonobehaviour<CookingManager>
 {
-    [Header("References")]
+    // ─────────────────────────────────────────────────────
+    // Serialized Fields
+    // ─────────────────────────────────────────────────────
+
+    [Header("UI References")]
     [SerializeField] private Transform cookingContainerParent;
 
     [Header("Data & Prefab")]
     [SerializeField] private List<ItemDataSO> allRecipeList;
     [SerializeField] private CookingContainer cookingContainerPrefab;
 
+    // ─────────────────────────────────────────────────────
+    // Runtime State
+    // ─────────────────────────────────────────────────────
+
     private readonly List<CookingContainer> spawnedCookingContainers = new();
 
     // ─────────────────────────────────────────────────────
-    // Mono
+    // MonoBehaviour
     // ─────────────────────────────────────────────────────
 
+    /// <summary>
+    /// Called on startup to initialize the cooking interface.
+    /// </summary>
     private void Start()
     {
         InitializeCookingUI();
     }
 
     // ─────────────────────────────────────────────────────
-    // UI Initialization
+    // Initialization Logic
     // ─────────────────────────────────────────────────────
 
+    /// <summary>
+    /// Checks if a recipe is a cookable (non-sellable) crafted food.
+    /// </summary>
     private bool IsCookableRecipe(ItemDataSO item)
     {
-        return item.itemType == ItemType.CraftedFood;
+        return item.itemType == ItemType.CraftedFood && !item.canBeSold;
     }
 
+    /// <summary>
+    /// Instantiates UI containers for each valid cooking recipe.
+    /// </summary>
     private void InitializeCookingUI()
     {
         ClearExistingContainers();
@@ -46,6 +66,9 @@ public class CookingManager : SingletonMonobehaviour<CookingManager>
         }
     }
 
+    /// <summary>
+    /// Clears all existing cooking containers from the UI.
+    /// </summary>
     private void ClearExistingContainers()
     {
         foreach (var container in spawnedCookingContainers)
@@ -57,16 +80,21 @@ public class CookingManager : SingletonMonobehaviour<CookingManager>
         spawnedCookingContainers.Clear();
     }
 
-
     // ─────────────────────────────────────────────────────
     // UI Refresh & Utility
     // ─────────────────────────────────────────────────────
 
+    /// <summary>
+    /// Refreshes the ingredient UI in all active containers.
+    /// </summary>
     public void RefreshAllCookingContainers()
     {
         foreach (var container in spawnedCookingContainers)
             container.RefreshIngredientUI();
     }
 
+    /// <summary>
+    /// Returns a list of all spawned cooking containers.
+    /// </summary>
     public List<CookingContainer> GetAllCookingContainers() => spawnedCookingContainers;
 }

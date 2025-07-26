@@ -63,8 +63,11 @@ public enum IngredientType
     Pizza,
     DrinkCup,
 
-    // ───── CraftedFood ─────
+    // ───── CraftedFood Dish ─────
     NoodleSoup,
+    GrilledMeat,
+
+    // ───── CraftedFood Desserts ─────
     SpongeCake,
-    GrilledMeat
+    EggCake,
 }

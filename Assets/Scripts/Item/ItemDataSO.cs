@@ -48,6 +48,14 @@ public class ItemDataSO : ScriptableObject
     [LabelText("Sell Price"), SuffixLabel("$", true), MinValue(0)]
     [SerializeField] private double sellPrice = 0;
 
+    [ShowIf("@itemType == ItemType.CraftedFood")]
+    [LabelText("Crafting Time"), SuffixLabel("sec", true), MinValue(0.1)]
+    public int craftingTime = 3;
+
+    [ShowIf("@itemType == ItemType.CraftedFood")]
+    [LabelText("Unlock Level"), MinValue(0)]
+    public int requiredLevel = 0;
+
     // ─────────────────────────────────────────────────────
     // Consumption Effects
     // ─────────────────────────────────────────────────────
@@ -81,27 +89,14 @@ public class ItemDataSO : ScriptableObject
     // ─────────────────────────────────────────────────────
     // Logic Properties
     // ─────────────────────────────────────────────────────
-
-    /// <summary>
-    /// Determines if the item can be used (consumed).
-    /// </summary>
     public bool CanBeUsed =>
         itemType == ItemType.Consumable ||
         (itemType == ItemType.CraftedFood && !canBeSold);
 
-    /// <summary>
-    /// Determines if the item can be sold.
-    /// </summary>
     public bool CanBeSold =>
         itemType == ItemType.Material ||
         (itemType == ItemType.CraftedFood && canBeSold);
 
-    /// <summary>
-    /// Gets the final sell price of the item based on its type.
-    /// - CraftedFood: use sellPrice.
-    /// - Material: 50% of purchaseCost.
-    /// - Others: 0.
-    /// </summary>
     public double SellPrice
     {
         get
@@ -117,12 +112,7 @@ public class ItemDataSO : ScriptableObject
     }
 
     // ─────────────────────────────────────────────────────
-    // Editor-only logic
-    // ─────────────────────────────────────────────────────
 #if UNITY_EDITOR
-    /// <summary>
-    /// Ensures only up to 3 ingredients for CraftedFood.
-    /// </summary>
     private void LimitIngredients()
     {
         if (requiredIngredients.Count > 3)
@@ -137,9 +127,6 @@ public class ItemDataSO : ScriptableObject
     }
 #endif
 
-    // ─────────────────────────────────────────────────────
-    // Private Helpers
-    // ─────────────────────────────────────────────────────
     private bool IsIngredientCategory()
     {
         return itemType == ItemType.Material ||

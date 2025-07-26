@@ -47,4 +47,21 @@ public static class DoubleUtilities
 
         return tValue.ToString("F2") + "e" + exponent;
     }
+
+    /// <summary>
+    /// Display total time in HH:MM:SS format.
+    /// </summary>
+    public static string UpdateTime(int totalSeconds)
+    {
+        int hours = totalSeconds / 3600;
+        int minutes = (totalSeconds % 3600) / 60;
+        int seconds = totalSeconds % 60;
+
+        // Show only minutes and seconds (e.g., 05:23)
+        if (hours == 0)
+            return $"{minutes:D2}:{seconds:D2}";
+
+        // Show only hours and minutes (e.g., 02:45)
+        return $"{hours:D2}:{minutes:D2}";
+    }
 }

@@ -123,26 +123,26 @@ public class CookingContainer : MonoBehaviour
     // ─────────────────────────────────────────────────────
     // Nested Class
     // ─────────────────────────────────────────────────────
+}
 
-    [System.Serializable]
-    public class IngredientUI
+[System.Serializable]
+public class IngredientUI
+{
+    public GameObject ingredientsContainer;
+    public Image ingredientImage;
+    public TextMeshProUGUI quantityText;
+
+    public void SetData(RequiredIngredient data)
     {
-        public GameObject ingredientsContainer;
-        public Image ingredientImage;
-        public TextMeshProUGUI quantityText;
+        ingredientImage.sprite = data.icon;
+        int owned = Inventory.Instance.GetTotalQuantityOfItem(data.ingredientType);
+        quantityText.text = $"{owned}/{data.amount}";
+        quantityText.color = owned >= data.amount ? Color.green : Color.red;
+        ingredientsContainer.SetActive(true);
+    }
 
-        public void SetData(RequiredIngredient data)
-        {
-            ingredientImage.sprite = data.icon;
-            int owned = Inventory.Instance.GetTotalQuantityOfItem(data.ingredientType);
-            quantityText.text = $"{owned}/{data.amount}";
-            quantityText.color = owned >= data.amount ? Color.green : Color.red;
-            ingredientsContainer.SetActive(true);
-        }
-
-        public void Hide()
-        {
-            ingredientsContainer.SetActive(false);
-        }
+    public void Hide()
+    {
+        ingredientsContainer.SetActive(false);
     }
 }

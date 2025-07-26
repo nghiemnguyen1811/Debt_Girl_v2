@@ -130,7 +130,6 @@ public class Inventory : SingletonMonobehaviour<Inventory>
         }
     }
 
-
     /// <summary>
     /// Check whether the inventory has enough of a specific ingredient.
     /// </summary>
