@@ -169,7 +169,11 @@ public class UIManager : SingletonMonobehaviour<UIManager>
 
         if (!animate) return;
 
+        // Kill any existing tween and reset to default scale
         tween?.Kill();
+        textMesh.transform.localScale = Vector3.one;
+
+        // Apply punch scale animation
         tween = textMesh.transform
             .DOPunchScale(Vector3.one * punchScale, punchDuration, 5, 0.8f)
             .SetEase(Ease.OutBack);

@@ -107,7 +107,6 @@ public class CookingContainer : MonoBehaviour
         // looping through all of the items we need for crafting
         foreach (var ingredient in itemData.requiredIngredients)
         {
-            // loop through quantity for example if we need 3 stone loop 3 times and reduce 3 stone from inventory
             for (int i = 0; i < ingredient.amount; i++)
                 Inventory.Instance.RemoveItem(ingredient);
         }

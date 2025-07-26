@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,9 +12,8 @@ using DG.Tweening;
 public class BakingManager : SingletonMonobehaviour<BakingManager>
 {
     // ─────────────────────────────────────────────────────
-    // UI References
+    // UI REFERENCES
     // ─────────────────────────────────────────────────────
-
     [Header("UI References")]
     [SerializeField] private Transform cakeListContainer;
     [SerializeField] private ScrollRect scrollRect;
@@ -28,24 +28,28 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
     [Header("Plate Slots")]
     [SerializeField] private List<PlateUI> plateSlots = new();
 
-    [Header("Animation Settings")]
-    [SerializeField] private float floatingTextFadeDuration = 2f;
-
     // ─────────────────────────────────────────────────────
-    // Cake Data
+    // DATA
     // ─────────────────────────────────────────────────────
-
     [Header("Cake Recipes")]
     [SerializeField] private List<ItemDataSO> allCakeRecipes;
     [SerializeField] private CakeDisplay cakeDisplayPrefab;
 
+    // ─────────────────────────────────────────────────────
+    // ANIMATION SETTINGS
+    // ─────────────────────────────────────────────────────
+    [Header("Animation Settings")]
+    [SerializeField] private float floatingTextFadeDuration = 2f;
+
+    // ─────────────────────────────────────────────────────
+    // INTERNAL CACHE
+    // ─────────────────────────────────────────────────────
     private readonly List<CakeDisplay> spawnedCakeDisplays = new();
     private CakeDisplay selectedCake;
     private int selectedIndex = -1;
+    private Sequence warningSequence;
 
-    // ─────────────────────────────────────────────────────
-    // Warning Messages
-    // ─────────────────────────────────────────────────────
+    private ItemDataSO SelectedCakeData => selectedCake?.CakeData;
 
     private readonly string[] warningMessages = new string[]
     {
@@ -61,15 +65,13 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
     };
 
     // ─────────────────────────────────────────────────────
-    // Unity Events
+    // UNITY EVENTS
     // ─────────────────────────────────────────────────────
-
     private void Start()
     {
-        SetupListeners();
-        GenerateCakeSelectionList();
-        HideWarningTextImmediately();
-        ClearAllPlatesAtStart();
+        InitializeUI();
+        InitializePlates();
+        InitializeCakeSelection();
     }
 
     private void Update()
@@ -79,20 +81,74 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
     }
 
     // ─────────────────────────────────────────────────────
-    // Initialization
+    // INITIALIZATION
     // ─────────────────────────────────────────────────────
-
     /// <summary>
-    /// Setup UI listeners like bake button.
+    /// Initializes UI elements, listeners, and resets initial states.
     /// </summary>
-    private void SetupListeners()
+    private void InitializeUI()
     {
-        if (bakeButton != null)
-            bakeButton.onClick.AddListener(TryBakeSelectedCake);
+        SetupListeners();
+        ResetUIState();
     }
 
     /// <summary>
-    /// Populate the cake selection list with valid recipes.
+    /// Clears all plate slots at the beginning of the game.
+    /// </summary>
+    private void InitializePlates()
+    {
+        foreach (var plate in plateSlots)
+            plate.Clear();
+    }
+
+    /// <summary>
+    /// Generates the cake selection UI list from valid recipes.
+    /// </summary>
+    private void InitializeCakeSelection()
+    {
+        GenerateCakeSelectionList();
+    }
+
+    /// <summary>
+    /// Set up listeners for UI buttons.
+    /// </summary>
+    private void SetupListeners()
+    {
+        bakeButton?.onClick.AddListener(TryBakeSelectedCake);
+    }
+
+    // ─────────────────────────────────────────────────────
+    // UI STATE MANAGEMENT
+    // ─────────────────────────────────────────────────────
+    /// <summary>
+    /// Resets warning, ingredient slots, and plus signs visibility.
+    /// </summary>
+    private void ResetUIState()
+    {
+        HideWarningImmediately();
+
+        foreach (var slot in ingredientSlots)
+            slot.Hide();
+
+        foreach (var plus in plusSignsBetweenIngredients)
+            plus.SetActive(false);
+    }
+
+    /// <summary>
+    /// Hides the warning text immediately on game start.
+    /// </summary>
+    private void HideWarningImmediately()
+    {
+        warningText.DOKill();
+        warningText.gameObject.SetActive(false);
+        warningText.text = "";
+    }
+
+    // ─────────────────────────────────────────────────────
+    // CAKE SELECTION LOGIC
+    // ─────────────────────────────────────────────────────
+    /// <summary>
+    /// Generates the cake selection UI list from valid recipes.
     /// </summary>
     private void GenerateCakeSelectionList()
     {
@@ -102,33 +158,30 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
 
         for (int i = 0; i < validCakes.Count; i++)
         {
-            var cakeDisplay = Instantiate(cakeDisplayPrefab, cakeListContainer);
-            cakeDisplay.Initialize(validCakes[i]);
+            var display = Instantiate(cakeDisplayPrefab, cakeListContainer);
+            display.Initialize(validCakes[i]);
 
             int index = i;
-            cakeDisplay.GetButton().onClick.AddListener(() => SelectCakeAtIndex(index));
-            spawnedCakeDisplays.Add(cakeDisplay);
+            display.GetButton().onClick.AddListener(() => SelectCakeAtIndex(index));
+            spawnedCakeDisplays.Add(display);
         }
 
-        ResetScrollToStart();
+        StartCoroutine(DelayScrollReset());
     }
 
     /// <summary>
-    /// Remove old cake display objects.
+    /// Destroys existing cake display objects.
     /// </summary>
     private void ClearCakeList()
     {
         foreach (var display in spawnedCakeDisplays)
-        {
-            if (display != null)
-                Destroy(display.gameObject);
-        }
+            if (display != null) Destroy(display.gameObject);
 
         spawnedCakeDisplays.Clear();
     }
 
     /// <summary>
-    /// Check if the item is a valid cake recipe.
+    /// Checks whether the item is a valid crafted cake recipe.
     /// </summary>
     private bool IsValidCakeRecipe(ItemDataSO item)
     {
@@ -136,46 +189,16 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
     }
 
     /// <summary>
-    /// Reset horizontal scroll view to the beginning.
+    /// Resets scroll view position after frame delay.
     /// </summary>
-    private void ResetScrollToStart()
-    {
-        StartCoroutine(DelayScrollReset());
-    }
-
-    private System.Collections.IEnumerator DelayScrollReset()
+    private IEnumerator DelayScrollReset()
     {
         yield return null;
         scrollRect.horizontalNormalizedPosition = 0f;
     }
 
     /// <summary>
-    /// Hide warning text immediately at start.
-    /// </summary>
-    private void HideWarningTextImmediately()
-    {
-        if (warningText == null) return;
-
-        warningText.DOKill();
-        warningText.gameObject.SetActive(false);
-        warningText.text = string.Empty;
-    }
-
-    /// <summary>
-    /// Clear all plates on game start.
-    /// </summary>
-    private void ClearAllPlatesAtStart()
-    {
-        foreach (var plate in plateSlots)
-            plate.Clear();
-    }
-
-    // ─────────────────────────────────────────────────────
-    // Cake Selection Logic
-    // ─────────────────────────────────────────────────────
-
-    /// <summary>
-    /// Handle cake selection UI and ingredient display.
+    /// Selects a cake from the list and updates UI.
     /// </summary>
     private void SelectCakeAtIndex(int index)
     {
@@ -184,33 +207,18 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
         selectedCake = spawnedCakeDisplays[index];
         selectedIndex = index;
 
-        DeselectAllCakes();
-        selectedCake.SetSelected(true);
-
-        var data = selectedCake.CakeData;
-
-        UpdateIngredientUI(data);
-        UpdatePlusSigns(data);
-        UpdateBakeTime(data.craftingTime);
-    }
-
-    /// <summary>
-    /// Remove selection highlight from all cakes.
-    /// </summary>
-    private void DeselectAllCakes()
-    {
         foreach (var cake in spawnedCakeDisplays)
             cake.SetSelected(false);
+
+        selectedCake.SetSelected(true);
+
+        UpdateIngredientUI(SelectedCakeData);
+        UpdatePlusSigns(SelectedCakeData);
+        UpdateBakeTime(SelectedCakeData.craftingTime);
     }
 
-    // ─────────────────────────────────────────────────────
-    // UI Updating
-    // ─────────────────────────────────────────────────────
-
     /// <summary>
-    /// Update the ingredient slots based on the selected cake's recipe.
-    /// Shows each required ingredient, hides unused slots.
-    /// Also updates the bake button state based on inventory availability.
+    /// Updates ingredient UI based on selected cake.
     /// </summary>
     private void UpdateIngredientUI(ItemDataSO cakeData)
     {
@@ -226,8 +234,7 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
     }
 
     /// <summary>
-    /// Activate or deactivate the plus signs between ingredients,
-    /// depending on how many ingredients are shown.
+    /// Updates the plus signs visibility between ingredients.
     /// </summary>
     private void UpdatePlusSigns(ItemDataSO cakeData)
     {
@@ -236,8 +243,7 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
     }
 
     /// <summary>
-    /// Update the displayed baking time for the selected cake.
-    /// Uses a formatted time string from DoubleUtilities.
+    /// Updates the bake time UI based on the selected recipe.
     /// </summary>
     private void UpdateBakeTime(int totalSeconds)
     {
@@ -245,70 +251,92 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
     }
 
     /// <summary>
-    /// Enable the bake button only if the player has all required ingredients.
+    /// Enables or disables the bake button depending on ingredient availability.
     /// </summary>
     private void UpdateBakeButtonState()
     {
-        bool hasAllIngredients = selectedCake.CakeData.requiredIngredients
-            .All(ingredient => Inventory.Instance.HasItems(ingredient));
-
-        bakeButton.interactable = hasAllIngredients;
-    }
-
-    // ─────────────────────────────────────────────────────
-    // Baking Logic
-    // ─────────────────────────────────────────────────────
-
-    private void TryBakeSelectedCake()
-    {
-        foreach (var plate in plateSlots)
+        if (SelectedCakeData == null)
         {
-            if (plate.IsEmpty())
-            {
-                plate.SetData(selectedCake.CakeData);
-                warningText.gameObject.SetActive(false);
-                return;
-            }
+            bakeButton.interactable = false;
+            return;
         }
 
-        string warning = warningMessages[Random.Range(0, warningMessages.Length)];
-        ShowWarningText(warning);
+        bakeButton.interactable = SelectedCakeData.requiredIngredients
+            .All(ingredient => Inventory.Instance.HasItems(ingredient));
     }
 
+    // ─────────────────────────────────────────────────────
+    // BAKING LOGIC
+    // ─────────────────────────────────────────────────────
     /// <summary>
-    /// Show animated warning text with DOTween.
+    /// Tries to bake the selected cake and assign it to the first available plate.
+    /// </summary>
+    private void TryBakeSelectedCake()
+    {
+        if (SelectedCakeData == null) return;
+
+        foreach (var plate in plateSlots)
+        {
+            if (!plate.IsEmpty()) continue;
+
+            foreach (var ingredient in SelectedCakeData.requiredIngredients)
+                for (int i = 0; i < ingredient.amount; i++)
+                    Inventory.Instance.RemoveItem(ingredient);
+
+            plate.SetData(SelectedCakeData);
+            warningText.gameObject.SetActive(false);
+
+            Inventory.Instance.AddItem(SelectedCakeData, 1);
+            SelectCakeAtIndex(selectedIndex);
+            return;
+        }
+
+        ShowWarningText(warningMessages[Random.Range(0, warningMessages.Length)]);
+    }
+
+    // ─────────────────────────────────────────────────────
+    // WARNING SYSTEM
+    // ─────────────────────────────────────────────────────
+    /// <summary>
+    /// Shows animated warning message with fade and scale.
     /// </summary>
     private void ShowWarningText(string message)
     {
-        if (warningText == null) return;
+        if (warningSequence != null && warningSequence.IsActive())
+            warningSequence.Kill();
 
-        warningText.text = message;
-        warningText.color = new Color(warningText.color.r, warningText.color.g, warningText.color.b, 1f);
-        warningText.transform.localScale = Vector3.one * 1.2f;
         warningText.gameObject.SetActive(true);
+        warningText.text = message;
+        warningText.transform.localScale = Vector3.one;
+        warningText.color = new Color(warningText.color.r, warningText.color.g, warningText.color.b, 1f);
 
-        DOTween.Kill(warningText);
-        Sequence sequence = DOTween.Sequence();
-        sequence.Append(warningText.transform.DOScale(Vector3.one, 0.25f).SetEase(Ease.OutBack));
-        sequence.AppendInterval(0.5f);
-        sequence.Append(warningText.DOFade(0f, floatingTextFadeDuration).SetEase(Ease.InOutQuad));
-        sequence.OnComplete(() =>
-        {
-            warningText.gameObject.SetActive(false);
-            warningText.text = string.Empty;
-        });
+        warningSequence = DOTween.Sequence()
+            .Append(warningText.transform.DOScale(Vector3.one * 1.2f, 0.1f).SetEase(Ease.OutBack))
+            .Append(warningText.transform.DOScale(Vector3.one, 0.15f).SetEase(Ease.OutBack))
+            .AppendInterval(0.5f)
+            .Append(warningText.DOFade(0f, floatingTextFadeDuration).SetEase(Ease.InOutQuad))
+            .OnComplete(() =>
+            {
+                warningText.gameObject.SetActive(false);
+                warningText.text = "";
+                warningText.color = new Color(warningText.color.r, warningText.color.g, warningText.color.b, 1f);
+            });
     }
 
     // ─────────────────────────────────────────────────────
-    // Public Access
+    // PUBLIC ACCESSORS
     // ─────────────────────────────────────────────────────
-
+    /// <summary>
+    /// Returns a list of all spawned cake displays.
+    /// </summary>
     public List<CakeDisplay> GetAllCakeDisplays() => spawnedCakeDisplays;
 
     // ─────────────────────────────────────────────────────
-    // Nested PlateUI Class
+    // PLATE UI CLASS
     // ─────────────────────────────────────────────────────
-
+    /// <summary>
+    /// Plate UI representation and countdown logic.
+    /// </summary>
     [System.Serializable]
     public class PlateUI
     {
@@ -319,7 +347,7 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
         private float remainingTime;
 
         /// <summary>
-        /// Assign a cake to this plate and start countdown.
+        /// Assigns data and starts countdown for plate.
         /// </summary>
         public void SetData(ItemDataSO data)
         {
@@ -331,31 +359,30 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
         }
 
         /// <summary>
-        /// Decrease timer, and clear plate when finished.
+        /// Updates the timer each frame.
         /// </summary>
         public void UpdateTimer(float deltaTime)
         {
             if (IsEmpty()) return;
 
             remainingTime -= deltaTime;
-
             if (remainingTime <= 0f) Clear();
             else waitTimeText.text = DoubleUtilities.UpdateTime((int)remainingTime);
         }
 
         /// <summary>
-        /// Clear the plate and reset data.
+        /// Clears the plate UI and data.
         /// </summary>
         public void Clear()
         {
             cakeImage.gameObject.SetActive(false);
-            waitTimeText.text = string.Empty;
+            waitTimeText.text = "";
             cakeData = null;
             remainingTime = 0f;
         }
 
         /// <summary>
-        /// Check if this plate is currently empty.
+        /// Checks if the plate has no assigned data.
         /// </summary>
         public bool IsEmpty() => cakeData == null;
     }
