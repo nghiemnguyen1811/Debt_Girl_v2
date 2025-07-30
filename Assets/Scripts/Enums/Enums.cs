@@ -1,4 +1,17 @@
-﻿public enum StatType
+﻿public enum RoomType
+{
+    None,
+    LivingRoom,
+    Kitchen,
+    Bedroom,
+    Bathroom,
+    Office,
+    Laboratory,
+    Storage,
+    Hallway
+}
+
+public enum StatType
 {
     IncomeRate,
     Productivity,
@@ -40,6 +53,13 @@ public enum ItemType
     Consumable,
     Equipment,
     QuestItem
+}
+
+public enum InteractionPlayMode
+{
+    Instant,         // Âm thanh + animation ngay khi interact
+    WaitForConfirm,  // Chờ nhấn nút confirm sau UI
+    SoundOnly        // Chỉ phát âm thanh, không animation
 }
 
 public enum IngredientType

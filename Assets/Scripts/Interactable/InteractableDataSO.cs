@@ -18,9 +18,6 @@ public class InteractableDataSO : ScriptableObject
     [Min(0f)]
     public float interactionDuration = 2f;
 
-    [LabelText("Play Animation Immediately")]
-    public bool playAnimationImmediately = true;
-
     // ─────────────────────────────────────────────────────
     // Mood & Energy Effects
     // ─────────────────────────────────────────────────────

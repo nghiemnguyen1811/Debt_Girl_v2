@@ -92,20 +92,27 @@ public class PlayerInteractDetector : MonoBehaviour
         originalRotation = transform.rotation;
 
         Transform point = CurrentInteractable.GetInteractPoint();
+
         if (point != null)
             transform.SetPositionAndRotation(point.position, point.rotation);
 
         if (CurrentInteractable.MoodIconOffset != Vector3.zero)
             playerControl.visualizer?.OffsetMoodIcon(CurrentInteractable.MoodIconOffset);
 
-
-        if (!CurrentInteractable.ShouldPlayAnimationImmediately())
+        switch (CurrentInteractable.GetInteractionMode())
         {
-            CurrentInteractable.OnInteract(false);
-            return;
-        }
+            case InteractionPlayMode.Instant:
+                PlayInteractionIfValid();
+                break;
 
-        PlayInteractionIfValid();
+            case InteractionPlayMode.WaitForConfirm:
+                CurrentInteractable.OnInteract(false);
+                break;
+
+            case InteractionPlayMode.SoundOnly:
+                CurrentInteractable.OnInteract();
+                break;
+        }
     }
 
     /// <summary>

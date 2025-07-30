@@ -23,6 +23,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     [SerializeField] private GameObject shoppingPanel;
     [SerializeField] private GameObject inventoryPanel;
     [SerializeField] private GameObject cookingPanel;
+    [SerializeField] private GameObject bakingPanel;
 
     [Header("UI Buttons")]
     [SerializeField] private GameObject payDebtButton;
@@ -91,6 +92,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     }
 
     public void TogglePostPanel(bool show) => postPanel?.SetActive(show);
+    public void ToggleBakingPanel(bool show) => bakingPanel?.SetActive(show);
 
     public void ToggleUpgradePanel(bool show)
     {
@@ -132,6 +134,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
         if (panel == null) return;
 
         panel.SetActive(show);
+
         if (!show)
             onHideCallback?.Invoke();
     }

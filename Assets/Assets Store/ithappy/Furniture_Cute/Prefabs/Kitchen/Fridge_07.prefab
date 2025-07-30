@@ -117,7 +117,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: be9ec907ade13714082c8a181ec0d2c1, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.087
+      value: 1.0869999
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: be9ec907ade13714082c8a181ec0d2c1, type: 3}
       propertyPath: m_LocalPosition.y
@@ -198,6 +198,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: be9ec907ade13714082c8a181ec0d2c1, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2997556748602789080}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: be9ec907ade13714082c8a181ec0d2c1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4848054243847938212}
   m_SourcePrefab: {fileID: 100100000, guid: be9ec907ade13714082c8a181ec0d2c1, type: 3}
 --- !u!23 &204430013134164934 stripped
 MeshRenderer:
@@ -247,7 +250,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61e7bb299eb8ef64a9fefacb865a3ba3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useData: 1
+  useMoodOffset: 0
+  useParticle: 0
+  useSound: 1
   interactPoint: {fileID: 0}
+  interactionMode: 2
   data: {fileID: 11400000, guid: 2479eb6512628284a86420877ff371cb, type: 2}
   moodIconOffset: {x: 0, y: 0, z: 0}
   interactParticle: {fileID: 0}
@@ -268,7 +276,7 @@ MonoBehaviour:
   drawingMode: 1
   outlineLayer: 0
   outlineTargets:
-  - IsVisible: 1
+  - IsVisible: 0
     CutoutMask: 8
     edgeDilateAmount: 5
     frontEdgeDilateAmount: 5
@@ -284,7 +292,7 @@ MonoBehaviour:
     cutoutTextureName: 
     DilateRenderingMode: 0
     cutoutTextureIndex: 0
-  - IsVisible: 1
+  - IsVisible: 0
     CutoutMask: 8
     edgeDilateAmount: 5
     frontEdgeDilateAmount: 5
@@ -300,7 +308,7 @@ MonoBehaviour:
     cutoutTextureName: 
     DilateRenderingMode: 0
     cutoutTextureIndex: 0
-  - IsVisible: 1
+  - IsVisible: 0
     CutoutMask: 8
     edgeDilateAmount: 5
     frontEdgeDilateAmount: 5
@@ -316,7 +324,7 @@ MonoBehaviour:
     cutoutTextureName: 
     DilateRenderingMode: 0
     cutoutTextureIndex: 0
-  - IsVisible: 1
+  - IsVisible: 0
     CutoutMask: 8
     edgeDilateAmount: 5
     frontEdgeDilateAmount: 5
@@ -332,7 +340,7 @@ MonoBehaviour:
     cutoutTextureName: 
     DilateRenderingMode: 0
     cutoutTextureIndex: 0
-  - IsVisible: 1
+  - IsVisible: 0
     CutoutMask: 8
     edgeDilateAmount: 5
     frontEdgeDilateAmount: 5
@@ -348,7 +356,7 @@ MonoBehaviour:
     cutoutTextureName: 
     DilateRenderingMode: 0
     cutoutTextureIndex: 0
-  - IsVisible: 1
+  - IsVisible: 0
     CutoutMask: 8
     edgeDilateAmount: 5
     frontEdgeDilateAmount: 5
@@ -364,7 +372,7 @@ MonoBehaviour:
     cutoutTextureName: 
     DilateRenderingMode: 0
     cutoutTextureIndex: 0
-  - IsVisible: 1
+  - IsVisible: 0
     CutoutMask: 8
     edgeDilateAmount: 5
     frontEdgeDilateAmount: 5
@@ -380,7 +388,7 @@ MonoBehaviour:
     cutoutTextureName: 
     DilateRenderingMode: 0
     cutoutTextureIndex: 0
-  - IsVisible: 1
+  - IsVisible: 0
     CutoutMask: 8
     edgeDilateAmount: 5
     frontEdgeDilateAmount: 5
@@ -396,7 +404,7 @@ MonoBehaviour:
     cutoutTextureName: 
     DilateRenderingMode: 0
     cutoutTextureIndex: 0
-  - IsVisible: 1
+  - IsVisible: 0
     CutoutMask: 8
     edgeDilateAmount: 5
     frontEdgeDilateAmount: 5
@@ -437,6 +445,18 @@ MonoBehaviour:
     fillPass:
       shader: {fileID: 0}
       serializedProperties: []
+--- !u!114 &4848054243847938212
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1861873905147703827}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1838146211735416295
 PrefabInstance:
   m_ObjectHideFlags: 0

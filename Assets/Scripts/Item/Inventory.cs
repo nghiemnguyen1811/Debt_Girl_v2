@@ -400,24 +400,29 @@ public class Inventory : SingletonMonobehaviour<Inventory>
         foreach (Transform stat in statGroupRoot)
             stat.gameObject.SetActive(false);
 
-        bool hasEnergy = data.energy > 0;
-        bool hasMood = data.mood > 0;
+        bool shouldShowGroup = false;
 
-        if (hasEnergy)
+        if (!data.canBeSold)
         {
-            statGroupRoot.GetChild(0).gameObject.SetActive(true);
-            energyText.text = data.energy.ToString();
+            if (data.energy > 0)
+            {
+                statGroupRoot.GetChild(0).gameObject.SetActive(true);
+                energyText.text = data.energy.ToString();
+                shouldShowGroup = true;
+            }
+
+            if (data.mood > 0)
+            {
+                statGroupRoot.GetChild(1).gameObject.SetActive(true);
+                moodText.text = data.mood.ToString();
+                shouldShowGroup = true;
+            }
         }
 
-        if (hasMood)
-        {
-            statGroupRoot.GetChild(1).gameObject.SetActive(true);
-            moodText.text = data.mood.ToString();
-        }
-
-        statGroupRoot.gameObject.SetActive(hasEnergy || hasMood);
+        statGroupRoot.gameObject.SetActive(shouldShowGroup);
         StartCoroutine(RebuildLayoutNextFrame(itemInfoContainer));
     }
+
 
     private IEnumerator RebuildLayoutNextFrame(Transform layoutRoot)
     {

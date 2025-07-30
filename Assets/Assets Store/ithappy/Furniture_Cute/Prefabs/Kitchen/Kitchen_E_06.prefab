@@ -251,7 +251,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bd60eb90a39d0b49b4520be9ef3f1fc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useData: 1
+  useMoodOffset: 1
+  useParticle: 1
+  useSound: 1
   interactPoint: {fileID: 900152871920463262}
+  interactionMode: 1
   data: {fileID: 11400000, guid: 07cbbf6f196873e4e8c6c29e3824efbe, type: 2}
   moodIconOffset: {x: -0.165, y: 0.72, z: -0.116}
   interactParticle: {fileID: 3495066292246307044}
@@ -272,7 +277,7 @@ MonoBehaviour:
   drawingMode: 1
   outlineLayer: 0
   outlineTargets:
-  - IsVisible: 1
+  - IsVisible: 0
     CutoutMask: 8
     edgeDilateAmount: 5
     frontEdgeDilateAmount: 5
@@ -288,7 +293,7 @@ MonoBehaviour:
     cutoutTextureName: 
     DilateRenderingMode: 0
     cutoutTextureIndex: 0
-  - IsVisible: 1
+  - IsVisible: 0
     CutoutMask: 8
     edgeDilateAmount: 5
     frontEdgeDilateAmount: 5

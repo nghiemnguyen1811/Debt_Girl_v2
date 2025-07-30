@@ -1,134 +1,155 @@
-using UnityEngine;
+﻿using UnityEngine;
 using EPOOutline;
+using Sirenix.OdinInspector;
 
 /// <summary>
 /// Base class for all interactable objects. 
-/// Provides shared data and behavior like outline, particles, and common properties.
+/// Provides shared data and behavior like outline, particles, and interaction logic.
 /// </summary>
 public abstract class InteractableBase : MonoBehaviour
 {
-    #region === Serialized Fields ===
+    // ─────────────────────────────────────────────────────
+    // Toggle Options for Odin (Inspector cleaner)
+    // ─────────────────────────────────────────────────────
+    [BoxGroup("Options"), LabelText("Use Data")]
+    public bool useData;
 
-    [Header("Elements")]
+    [BoxGroup("Options"), LabelText("Use Mood Offset")]
+    public bool useMoodOffset;
+
+    [BoxGroup("Options"), LabelText("Use Particle")]
+    public bool useParticle;
+
+    [BoxGroup("Options"), LabelText("Use Sound")]
+    public bool useSound;
+
+    // ─────────────────────────────────────────────────────
+    // Serialized Fields (Grouped)
+    // ─────────────────────────────────────────────────────
+    [BoxGroup("Core"), LabelText("Interaction Point")]
     [SerializeField] protected Transform interactPoint;
 
-    [Header("Interactable Data")]
+    [BoxGroup("Core"), LabelText("Interaction Mode")]
+    [SerializeField] protected InteractionPlayMode interactionMode;
+
+    [BoxGroup("Data"), ShowIf("useData")]
     [SerializeField] protected InteractableDataSO data;
 
-    [Header("Mood Icon Offset")]
+    [BoxGroup("Visuals"), ShowIf("useMoodOffset")]
     [SerializeField] protected Vector3 moodIconOffset;
 
-    [Header("Visual Effect")]
+    [BoxGroup("Visuals"), ShowIf("useParticle")]
     [SerializeField] protected GameObject interactParticle;
 
-    [Header("Sound")]
+    [BoxGroup("Audio"), ShowIf("useSound")]
     [SerializeField] protected int soundId = -1;
 
-    #endregion
-
-    #region === Unity Events ===
-
+    // ─────────────────────────────────────────────────────
+    // Unity Events
+    // ─────────────────────────────────────────────────────
     protected virtual void Start()
     {
         SetOutline(false);
         SetParticle(false);
     }
 
-    #endregion
-
-    #region === Properties ===
+    // ─────────────────────────────────────────────────────
+    // Properties
+    // ─────────────────────────────────────────────────────
 
     /// <summary>
-    /// Optional outline visual for highlighting.
+    /// Cached reference to Outlinable component (used for highlighting).
     /// </summary>
     public Outlinable Outlinable => GetComponent<Outlinable>();
 
     /// <summary>
-    /// Returns the assigned data asset (name, animation, duration).
+    /// The InteractableData scriptable object assigned to this object.
     /// </summary>
     public virtual InteractableDataSO Data => data;
 
     /// <summary>
-    /// Returns the energy amount provided by this interactable.
+    /// Returns energy value from the data asset.
     /// </summary>
     public virtual float GetEnergyAmount() => data != null ? data.energyAmount : 0f;
 
     /// <summary>
-    /// Returns the point used to align the player when interacting.
+    /// Transform point where the player should align to interact.
     /// </summary>
     public virtual Transform GetInteractPoint() => interactPoint;
 
     /// <summary>
-    /// Position offset for UI mood icons.
+    /// World offset used for UI mood icon placement.
     /// </summary>
     public virtual Vector3 MoodIconOffset => moodIconOffset;
 
     /// <summary>
-    /// The particle to play during interaction.
+    /// Particle system played when interaction happens.
     /// </summary>
     public virtual GameObject InteractParticle => interactParticle;
 
     /// <summary>
-    /// Returns the sound ID associated with this interaction.
+    /// ID used to fetch sound from AudioManager.
     /// </summary>
     public virtual int SoundId => soundId;
 
-    #endregion
-
-    #region === Interaction Info ===
+    // ─────────────────────────────────────────────────────
+    // Interaction Info (for UI or animation systems)
+    // ─────────────────────────────────────────────────────
 
     /// <summary>
-    /// Object name used for debug or UI display.
+    /// Name of this object, for UI display or debug.
     /// </summary>
     public virtual string GetObjectName() => data != null ? data.objectName : "Unknown";
 
     /// <summary>
-    /// The animation clip name tied to this interaction.
+    /// Animation name (if any) to be played during interaction.
     /// </summary>
     public virtual string GetAnimationName() => data != null ? data.animationName : string.Empty;
 
     /// <summary>
-    /// Duration in seconds for how long the interaction takes.
+    /// Time duration of the interaction in seconds.
     /// </summary>
     public virtual float GetDuration() => data != null ? data.interactionDuration : 0f;
 
     /// <summary>
-    /// Whether this interaction plays animation immediately or waits for user action (like UI selection).
+    /// Gets how this object should handle interaction (instant, confirm, sound only).
     /// </summary>
-    public virtual bool ShouldPlayAnimationImmediately() => data != null && data.playAnimationImmediately;
+    public virtual InteractionPlayMode GetInteractionMode() => interactionMode;
 
-    #endregion
-
-    #region === Interaction Events ===
+    // ─────────────────────────────────────────────────────
+    // Interaction Lifecycle (override in subclasses)
+    // ─────────────────────────────────────────────────────
 
     /// <summary>
-    /// Called when the player enters interaction range.
+    /// Called when player enters interaction range.
+    /// Usually enables highlight or UI prompt.
     /// </summary>
     public virtual void OnEnter() => SetOutline(true);
 
     /// <summary>
-    /// Called when the player exits interaction range.
+    /// Called when player exits interaction range.
+    /// Usually disables highlight or UI prompt.
     /// </summary>
     public virtual void OnExit() => SetOutline(false);
 
     /// <summary>
-    /// Called when interaction begins.
-    /// Implement this in derived classes.
+    /// Called when player initiates interaction.
+    /// Must be implemented in subclasses.
     /// </summary>
     public abstract void OnInteract(bool playSound = true);
 
     /// <summary>
-    /// Called when interaction stops.
-    /// Implement this in derived classes.
+    /// Called when interaction ends or is cancelled.
+    /// Must be implemented in subclasses.
     /// </summary>
     public abstract void OnStopInteract();
 
-    #endregion
-
-    #region === Visual / Audio Tools ===
+    // ─────────────────────────────────────────────────────
+    // Visual & Audio Helpers
+    // ─────────────────────────────────────────────────────
 
     /// <summary>
-    /// Toggle the outline component on or off.
+    /// Toggles outline component on or off.
     /// </summary>
     protected void SetOutline(bool enabled)
     {
@@ -137,7 +158,7 @@ public abstract class InteractableBase : MonoBehaviour
     }
 
     /// <summary>
-    /// Toggle the interaction particle on or off.
+    /// Enables/disables interaction particle visual effect.
     /// </summary>
     protected void SetParticle(bool enabled)
     {
@@ -146,9 +167,9 @@ public abstract class InteractableBase : MonoBehaviour
     }
 
     /// <summary>
-    /// Play or stop the assigned sound based on interaction state.
+    /// Plays or stops the assigned sound via AudioManager.
     /// </summary>
-    /// <param name="play">True to play the sound; false to stop it.</param>
+    /// <param name="play">True = play, False = stop</param>
     public void HandleSound(bool play)
     {
         if (SoundId <= -1)
@@ -160,6 +181,4 @@ public abstract class InteractableBase : MonoBehaviour
         if (play) AudioManager.Instance.PlayInteractSound(SoundId);
         else AudioManager.Instance.StopSound(SoundId);
     }
-
-    #endregion
 }

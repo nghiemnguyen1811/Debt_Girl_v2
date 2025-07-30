@@ -48,8 +48,9 @@ public class PlayerMovement : MonoBehaviour
         // Disable movement while interacting
         if (control.interactDetector?.IsInteracting == true)
         {
-            if (modelTransform != null)
-                modelTransform.localRotation = Quaternion.identity;
+            if (control.interactDetector?.CurrentInteractable.InteractParticle != null)
+                ResetModelRotation();
+
             return;
         }
 
@@ -111,6 +112,20 @@ public class PlayerMovement : MonoBehaviour
 
         verticalVelocity = isGrounded ? -2f : verticalVelocity + gravity * Time.deltaTime;
         moveDirection.y = verticalVelocity;
+    }
+
+    #endregion
+
+    #region === Public Utility ===
+
+    /// <summary>
+    /// Resets the local rotation of the player's model to identity.
+    /// Useful when snapping back to default orientation.
+    /// </summary>
+    public void ResetModelRotation()
+    {
+        if (modelTransform != null)
+            modelTransform.localRotation = Quaternion.identity;
     }
 
     #endregion

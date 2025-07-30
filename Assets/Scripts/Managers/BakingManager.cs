@@ -193,6 +193,7 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
     /// </summary>
     private IEnumerator DelayScrollReset()
     {
+        yield return new WaitUntil(() => scrollRect.gameObject.activeInHierarchy);
         yield return null;
         scrollRect.horizontalNormalizedPosition = 0f;
     }
@@ -226,8 +227,8 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
         {
             if (i < cakeData.requiredIngredients.Count)
                 ingredientSlots[i].SetData(cakeData.requiredIngredients[i]);
-            else
-                ingredientSlots[i].Hide();
+
+            else ingredientSlots[i].Hide();
         }
 
         UpdateBakeButtonState();
@@ -286,7 +287,6 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
             plate.SetData(SelectedCakeData);
             warningText.gameObject.SetActive(false);
 
-            Inventory.Instance.AddItem(SelectedCakeData, 1);
             SelectCakeAtIndex(selectedIndex);
             return;
         }
@@ -366,7 +366,13 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
             if (IsEmpty()) return;
 
             remainingTime -= deltaTime;
-            if (remainingTime <= 0f) Clear();
+
+            if (remainingTime <= 0f)
+            {
+                Inventory.Instance.AddItem(cakeData, 1);
+                Clear();
+            }
+
             else waitTimeText.text = DoubleUtilities.UpdateTime((int)remainingTime);
         }
 

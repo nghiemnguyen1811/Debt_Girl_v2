@@ -166,7 +166,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43377a1370a690d45baa9f46eae9a269, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useData: 1
+  useMoodOffset: 1
+  useParticle: 1
+  useSound: 1
   interactPoint: {fileID: 571840123318222536}
+  playAnimationImmediately: 1
   data: {fileID: 11400000, guid: c34683a5baf63404c8b0d79f653faa54, type: 2}
   moodIconOffset: {x: 0.15, y: 0.5, z: -0.46}
   interactParticle: {fileID: 2771523592105010271}
@@ -234,7 +239,7 @@ MonoBehaviour:
       serializedProperties: []
   frontParameters:
     enabled: 1
-    color: {r: 0.99215686, g: 0.14117648, b: 0.03529412, a: 1}
+    color: {r: 0.99215686, g: 0.03529412, b: 0.04736103, a: 1}
     dilateShift: 1
     blurShift: 1
     fillPass:

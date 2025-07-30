@@ -70,7 +70,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a1b5c10f13f2b94e9a0d596e6a8466e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useData: 1
+  useMoodOffset: 1
+  useParticle: 0
+  useSound: 0
   interactPoint: {fileID: 1929736705203894535}
+  playAnimationImmediately: 1
   data: {fileID: 11400000, guid: 5aaf81490e061f944ac5630e503da964, type: 2}
   moodIconOffset: {x: 0, y: 0, z: 0}
   interactParticle: {fileID: 0}
