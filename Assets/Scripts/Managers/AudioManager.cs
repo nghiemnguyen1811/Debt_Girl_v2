@@ -1,25 +1,34 @@
 ﻿using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Audio;
 
 /// <summary>
 /// Central audio manager that organizes and plays different categories of audio: music, sound effects, footsteps, and mood sounds.
 /// </summary>
 public class AudioManager : SingletonMonobehaviour<AudioManager>
 {
-    #region === Inspector References ===
+    #region === Serialized Fields ===
 
-    [Header(" Elements ")]
+    [Header("Audio Sources")]
     [SerializeField] private AudioSource[] musics;
     [SerializeField] private AudioSource[] sounds;
     [SerializeField] private AudioSource[] footstepSounds;
     [SerializeField] private AudioSource[] moodSounds;
 
+    [Header("Audio Mixers")]
+    [SerializeField] private AudioMixerGroup volumeMixer;
+    [SerializeField] private AudioMixerGroup musicMixer;
+    [SerializeField] private AudioMixerGroup soundMixer;
+
     #endregion
 
-    #region === Internal Data ===
+    #region === Runtime Fields ===
 
     private Dictionary<AudioGroup, AudioSource[]> audioGroups;
+    private float volumeVol;
+    private float musicVol;
+    private float soundVol;
 
     #endregion
 
@@ -37,6 +46,8 @@ public class AudioManager : SingletonMonobehaviour<AudioManager>
             { AudioGroup.Footstep, footstepSounds },
             { AudioGroup.Mood, moodSounds }
         };
+
+        DontDestroyOnLoad(gameObject);
     }
 
     #endregion
@@ -89,6 +100,14 @@ public class AudioManager : SingletonMonobehaviour<AudioManager>
     #endregion
 
     #region === Music Control ===
+
+    /// <summary>
+    /// Stops all current music
+    /// </summary>
+    public void StopMusic()
+    {
+        StopAllFromGroup(AudioGroup.Music);
+    }
 
     /// <summary>
     /// Stops all current music and plays one by index.
@@ -159,6 +178,43 @@ public class AudioManager : SingletonMonobehaviour<AudioManager>
     public void StopMoodSound(int index)
     {
         StopFromGroup(AudioGroup.Mood, index);
+    }
+
+    #endregion
+
+    #region === Volume Control ===
+
+    public void SetVolumeSlider()
+    {
+        volumeMixer.audioMixer.SetFloat("VolumeVol", SettingsManager.Instance.volumeVolSlider.value);
+        volumeVol = SettingsManager.Instance.volumeVolSlider.value;
+    }
+
+    public void SetMusicSlider()
+    {
+        musicMixer.audioMixer.SetFloat("MusicVol", SettingsManager.Instance.musicVolSlider.value);
+        musicVol = SettingsManager.Instance.musicVolSlider.value;
+    }
+
+    public void SetSoundSlider()
+    {
+        soundMixer.audioMixer.SetFloat("SoundVol", SettingsManager.Instance.soundVolSlider.value);
+        soundVol = SettingsManager.Instance.soundVolSlider.value;
+    }
+
+    public float GetVolumeVol()
+    {
+        return volumeVol;
+    }
+
+    public float GetMusicVol()
+    {
+        return musicVol;
+    }
+
+    public float GetSoundVol()
+    {
+        return soundVol;
     }
 
     #endregion

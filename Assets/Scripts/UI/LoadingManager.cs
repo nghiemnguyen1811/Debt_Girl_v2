@@ -20,7 +20,7 @@ public class LoadingManager : SingletonMonobehaviour<LoadingManager>
     #region === Settings ===
 
     [Header("Settings")]
-    [SerializeField] private int targetSceneIndex = 1;
+    [SerializeField] private int targetSceneIndex = 2;
     [SerializeField] private float initialDelay = 0.5f;
 
     #endregion
@@ -37,6 +37,8 @@ public class LoadingManager : SingletonMonobehaviour<LoadingManager>
         }
 
         StartCoroutine(AutoLoadScene());
+
+        AudioManager.Instance.StopMusic();
     }
 
     #endregion

@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using DG.Tweening;
 using TMPro;
-using DG.Tweening;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// Manages all UI updates and panel visibility.
@@ -24,6 +25,8 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     [SerializeField] private GameObject inventoryPanel;
     [SerializeField] private GameObject cookingPanel;
     [SerializeField] private GameObject bakingPanel;
+    [SerializeField] private GameObject settingsPanel;
+    [SerializeField] private GameObject pausePanel;
 
     [Header("UI Buttons")]
     [SerializeField] private GameObject payDebtButton;
@@ -36,11 +39,14 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     private Tween[] moneyTweens = new Tween[2];
     private Tween debtTween;
 
+    private bool hasInitialized = false; // Chỉ phát âm sau khi Start()
+
     // ─────────────────────────────────────────────────────
 
     private void Start()
     {
         InitializeUI();
+        hasInitialized = true;
     }
 
     private void InitializeUI()
@@ -86,13 +92,47 @@ public class UIManager : SingletonMonobehaviour<UIManager>
 
     private void HideAllPanels()
     {
+        TogglePausePanelFromButton(false);
         TogglePostPanel(false);
         ToggleUpgradePanel(false);
         ToggleCoinTradePanel(false);
+        ToggleBakingPanel(false);
+        ToggleShoppingPanel(false);
+        ToggleInventoryPanel(false);
     }
 
-    public void TogglePostPanel(bool show) => postPanel?.SetActive(show);
-    public void ToggleBakingPanel(bool show) => bakingPanel?.SetActive(show);
+    public void ReturnToMenu()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene(0);
+    }
+
+    public void TogglePausePanelFromButton(bool show) => TogglePausePanel(show);
+
+    public void TogglePausePanel(bool show, bool isPausedBySettings = false)
+    {
+        bool shouldPauseGame = show || isPausedBySettings;
+        Time.timeScale = shouldPauseGame ? 0 : 1;
+
+        pausePanel.SetActive(show);
+
+        if (hasInitialized)
+            AudioManager.Instance.PlayInteractSound(6);
+    }
+
+    public void TogglePostPanel(bool show)
+    {
+        postPanel?.SetActive(show);
+        if (hasInitialized)
+            AudioManager.Instance.PlayInteractSound(6);
+    }
+
+    public void ToggleBakingPanel(bool show)
+    {
+        bakingPanel?.SetActive(show);
+        if (hasInitialized)
+            AudioManager.Instance.PlayInteractSound(6);
+    }
 
     public void ToggleUpgradePanel(bool show)
     {
@@ -111,7 +151,19 @@ public class UIManager : SingletonMonobehaviour<UIManager>
 
     public void ToggleInventoryPanel(bool show)
     {
-        TogglePanel(inventoryPanel, show, () => Inventory.Instance.DeSelectItem());
+        TogglePanel(inventoryPanel, show, () => Inventory.Instance.DeSelectItem(), false);
+    }
+
+    public void ToggleSettingsPanel(bool show)
+    {
+        if (settingsPanel == null) return;
+
+        settingsPanel.SetActive(show);
+
+        TogglePausePanel(!show, show);
+
+        if (hasInitialized)
+            AudioManager.Instance.PlayInteractSound(6);
     }
 
     public void ToggleCookingPanel(bool show)
@@ -121,15 +173,17 @@ public class UIManager : SingletonMonobehaviour<UIManager>
         cookingPanel.SetActive(show);
 
         if (show) CookingManager.Instance.RefreshAllCookingContainers();
+
+        if (hasInitialized)
+            AudioManager.Instance.PlayInteractSound(6);
     }
 
     public void TogglePayDebtButton(bool show) => payDebtButton?.SetActive(show);
 
-
     /// <summary>
     /// Generic panel toggler with optional callback when hiding.
     /// </summary>
-    private void TogglePanel(GameObject panel, bool show, System.Action onHideCallback = null)
+    private void TogglePanel(GameObject panel, bool show, System.Action onHideCallback = null, bool playSound = true)
     {
         if (panel == null) return;
 
@@ -137,6 +191,9 @@ public class UIManager : SingletonMonobehaviour<UIManager>
 
         if (!show)
             onHideCallback?.Invoke();
+
+        if ((playSound || (!show && !playSound)) && hasInitialized)
+            AudioManager.Instance.PlayInteractSound(6);
     }
 
     #endregion
@@ -172,11 +229,9 @@ public class UIManager : SingletonMonobehaviour<UIManager>
 
         if (!animate) return;
 
-        // Kill any existing tween and reset to default scale
         tween?.Kill();
         textMesh.transform.localScale = Vector3.one;
 
-        // Apply punch scale animation
         tween = textMesh.transform
             .DOPunchScale(Vector3.one * punchScale, punchDuration, 5, 0.8f)
             .SetEase(Ease.OutBack);

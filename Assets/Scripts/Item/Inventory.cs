@@ -71,7 +71,7 @@ public class Inventory : SingletonMonobehaviour<Inventory>
         useButton.onClick.AddListener(() => UseSelectedItem());
         sellButton.onClick.AddListener(() => SellSelectedItem());
         dropButton.onClick.AddListener(() => DropSelectedItem());
-        closeButton.onClick.AddListener(() => playerControl.interactDetector.StopCurrentInteraction());
+        closeButton.onClick.AddListener(() => CloseInventory());
 
         InitializeSlots();
     }
@@ -87,7 +87,7 @@ public class Inventory : SingletonMonobehaviour<Inventory>
             newSlot.SetEmpty();
 
             int itemIndex = i;
-            newSlot.GetSelectButton().onClick.AddListener(() => SelectItem(itemIndex));
+            newSlot.GetSelectButton().onClick.AddListener(() => SelectItem(itemIndex, true));
             slots.Add(newSlot);
         }
 
@@ -201,7 +201,7 @@ public class Inventory : SingletonMonobehaviour<Inventory>
     /// <summary>
     /// Called when a slot is selected — display item info, enable buttons.
     /// </summary>
-    public void SelectItem(int index)
+    private void SelectItem(int index, bool playSound = false)
     {
         if (slots[index].IsEmpty()) return;
 
@@ -227,6 +227,9 @@ public class Inventory : SingletonMonobehaviour<Inventory>
 
         sellPriceGroup.SetActive(data.CanBeSold);
         infoDisplayGroup.SetActive(true);
+
+        if (playSound)
+            AudioManager.Instance.PlayInteractSound(6);
     }
 
     /// <summary>
@@ -267,6 +270,8 @@ public class Inventory : SingletonMonobehaviour<Inventory>
         stats.ApplyStatChange(StatType.Mood, data.mood);
 
         RemoveSelectedItem();
+
+        AudioManager.Instance.PlayInteractSound(6);
     }
 
     /// <summary>
@@ -282,6 +287,8 @@ public class Inventory : SingletonMonobehaviour<Inventory>
         AudioManager.Instance.PlayInteractSound(1);
 
         RemoveSelectedItem();
+
+        AudioManager.Instance.PlayInteractSound(6);
     }
 
     /// <summary>
@@ -291,6 +298,16 @@ public class Inventory : SingletonMonobehaviour<Inventory>
     private void DropSelectedItem()
     {
         RemoveSelectedItem();
+        AudioManager.Instance.PlayInteractSound(6);
+    }
+
+    /// <summary>
+    /// Closes inventory and stops interaction.
+    /// </summary>
+    private void CloseInventory()
+    {
+        playerControl.interactDetector.StopCurrentInteraction();
+        AudioManager.Instance.PlayInteractSound(6);
     }
 
     /// <summary>

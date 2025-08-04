@@ -22,7 +22,7 @@ public class GameManager : SingletonMonobehaviour<GameManager>
     // Play background music when the game starts
     private void Start()
     {
-        AudioManager.Instance.PlayMusic(0);
+        AudioManager.Instance.PlayMusic(1);
     }
 
     #endregion

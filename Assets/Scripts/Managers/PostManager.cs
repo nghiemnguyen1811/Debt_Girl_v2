@@ -94,6 +94,8 @@ public class PostManager : SingletonMonobehaviour<PostManager>
 
         UpdateFXAndPosts();
         BeginCooldown();
+
+        AudioManager.Instance.PlayInteractSound(6);
     }
 
     // Create a new post from random data and engagement level
