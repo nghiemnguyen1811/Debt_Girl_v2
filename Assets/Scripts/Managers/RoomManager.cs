@@ -98,11 +98,15 @@ public class RoomManager : SingletonMonobehaviour<RoomManager>
     {
         isTransitioning = true;
 
+        AudioManager.Instance.PlayInteractSound(6);
+
         yield return fader.FadeOutCo(fadeDuration);
 
         ApplyRoomState(targetRoom);
 
         yield return new WaitForSeconds(delayDuringBlack);
+
+        AudioManager.Instance.PlayInteractSound(7);
 
         yield return fader.FadeInCo(fadeDuration);
 
@@ -143,6 +147,7 @@ public class RoomManager : SingletonMonobehaviour<RoomManager>
             room.gameObject.SetActive(room.RoomType == targetRoom);
         }
 
+        DirtManager.Instance.SetFloorCollider(target.RoomBounds);
         SetCurrentRoom(targetRoom);
     }
 }

@@ -13,6 +13,9 @@ public class Room : MonoBehaviour
     [SerializeField] private Transform playerSpawnPoint;
     [SerializeField] private float cameraSpawnX;
 
+    [Header("Room Bounds")]
+    [SerializeField] private BoxCollider roomBounds;
+
     /// <summary>
     /// The type of the room.
     /// </summary>
@@ -27,4 +30,9 @@ public class Room : MonoBehaviour
     /// The X position where the camera should be placed.
     /// </summary>
     public float CameraSpawnPosition => cameraSpawnX;
+
+    /// <summary>
+    /// The bounding box of the room.
+    /// </summary>
+    public BoxCollider RoomBounds => roomBounds;
 }

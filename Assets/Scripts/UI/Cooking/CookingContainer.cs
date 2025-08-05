@@ -115,7 +115,7 @@ public class CookingContainer : MonoBehaviour
         PlayerControl.Instance.interactDetector.ForceStartInteraction();
         Inventory.Instance.AddItem(itemData, 1);
         UIManager.Instance.ToggleCookingPanel(false);
-        AudioManager.Instance.PlayInteractSound(6);
+        AudioManager.Instance.PlayInteractSound(8);
     }
 
     public ItemDataSO GetItemData() => itemData;

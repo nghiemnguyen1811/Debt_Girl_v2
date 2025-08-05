@@ -5,12 +5,12 @@ using System.Collections;
 /// Manages periodic spawning of Dirt objects across a floor area,
 /// using spatial detection to avoid overlap.
 /// </summary>
-public class DirtManager : MonoBehaviour
+public class DirtManager : SingletonMonobehaviour<DirtManager>
 {
     #region === Floor & Spawn Settings ===
 
     [Header("Floor Settings")]
-    [SerializeField] private BoxCollider floorCollider;
+    private BoxCollider floorCollider;
 
     [Header("Spawn Settings")]
     [SerializeField] private GameObject dirtPrefab;
@@ -94,12 +94,24 @@ public class DirtManager : MonoBehaviour
                 }
 
                 dirt.gameObject.SetActive(true);
-                Debug.Log($"[DirtManager] Dirt spawned at {randomPoint} after {attempt + 1} attempts.");
                 return;
             }
         }
 
         Debug.LogWarning("[DirtManager] Failed to spawn dirt in a valid location.");
+    }
+
+    #endregion
+
+    #region === Public API ===
+
+    /// <summary>
+    /// Sets the floor collider to be used for spawning dirt.
+    /// </summary>
+    /// <param name="collider">The BoxCollider representing the floor area.</param>
+    public void SetFloorCollider(BoxCollider collider)
+    {
+        floorCollider = collider;
     }
 
     #endregion

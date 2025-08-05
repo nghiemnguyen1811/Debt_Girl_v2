@@ -39,9 +39,7 @@ public class PoolManager : SingletonMonobehaviour<PoolManager>
 
         // Create object pools for all defined prefabs
         for (int i = 0; i < poolArray.Length; i++)
-        {
             CreatePool(poolArray[i].prefab, poolArray[i].poolSize, poolArray[i].componentType);
-        }
     }
 
     #endregion

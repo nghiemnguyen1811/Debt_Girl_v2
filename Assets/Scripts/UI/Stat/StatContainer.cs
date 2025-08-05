@@ -44,7 +44,9 @@ public class StatContainer : MonoBehaviour
 
         pendingLevel++;
         UpdatePendingUI();
+
         StatUpgradeManager.Instance.UpdateStatUpgradeUI();
+        AudioManager.Instance.PlayInteractSound(8);
     }
 
     private void OnMinusClicked()
@@ -54,7 +56,9 @@ public class StatContainer : MonoBehaviour
         pendingLevel--;
         StatUpgradeManager.Instance.RefundTempPoint();
         UpdatePendingUI();
+
         StatUpgradeManager.Instance.UpdateStatUpgradeUI();
+        AudioManager.Instance.PlayInteractSound(8);
     }
 
     private void UpdatePendingUI()

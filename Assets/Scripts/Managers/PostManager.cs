@@ -12,7 +12,7 @@ public class PostManager : SingletonMonobehaviour<PostManager>
     [SerializeField] private ReactionAndFollowerFX reactionFX;
     [SerializeField] private PostContainer postPrefab;
     [SerializeField] private PostDataSO[] postDataArray;
-    [SerializeField] private Transform postParent;
+    [SerializeField] private RectTransform postParent;
     [SerializeField] private Button postButton;
 
     private PlayerControl playerControl;
@@ -95,7 +95,7 @@ public class PostManager : SingletonMonobehaviour<PostManager>
         UpdateFXAndPosts();
         BeginCooldown();
 
-        AudioManager.Instance.PlayInteractSound(6);
+        AudioManager.Instance.PlayInteractSound(8);
     }
 
     // Create a new post from random data and engagement level
@@ -107,6 +107,8 @@ public class PostManager : SingletonMonobehaviour<PostManager>
 
         post.Configure(data.caption, data.image, level);
         posts.Add(post);
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(postParent);
     }
 
     #endregion

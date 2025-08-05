@@ -86,7 +86,7 @@ public class ShopItemContainer : MonoBehaviour
         currentQuantity++;
         UpdateQuantityUI();
         ShopManager.Instance.UpdateAllUI();
-        AudioManager.Instance.PlayInteractSound(6);
+        AudioManager.Instance.PlayInteractSound(8);
     }
 
     private void OnMinusClicked()
@@ -97,7 +97,7 @@ public class ShopItemContainer : MonoBehaviour
         ShopManager.Instance.RefundFromTempPrice(itemPrice);
         UpdateQuantityUI();
         ShopManager.Instance.UpdateAllUI();
-        AudioManager.Instance.PlayInteractSound(6);
+        AudioManager.Instance.PlayInteractSound(8);
     }
 
     // ─────────────────────────────────────────────────────

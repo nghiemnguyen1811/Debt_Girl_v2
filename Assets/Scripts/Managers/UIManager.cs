@@ -117,21 +117,21 @@ public class UIManager : SingletonMonobehaviour<UIManager>
         pausePanel.SetActive(show);
 
         if (hasInitialized)
-            AudioManager.Instance.PlayInteractSound(6);
+            AudioManager.Instance.PlayInteractSound(8);
     }
 
     public void TogglePostPanel(bool show)
     {
         postPanel?.SetActive(show);
         if (hasInitialized)
-            AudioManager.Instance.PlayInteractSound(6);
+            AudioManager.Instance.PlayInteractSound(8);
     }
 
     public void ToggleBakingPanel(bool show)
     {
         bakingPanel?.SetActive(show);
         if (hasInitialized)
-            AudioManager.Instance.PlayInteractSound(6);
+            AudioManager.Instance.PlayInteractSound(8);
     }
 
     public void ToggleUpgradePanel(bool show)
@@ -163,7 +163,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
         TogglePausePanel(!show, show);
 
         if (hasInitialized)
-            AudioManager.Instance.PlayInteractSound(6);
+            AudioManager.Instance.PlayInteractSound(8);
     }
 
     public void ToggleCookingPanel(bool show)
@@ -175,7 +175,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
         if (show) CookingManager.Instance.RefreshAllCookingContainers();
 
         if (hasInitialized)
-            AudioManager.Instance.PlayInteractSound(6);
+            AudioManager.Instance.PlayInteractSound(8);
     }
 
     public void TogglePayDebtButton(bool show) => payDebtButton?.SetActive(show);
@@ -193,7 +193,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
             onHideCallback?.Invoke();
 
         if ((playSound || (!show && !playSound)) && hasInitialized)
-            AudioManager.Instance.PlayInteractSound(6);
+            AudioManager.Instance.PlayInteractSound(8);
     }
 
     #endregion

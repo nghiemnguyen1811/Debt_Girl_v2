@@ -29,7 +29,7 @@ public class MainMenu : MonoBehaviour
         if (panel == null) return;
         panel.SetActive(show);
 
-        AudioManager.Instance.PlayInteractSound(6);
+        AudioManager.Instance.PlayInteractSound(8);
     }
 
     public void QuitGame()

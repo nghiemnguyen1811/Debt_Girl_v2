@@ -217,7 +217,7 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
         UpdatePlusSigns(SelectedCakeData);
         UpdateBakeTime(SelectedCakeData.craftingTime);
 
-        AudioManager.Instance.PlayInteractSound(6);
+        AudioManager.Instance.PlayInteractSound(8);
     }
 
     /// <summary>
@@ -295,7 +295,7 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
 
         ShowWarningText(warningMessages[Random.Range(0, warningMessages.Length)]);
 
-        AudioManager.Instance.PlayInteractSound(6);
+        AudioManager.Instance.PlayInteractSound(8);
     }
 
     // ─────────────────────────────────────────────────────

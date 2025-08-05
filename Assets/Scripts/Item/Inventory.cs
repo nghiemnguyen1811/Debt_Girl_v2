@@ -229,7 +229,7 @@ public class Inventory : SingletonMonobehaviour<Inventory>
         infoDisplayGroup.SetActive(true);
 
         if (playSound)
-            AudioManager.Instance.PlayInteractSound(6);
+            AudioManager.Instance.PlayInteractSound(8);
     }
 
     /// <summary>
@@ -271,7 +271,7 @@ public class Inventory : SingletonMonobehaviour<Inventory>
 
         RemoveSelectedItem();
 
-        AudioManager.Instance.PlayInteractSound(6);
+        AudioManager.Instance.PlayInteractSound(8);
     }
 
     /// <summary>
@@ -288,7 +288,7 @@ public class Inventory : SingletonMonobehaviour<Inventory>
 
         RemoveSelectedItem();
 
-        AudioManager.Instance.PlayInteractSound(6);
+        AudioManager.Instance.PlayInteractSound(8);
     }
 
     /// <summary>
@@ -298,7 +298,7 @@ public class Inventory : SingletonMonobehaviour<Inventory>
     private void DropSelectedItem()
     {
         RemoveSelectedItem();
-        AudioManager.Instance.PlayInteractSound(6);
+        AudioManager.Instance.PlayInteractSound(8);
     }
 
     /// <summary>
@@ -307,7 +307,7 @@ public class Inventory : SingletonMonobehaviour<Inventory>
     private void CloseInventory()
     {
         playerControl.interactDetector.StopCurrentInteraction();
-        AudioManager.Instance.PlayInteractSound(6);
+        AudioManager.Instance.PlayInteractSound(8);
     }
 
     /// <summary>
