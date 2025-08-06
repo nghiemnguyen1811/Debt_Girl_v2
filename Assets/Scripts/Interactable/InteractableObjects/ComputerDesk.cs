@@ -28,8 +28,8 @@ public class ComputerDesk : InteractableBase
 
     #region === Interactable Overrides ===
 
-    // Triggered when player interacts with the desk
-    public override void OnInteract(bool playSound = true)
+    // Triggered when player interacts with the computer desk
+    public override void OnInteract(bool showProp = true)
     {
         Debug.Log($"Interacted with: {GetObjectName()}");
 
@@ -47,7 +47,7 @@ public class ComputerDesk : InteractableBase
     {
         SetOutline(true);
         SetParticle(true);
-        HandleSound(play: true);
+        HandleSound(play: false);
     }
 
     #endregion

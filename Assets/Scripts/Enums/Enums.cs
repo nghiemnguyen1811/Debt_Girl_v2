@@ -91,3 +91,10 @@ public enum IngredientType
     SpongeCake,
     EggCake,
 }
+
+public enum InteractionPropType
+{
+    None,
+    Broom,
+    CookingPan
+}

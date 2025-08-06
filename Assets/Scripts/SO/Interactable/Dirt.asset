@@ -12,11 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c731a44fa0590af40b37813c2c0aafb2, type: 3}
   m_Name: Dirt
   m_EditorClassIdentifier: 
-  conditionType: 3
   objectName: Dirt
-  animationName: Typing
+  animationName: Clean
   interactionDuration: 2
-  experienceAmount: 1
+  conditionType: 3
   moodAmount: 0.5
   energyAmount: -1
   earnsMoney: 0

@@ -13,13 +13,11 @@ public class Door : InteractableBase
     /// Called when the player interacts with the door.
     /// Triggers fade and room transition.
     /// </summary>
-    public override void OnInteract(bool playSound = true)
+    public override void OnInteract(bool showProp = true)
     {
         Debug.Log($"Interacted with: {GetObjectName()}");
 
-        SetOutline(false);
-        SetParticle(true);
-        HandleSound(playSound);
+        base.OnInteract(showProp);
 
         RoomManager.Instance.SetActiveRoom(roomType);
     }
@@ -29,9 +27,7 @@ public class Door : InteractableBase
     /// </summary>
     public override void OnStopInteract()
     {
-        SetOutline(true);
-        SetParticle(false);
-        HandleSound(false);
+        base.OnStopInteract();
     }
 
     #endregion

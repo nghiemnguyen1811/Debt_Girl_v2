@@ -8,6 +8,7 @@
 [RequireComponent(typeof(PlayerStats))]
 [RequireComponent(typeof(PlayerStatsUI))]
 [RequireComponent(typeof(MoodVisualizer))]
+[RequireComponent(typeof(HeldPropSwitcher))]
 public class PlayerControl : SingletonMonobehaviour<PlayerControl>
 {
     #region === Subsystem References ===
@@ -19,12 +20,12 @@ public class PlayerControl : SingletonMonobehaviour<PlayerControl>
     public PlayerStats stats { get; private set; }
     public PlayerStatsUI statsUI { get; private set; }
     public MoodVisualizer visualizer { get; private set; }
+    public HeldPropSwitcher propSwitcher { get; private set; }
 
     #endregion
 
     #region === Unity Lifecycle ===
 
-    // Assign all required component references
     protected override void Awake()
     {
         base.Awake();
@@ -36,8 +37,9 @@ public class PlayerControl : SingletonMonobehaviour<PlayerControl>
         stats = GetComponent<PlayerStats>();
         statsUI = GetComponent<PlayerStatsUI>();
         visualizer = GetComponent<MoodVisualizer>();
+        propSwitcher = GetComponent<HeldPropSwitcher>();
 
-        // Manually link private 'playerStats' field in statsUI using reflection
+        // Link private 'playerStats' field in statsUI
         if (statsUI != null && stats != null)
         {
             statsUI.GetType()

@@ -8,13 +8,11 @@ public class Stove : InteractableBase
     /// Called when the player starts interacting with the fridge.
     /// Disables outline, enables particles, and plays sound.
     /// </summary>
-    public override void OnInteract(bool playSound = true)
+    public override void OnInteract(bool showProp = true)
     {
         Debug.Log($"Interacted with: {GetObjectName()}");
 
-        SetOutline(false);
-        SetParticle(true);
-        HandleSound(playSound);
+        base.OnInteract(showProp);
 
         UIManager.Instance.ToggleCookingPanel(true);
     }
@@ -25,9 +23,7 @@ public class Stove : InteractableBase
     /// </summary>
     public override void OnStopInteract()
     {
-        SetOutline(true);
-        SetParticle(false);
-        HandleSound(play: false);
+        base.OnStopInteract();
 
         UIManager.Instance.ToggleCookingPanel(false);
     }

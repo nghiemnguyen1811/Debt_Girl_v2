@@ -20,6 +20,9 @@ public abstract class InteractableBase : MonoBehaviour
     [BoxGroup("Options"), LabelText("Use Particle")]
     public bool useParticle;
 
+    [BoxGroup("Options"), LabelText("Use Interaction Prop")]
+    public bool useProp;
+
     [BoxGroup("Options"), LabelText("Use Sound")]
     public bool useSound;
 
@@ -40,6 +43,9 @@ public abstract class InteractableBase : MonoBehaviour
 
     [BoxGroup("Visuals"), ShowIf("useParticle")]
     [SerializeField] protected GameObject interactParticle;
+
+    [BoxGroup("Visuals"), LabelText("Interaction Prop"), ShowIf("useProp")]
+    [SerializeField] protected InteractionPropType interactionProp;
 
     [BoxGroup("Audio"), ShowIf("useSound")]
     [SerializeField] protected int soundId = -1;
@@ -136,13 +142,25 @@ public abstract class InteractableBase : MonoBehaviour
     /// Called when player initiates interaction.
     /// Must be implemented in subclasses.
     /// </summary>
-    public abstract void OnInteract(bool playSound = true);
+    public virtual void OnInteract(bool showProp = true)
+    {
+        SetOutline(false);
+        SetParticle(true);
+        SetInteractionPropVisible(showProp);
+        HandleSound(showProp);
+    }
 
     /// <summary>
     /// Called when interaction ends or is cancelled.
     /// Must be implemented in subclasses.
     /// </summary>
-    public abstract void OnStopInteract();
+    public virtual void OnStopInteract()
+    {
+        SetOutline(true);
+        SetParticle(false);
+        SetInteractionPropVisible(false);
+        HandleSound(play: false);
+    }
 
     // ─────────────────────────────────────────────────────
     // Visual & Audio Helpers
@@ -167,10 +185,21 @@ public abstract class InteractableBase : MonoBehaviour
     }
 
     /// <summary>
+    /// Enables or disables the interaction prop (e.g. broom, pan).
+    /// </summary>
+    /// <param name="show">True = show, False = hide</param>
+    protected void SetInteractionPropVisible(bool show)
+    {
+        if (useProp && interactionProp != InteractionPropType.None)
+            PlayerControl.Instance.propSwitcher.SetPropActiveByType(interactionProp, show);
+    }
+
+
+    /// <summary>
     /// Plays or stops the assigned sound via AudioManager.
     /// </summary>
     /// <param name="play">True = play, False = stop</param>
-    public void HandleSound(bool play)
+    protected void HandleSound(bool play)
     {
         if (SoundId <= -1)
         {

@@ -24,11 +24,11 @@ public class Dirt : InteractableBase
     /// Called when the player interacts with the dirt.
     /// Plays VFX and disables outline.
     /// </summary>
-    public override void OnInteract(bool playSound = true)
+    public override void OnInteract(bool showProp = true)
     {
         Debug.Log($"Interacted with: {GetObjectName()}");
-        SetOutline(false);
-        SetParticle(true);
+
+        base.OnInteract(showProp);
     }
 
     /// <summary>
@@ -36,8 +36,7 @@ public class Dirt : InteractableBase
     /// </summary>
     public override void OnStopInteract()
     {
-        SetOutline(true);
-        SetParticle(false);
+        base.OnStopInteract();
 
         gameObject.SetActive(false);
     }

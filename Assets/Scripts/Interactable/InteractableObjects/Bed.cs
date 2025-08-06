@@ -11,13 +11,11 @@ public class Bed : InteractableBase
     /// Called when the player starts interacting with the bed.
     /// Disables outline, enables particles, and plays sound.
     /// </summary>
-    public override void OnInteract(bool playSound = true)
+    public override void OnInteract(bool showProp = true)
     {
         Debug.Log($"Interacted with: {GetObjectName()}");
 
-        SetOutline(false);
-        SetParticle(true);
-        HandleSound(playSound);
+        base.OnInteract(showProp);
     }
 
     /// <summary>
@@ -26,9 +24,7 @@ public class Bed : InteractableBase
     /// </summary>
     public override void OnStopInteract()
     {
-        SetOutline(true);
-        SetParticle(false);
-        HandleSound(play: false);
+        base.OnStopInteract();
     }
 
     #endregion
