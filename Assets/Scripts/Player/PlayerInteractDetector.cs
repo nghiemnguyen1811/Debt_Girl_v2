@@ -45,7 +45,7 @@ public class PlayerInteractDetector : MonoBehaviour
     #region === Public Properties ===
 
     public InteractableBase CurrentInteractable { get; private set; }
-    public bool IsInteracting { get; private set; }
+    public bool IsInteracting { get; set; }
 
     #endregion
 

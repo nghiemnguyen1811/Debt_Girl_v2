@@ -228,6 +228,7 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
     private void HandleRoomChosen(RoomType room)
     {
         Debug.Log($"[FloorSelectionManager] Room chosen: {room}");
+        RoomManager.Instance.SetActiveRoom(room);
     }
 
     // ─────────────────────────────────────────────────────

@@ -48,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
         // Disable movement while interacting
         if (control.interactDetector?.IsInteracting == true)
         {
-            if (control.interactDetector?.CurrentInteractable.InteractParticle != null)
+            if (control.interactDetector?.CurrentInteractable?.InteractParticle != null)
                 ResetModelRotation();
 
             return;

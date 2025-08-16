@@ -58,7 +58,7 @@ public class RoomManager : SingletonMonobehaviour<RoomManager>
     /// </summary>
     public void SetActiveRoom(RoomType targetRoom)
     {
-        if (isTransitioning) return;
+        if (isTransitioning || player.interactDetector.IsInteracting) return;
 
         fader.gameObject.SetActive(true);
         StartCoroutine(SetActiveRoomRoutine(targetRoom));
@@ -96,6 +96,7 @@ public class RoomManager : SingletonMonobehaviour<RoomManager>
     /// </summary>
     private IEnumerator SetActiveRoomRoutine(RoomType targetRoom)
     {
+        player.interactDetector.IsInteracting = true;
         isTransitioning = true;
 
         AudioManager.Instance.PlayInteractSound(6);
@@ -110,8 +111,7 @@ public class RoomManager : SingletonMonobehaviour<RoomManager>
 
         yield return fader.FadeInCo(fadeDuration);
 
-        PlayerControl.Instance.interactDetector.StopCurrentInteraction();
-
+        player.interactDetector.IsInteracting = false;
         isTransitioning = false;
     }
 
