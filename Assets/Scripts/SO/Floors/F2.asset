@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5ac700a7b278c744a9f98dfe2769c89, type: 3}
+  m_Name: F2
+  m_EditorClassIdentifier: 
+  floorName: F2
+  floorType: 3
+  roomTypes: 05000000060000000700000008000000
+  floorUIPrefab: {fileID: 857759056034407261, guid: cebd12473a6cba044acd440ab17bcaf8, type: 3}

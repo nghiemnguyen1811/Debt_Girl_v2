@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6acbbd15e75140948b9abbe0097c4bec, type: 3}
+  m_Name: Mochi
+  m_EditorClassIdentifier: 
+  icon: {fileID: 21300000, guid: 0aa39775459a4ab459adee0bbb606515, type: 3}
+  itemName: Mochi
+  description: Chewy rice cake filled with sweet paste.
+  itemType: 1
+  ingredientType: 46
+  requiredIngredients:
+  - ingredientType: 17
+    icon: {fileID: 21300000, guid: 01b34452101a0bb4dacabcf05f7988c7, type: 3}
+    amount: 2
+  - ingredientType: 25
+    icon: {fileID: 21300000, guid: 5767d66d7eb39eb46b282e7fa03ff4c1, type: 3}
+    amount: 1
+  canBeSold: 1
+  sellPrice: 19.1
+  craftingTime: 1200
+  requiredLevel: 4
+  energy: 16
+  mood: 20
+  purchaseCost: 0
+  canStackItem: 0
+  maxStackAmount: 1

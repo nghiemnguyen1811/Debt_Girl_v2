@@ -73,14 +73,14 @@ MonoBehaviour:
   useMoodOffset: 0
   useParticle: 0
   useProp: 1
-  useSound: 0
+  useSound: 1
   interactPoint: {fileID: 0}
   interactionMode: 0
   data: {fileID: 11400000, guid: 5aaf81490e061f944ac5630e503da964, type: 2}
   moodIconOffset: {x: 0, y: 0, z: 0}
   interactParticle: {fileID: 0}
   interactionProp: 1
-  soundId: -1
+  soundId: 9
   detectionRadius: 0.4
 --- !u!114 &7066875925575128251
 MonoBehaviour:

@@ -1,14 +1,27 @@
-﻿public enum RoomType
+﻿public enum FloorType
 {
     None,
+    Yard,
+    F1,
+    F2,
+    F3,
+}
+
+public enum RoomType
+{
+    None,
+    WareHouse,
+    HongYeoSa,
     LivingRoom,
-    Kitchen,
-    Bedroom,
-    Bathroom,
-    Office,
-    Laboratory,
-    Storage,
-    Hallway
+    WC_F1,
+    Jiho,
+    Danbi,
+    WC_F2,
+    ChoHee,
+    SonsRoom,
+    TaeSeon,
+    ExcitedRoom,
+    YoonSeul
 }
 
 public enum StatType
@@ -67,17 +80,38 @@ public enum IngredientType
     None,
 
     // ───── Material ─────
-    Meat,
-    Fish,
+    Almond,
+    BakingPowder,
+    BakingSoda,
+    Banana,
     Butter,
-    Peanut,
-    Flour,
-    Sugar,
+    ChocolateBar,
+    ChocolateChips,
+    Chocolate,
+    CoconutMilk,
+    Coffee,
+    CondensedMilk,
+    CreamCheese,
     Egg,
+    FreshMilk,
+    FriedEgg,
+    Gelatin,
+    GlutinouseRiceFlour,
+    Honey,
+    Ladyfinger,
+    MatchaPowder,
+    Mayonnaise,
     Milk,
-    InstantNoodles,
-    SpicyNoodles,
-    BottleWater,
+    PineappleJam,
+    PorkFloss,
+    RedBeanPaste,
+    SaltedEgg,
+    Strawberry,
+    Sugar,
+    VanillaExtract,
+    Walnut,
+    WhippedCream,
+    WhippingCream,
 
     // ───── Consumable ─────
     Pizza,
@@ -88,8 +122,21 @@ public enum IngredientType
     GrilledMeat,
 
     // ───── CraftedFood Desserts ─────
+    BananaBread,
+    Brownie,
+    ButterCookies,
+    Cheesecake,
+    ChocolateChipCookies,
+    Crepe,
+    Cupcake,
+    Flan,
+    MatchaRollCake,
+    Mochi,
+    RedVelvetCake,
+    SaltedEggSpongeCake,
     SpongeCake,
-    EggCake,
+    StrawberryMousseCake,
+    Tiramisu
 }
 
 public enum InteractionPropType
