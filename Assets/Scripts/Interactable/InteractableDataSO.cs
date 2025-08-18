@@ -22,8 +22,11 @@ public class InteractableDataSO : ScriptableObject
     // Mood & Energy Effects
     // ─────────────────────────────────────────────────────
     [Title("Mood & Energy Effects")]
-    [LabelText("Target Mood Type")]
-    public MoodConditionType conditionType = MoodConditionType.None;
+    [LabelText("Required Action Type")]
+    public MoodConditionType requiredActionType = MoodConditionType.None;
+
+    [LabelText("Clears Mood Type")]
+    public MoodConditionType clearsMoodType = MoodConditionType.None;
 
     [LabelText("Mood Amount")]
     [Range(-100f, 100f)]

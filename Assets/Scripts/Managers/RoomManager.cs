@@ -126,7 +126,7 @@ public class RoomManager : SingletonMonobehaviour<RoomManager>
 
         // Move player
         player.transform.position = target.PlayerSpawnPoint.position;
-        player.transform.rotation = target.PlayerSpawnPoint.rotation;
+        //player.transform.rotation = target.PlayerSpawnPoint.rotation;
 
         // Reset Rotation
         player.movementHandler.ResetModelRotation();

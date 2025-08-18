@@ -35,12 +35,13 @@ public enum MoodConditionType
 {
     None,
     Normal,
+    Yawn,
     Hungry,
     Dirty,
-    Sleepy,
-    NeedToShower,
-    Bored,
-    Stressed
+    Sleep,
+    Clean,
+    Typing,
+    Cooking
 }
 
 public enum AudioGroup

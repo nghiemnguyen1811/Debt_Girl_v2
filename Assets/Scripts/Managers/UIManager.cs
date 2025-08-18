@@ -25,6 +25,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     [SerializeField] private GameObject inventoryPanel;
     [SerializeField] private GameObject cookingPanel;
     [SerializeField] private GameObject bakingPanel;
+    [SerializeField] private GameObject selectRoomPanel;
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject pausePanel;
 
@@ -173,6 +174,16 @@ public class UIManager : SingletonMonobehaviour<UIManager>
         cookingPanel.SetActive(show);
 
         if (show) CookingManager.Instance.RefreshAllCookingContainers();
+
+        if (hasInitialized)
+            AudioManager.Instance.PlayInteractSound(8);
+    }
+
+    public void ToggleSelectRoomPanel(bool show)
+    {
+        if (selectRoomPanel == null) return;
+
+        selectRoomPanel.SetActive(show);
 
         if (hasInitialized)
             AudioManager.Instance.PlayInteractSound(8);

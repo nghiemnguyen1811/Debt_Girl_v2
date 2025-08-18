@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7f4ca9bea53598946a96f1cfd389b990, type: 3}
-  m_Name: Sleepy
+  m_Name: Clean
   m_EditorClassIdentifier: 
-  conditionType: 4
-  eyeSprite: {fileID: 21300000, guid: 44f476be6c1950a4fb1ee53a8befe69f, type: 3}
-  mouthSprite: {fileID: 21300000, guid: 32157cf0f92376d46b0cde5703a5df24, type: 3}
+  conditionType: 6
+  eyeSprite: {fileID: 21300000, guid: 7c5ada66a1803f84baa63213bc2a40e4, type: 3}
+  mouthSprite: {fileID: 21300000, guid: 5b594a20be0369246ab24c27e57473ee, type: 3}

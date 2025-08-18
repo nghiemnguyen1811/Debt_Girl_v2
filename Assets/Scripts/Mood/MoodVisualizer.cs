@@ -49,6 +49,8 @@ public class MoodVisualizer : MonoBehaviour
         playerControl = GetComponent<PlayerControl>();
         originalIconLocalPosition = moodIconRoot.transform.localPosition;
         moodIconRoot.SetActive(false);
+
+        ApplyFaceTextures(MoodConditionType.Normal);
     }
 
     #endregion
@@ -141,7 +143,7 @@ public class MoodVisualizer : MonoBehaviour
     /// <summary>
     /// Updates facial textures (eye and mouth) based on mood type.
     /// </summary>
-    private void ApplyFaceTextures(MoodConditionType type)
+    public void ApplyFaceTextures(MoodConditionType type)
     {
         var set = FindMaterialSet(type);
         if (set == null) return;
@@ -163,6 +165,7 @@ public class MoodVisualizer : MonoBehaviour
             if (set != null && set.conditionType == type)
                 return set;
         }
+
         return null;
     }
 

@@ -15,7 +15,8 @@ MonoBehaviour:
   objectName: Stove
   animationName: Cooking
   interactionDuration: 10
-  conditionType: 0
+  requiredActionType: 8
+  clearsMoodType: 0
   moodAmount: 10
   energyAmount: -20
   earnsMoney: 0

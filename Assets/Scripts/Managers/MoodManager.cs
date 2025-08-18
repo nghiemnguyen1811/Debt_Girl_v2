@@ -106,6 +106,28 @@ public class MoodManager : SingletonMonobehaviour<MoodManager>
     }
 
     /// <summary>
+    /// Sets visual based on current mood in queue.
+    /// If none → Normal, else clear.
+    /// </summary>
+    public void SetCurrentMoodVisual()
+    {
+        var current = GetCurrentMoodInQueue();
+
+        if (current.HasValue)
+        {
+            SetMoodVisual(current.Value);
+            return;
+        }
+
+        var normal = GetMoodData(MoodConditionType.Normal);
+
+        if (normal != null)
+            playerControl?.visualizer?.SetMoodVisual(normal);
+
+        else playerControl?.visualizer?.ClearMoodVisual();
+    }
+
+    /// <summary>
     /// Clears a specific mood from the queue and updates the visual and decay rate.
     /// </summary>
     public void ClearMood(MoodConditionType conditionType)

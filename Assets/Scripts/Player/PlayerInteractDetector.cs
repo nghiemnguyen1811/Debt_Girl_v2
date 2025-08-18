@@ -87,17 +87,24 @@ public class PlayerInteractDetector : MonoBehaviour
             return;
         }
 
+
         IsInteracting = true;
         originalPosition = transform.position;
         originalRotation = transform.rotation;
 
-        Transform point = CurrentInteractable.GetInteractPoint();
 
+        Transform point = CurrentInteractable.GetInteractPoint();
         if (point != null)
             transform.SetPositionAndRotation(point.position, point.rotation);
 
+
         if (CurrentInteractable.MoodIconOffset != Vector3.zero)
             playerControl.visualizer?.OffsetMoodIcon(CurrentInteractable.MoodIconOffset);
+
+        var data = CurrentInteractable.Data;
+        if (data != null && data.requiredActionType != MoodConditionType.None)
+            playerControl.visualizer?.ApplyFaceTextures(data.requiredActionType);
+
 
         switch (CurrentInteractable.GetInteractionMode())
         {
@@ -192,8 +199,10 @@ public class PlayerInteractDetector : MonoBehaviour
             if (data.earnsMoney)
                 MoneyManager.Instance.ChangeMoneys(data.moneyEarned);
 
-            if (data.conditionType != MoodConditionType.None)
-                MoodManager.Instance.ClearMood(data.conditionType);
+            MoodManager.Instance.SetCurrentMoodVisual();
+
+            if (data.clearsMoodType != MoodConditionType.None)
+                MoodManager.Instance.ClearMood(data.clearsMoodType);
         }
 
         playerControl.visualizer?.ResetMoodIconPosition();

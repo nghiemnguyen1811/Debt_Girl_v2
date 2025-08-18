@@ -9,13 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2906d38c16a7bca4082cf89680b21d04, type: 3}
-  m_Name: Sleepy
+  m_Script: {fileID: 11500000, guid: 7f4ca9bea53598946a96f1cfd389b990, type: 3}
+  m_Name: Yawn
   m_EditorClassIdentifier: 
-  conditionType: 4
-  moodIcon: {fileID: 2008723437, guid: 4e2a8781c4ae171469315681a3eb2fd8, type: 3}
-  moodAnimName: Yawn
-  animatorLayerIndex: 1
-  moodDecayRate: 1
-  minTime: 600
-  maxTime: 700
+  conditionType: 2
+  eyeSprite: {fileID: 21300000, guid: 7c5ada66a1803f84baa63213bc2a40e4, type: 3}
+  mouthSprite: {fileID: 21300000, guid: 5b594a20be0369246ab24c27e57473ee, type: 3}

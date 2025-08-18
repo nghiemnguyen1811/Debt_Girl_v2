@@ -15,7 +15,8 @@ MonoBehaviour:
   objectName: Dirt
   animationName: Clean
   interactionDuration: 2
-  conditionType: 3
+  requiredActionType: 6
+  clearsMoodType: 0
   moodAmount: 0.5
   energyAmount: -1
   earnsMoney: 0
