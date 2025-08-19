@@ -11130,10 +11130,10 @@ MonoBehaviour:
   detectionLayer:
     serializedVersion: 2
     m_Bits: 768
-  minSpawnInterval: 5
-  maxSpawnInterval: 10
+  minSpawnInterval: 30
+  maxSpawnInterval: 60
   minDirtPerCycle: 1
-  maxDirtPerCycle: 3
+  maxDirtPerCycle: 2
 --- !u!1 &2711135033025851020
 GameObject:
   m_ObjectHideFlags: 0
