@@ -7,6 +7,9 @@ using UnityEngine;
 /// </summary>
 public abstract class InventoryBase<T> : SingletonMonobehaviour<T> where T : InventoryBase<T>
 {
+    [Header("References")]
+    protected PlayerControl playerControl;
+
     [Header("Slot Settings")]
     [SerializeField] private int slotCount = 52;
     [SerializeField] private ItemSlot slotPrefab;
@@ -26,6 +29,8 @@ public abstract class InventoryBase<T> : SingletonMonobehaviour<T> where T : Inv
     /// </summary>
     protected virtual void Start()
     {
+        playerControl = PlayerControl.Instance;
+
         InitializeSlots();
     }
 

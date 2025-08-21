@@ -5,9 +5,6 @@ using UnityEngine.UI;
 
 public class FoodInventoryUI : InventoryBase<FoodInventoryUI>
 {
-    [Header("References")]
-    private PlayerControl playerControl;
-
     [Header("UI Elements")]
     [SerializeField] private Transform itemInfoContainer;
     [SerializeField] private TextMeshProUGUI itemNameText;
@@ -33,7 +30,6 @@ public class FoodInventoryUI : InventoryBase<FoodInventoryUI>
     {
         base.Start();
 
-        playerControl = PlayerControl.Instance;
         useButton.onClick.AddListener(UI_Use);
         sellButton.onClick.AddListener(UI_Sell);
         dropButton.onClick.AddListener(UI_Drop);
