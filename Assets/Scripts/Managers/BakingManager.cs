@@ -265,7 +265,7 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
         }
 
         bakeButton.interactable = SelectedCakeData.requiredIngredients
-            .All(ingredient => Inventory.Instance.HasItems(ingredient));
+            .All(ingredient => FoodInventoryUI.Instance.HasItems(ingredient));
     }
 
     // ─────────────────────────────────────────────────────
@@ -284,7 +284,7 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
 
             foreach (var ingredient in SelectedCakeData.requiredIngredients)
                 for (int i = 0; i < ingredient.amount; i++)
-                    Inventory.Instance.RemoveItem(ingredient);
+                    FoodInventoryUI.Instance.RemoveItem(ingredient);
 
             plate.SetData(SelectedCakeData);
             warningText.gameObject.SetActive(false);
@@ -373,7 +373,7 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
 
             if (remainingTime <= 0f)
             {
-                Inventory.Instance.AddItem(cakeData, 1);
+                FoodInventoryUI.Instance.AddItem(cakeData, 1);
                 Clear();
             }
 

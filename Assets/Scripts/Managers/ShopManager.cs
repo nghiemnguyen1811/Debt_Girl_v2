@@ -118,7 +118,7 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
             ItemDataSO itemData = container.GetItemData();
             int quantity = container.GetCurrentQuantity();
 
-            Inventory.Instance.AddItem(itemData, quantity);
+            FoodInventoryUI.Instance.AddItem(itemData, quantity);
             container.ConfirmPurchase();
         }
 

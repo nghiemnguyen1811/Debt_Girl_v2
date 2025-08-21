@@ -152,7 +152,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
 
     public void ToggleInventoryPanel(bool show)
     {
-        TogglePanel(inventoryPanel, show, () => Inventory.Instance.DeSelectItem(), false);
+        TogglePanel(inventoryPanel, show, () => FoodInventoryUI.Instance.DeSelectItem(), false);
     }
 
     public void ToggleSettingsPanel(bool show)

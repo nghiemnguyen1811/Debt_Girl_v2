@@ -85,7 +85,7 @@ public class CookingContainer : MonoBehaviour
 
         foreach (var ingredient in itemData.requiredIngredients)
         {
-            if (!Inventory.Instance.HasItems(ingredient))
+            if (!FoodInventoryUI.Instance.HasItems(ingredient))
             {
                 canCook = false;
                 break;
@@ -108,12 +108,12 @@ public class CookingContainer : MonoBehaviour
         foreach (var ingredient in itemData.requiredIngredients)
         {
             for (int i = 0; i < ingredient.amount; i++)
-                Inventory.Instance.RemoveItem(ingredient);
+                FoodInventoryUI.Instance.RemoveItem(ingredient);
         }
 
         //PlayerControl.Instance
         PlayerControl.Instance.interactDetector.ForceStartInteraction();
-        Inventory.Instance.AddItem(itemData, 1);
+        FoodInventoryUI.Instance.AddItem(itemData, 1);
         UIManager.Instance.ToggleCookingPanel(false);
         AudioManager.Instance.PlayInteractSound(8);
     }
@@ -135,7 +135,7 @@ public class IngredientUI
     public void SetData(RequiredIngredient data)
     {
         ingredientImage.sprite = data.icon;
-        int owned = Inventory.Instance.GetTotalQuantityOfItem(data.ingredientType);
+        int owned = FoodInventoryUI.Instance.GetTotalQuantityOfItem(data.ingredientType);
         quantityText.text = $"{owned}/{data.amount}";
         quantityText.color = owned >= data.amount ? Color.green : Color.red;
         ingredientsContainer.SetActive(true);
