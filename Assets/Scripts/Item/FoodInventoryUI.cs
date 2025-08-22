@@ -77,6 +77,7 @@ public class FoodInventoryUI : InventoryBase<FoodInventoryUI>
 
         infoDisplayGroup.SetActive(false);
         useButton.gameObject.SetActive(false);
+        sellButton.gameObject.SetActive(false);
         dropButton.gameObject.SetActive(false);
     }
 

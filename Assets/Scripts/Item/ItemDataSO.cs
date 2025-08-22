@@ -125,6 +125,15 @@ public class ItemDataSO : ScriptableObject
             requiredIngredients.RemoveRange(3, requiredIngredients.Count - 3);
         }
     }
+
+    private void OnValidate()
+    {
+        // Nếu là Consumable thì luôn ép canBeSold = false
+        if (itemType == ItemType.Consumable)
+        {
+            canBeSold = false;
+        }
+    }
 #endif
 
     private bool IsIngredientCategory()

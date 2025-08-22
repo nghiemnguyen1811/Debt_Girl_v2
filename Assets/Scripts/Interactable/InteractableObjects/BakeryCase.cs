@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Fridge : InteractableBase
+public class BakeryCase : InteractableBase
 {
     #region === Interaction Events ===
 
@@ -14,7 +14,7 @@ public class Fridge : InteractableBase
 
         base.OnInteract(showProp);
 
-        UIManager.Instance.ToggleFoodInventoryPanel(true);
+        UIManager.Instance.ToggleCakeInventoryPanel(true);
     }
 
     /// <summary>
@@ -25,7 +25,7 @@ public class Fridge : InteractableBase
     {
         base.OnStopInteract();
 
-        UIManager.Instance.ToggleFoodInventoryPanel(false);
+        UIManager.Instance.ToggleCakeInventoryPanel(false);
     }
 
     #endregion

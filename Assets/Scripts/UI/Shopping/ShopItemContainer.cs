@@ -57,6 +57,8 @@ public class ShopItemContainer : MonoBehaviour
         foreach (Transform stat in statGroupRoot)
             stat.gameObject.SetActive(false);
 
+        if (data.itemType == ItemType.Material) return;
+
         bool hasEnergy = data.energy > 0;
         bool hasMood = data.mood > 0;
 

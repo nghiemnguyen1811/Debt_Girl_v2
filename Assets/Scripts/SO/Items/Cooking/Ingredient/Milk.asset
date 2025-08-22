@@ -15,7 +15,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 29a1c78b0dd09574c9486634e6d65dba, type: 3}
   itemName: Milk
   description: Fresh dairy milk for baking and drinks.
-  itemType: 0
+  itemType: 2
   ingredientType: 22
   requiredIngredients:
   - ingredientType: 6
@@ -27,12 +27,12 @@ MonoBehaviour:
   - ingredientType: 7
     icon: {fileID: -1476512224, guid: 4e2a8781c4ae171469315681a3eb2fd8, type: 3}
     amount: 2
-  canBeSold: 1
+  canBeSold: 0
   sellPrice: 300
   craftingTime: 130
   requiredLevel: 0
-  energy: 16
-  mood: 20
+  energy: 2
+  mood: 2
   purchaseCost: 1
   canStackItem: 1
   maxStackAmount: 50

@@ -22,7 +22,8 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     [SerializeField] private GameObject upgradePanel;
     [SerializeField] private GameObject coinTradePanel;
     [SerializeField] private GameObject shoppingPanel;
-    [SerializeField] private GameObject inventoryPanel;
+    [SerializeField] private GameObject foodInventoryPanel;
+    [SerializeField] private GameObject cakeInventoryPanel;
     [SerializeField] private GameObject cookingPanel;
     [SerializeField] private GameObject bakingPanel;
     [SerializeField] private GameObject selectRoomPanel;
@@ -99,7 +100,10 @@ public class UIManager : SingletonMonobehaviour<UIManager>
         ToggleCoinTradePanel(false);
         ToggleBakingPanel(false);
         ToggleShoppingPanel(false);
-        ToggleInventoryPanel(false);
+        ToggleCookingPanel(false);
+        ToggleFoodInventoryPanel(false);
+        ToggleCakeInventoryPanel(false);
+        ToggleSelectRoomPanel(false);
     }
 
     public void ReturnToMenu()
@@ -128,13 +132,6 @@ public class UIManager : SingletonMonobehaviour<UIManager>
             AudioManager.Instance.PlayInteractSound(8);
     }
 
-    public void ToggleBakingPanel(bool show)
-    {
-        bakingPanel?.SetActive(show);
-        if (hasInitialized)
-            AudioManager.Instance.PlayInteractSound(8);
-    }
-
     public void ToggleUpgradePanel(bool show)
     {
         TogglePanel(upgradePanel, show, () => StatUpgradeManager.Instance.ResetAll());
@@ -150,9 +147,24 @@ public class UIManager : SingletonMonobehaviour<UIManager>
         TogglePanel(shoppingPanel, show, () => ShopManager.Instance.ResetAllSelections());
     }
 
-    public void ToggleInventoryPanel(bool show)
+    public void ToggleFoodInventoryPanel(bool show)
     {
-        TogglePanel(inventoryPanel, show, () => FoodInventoryUI.Instance.DeSelectItem(), false);
+        TogglePanel(foodInventoryPanel, show, () => FoodInventoryUI.Instance.DeSelectItem(), false);
+    }
+
+    public void ToggleCakeInventoryPanel(bool show)
+    {
+        TogglePanel(cakeInventoryPanel, show, () => CakeInventoryUI.Instance.DeSelectItem(), false);
+    }
+
+    public void ToggleBakingPanel(bool show)
+    {
+        TogglePanelShow(bakingPanel, show, () => BakingManager.Instance.SelectCurrentCake());
+    }
+
+    public void ToggleCookingPanel(bool show)
+    {
+        TogglePanelShow(cookingPanel, show, () => CookingManager.Instance.RefreshAllCookingContainers());
     }
 
     public void ToggleSettingsPanel(bool show)
@@ -162,18 +174,6 @@ public class UIManager : SingletonMonobehaviour<UIManager>
         settingsPanel.SetActive(show);
 
         TogglePausePanel(!show, show);
-
-        if (hasInitialized)
-            AudioManager.Instance.PlayInteractSound(8);
-    }
-
-    public void ToggleCookingPanel(bool show)
-    {
-        if (cookingPanel == null) return;
-
-        cookingPanel.SetActive(show);
-
-        if (show) CookingManager.Instance.RefreshAllCookingContainers();
 
         if (hasInitialized)
             AudioManager.Instance.PlayInteractSound(8);
@@ -204,6 +204,22 @@ public class UIManager : SingletonMonobehaviour<UIManager>
             onHideCallback?.Invoke();
 
         if ((playSound || (!show && !playSound)) && hasInitialized)
+            AudioManager.Instance.PlayInteractSound(8);
+    }
+
+    /// <summary>
+    /// Toggle a panel and optionally run a callback when the panel is shown.
+    /// </summary>
+    private void TogglePanelShow(GameObject panel, bool show, System.Action onShowCallback = null)
+    {
+        if (panel == null) return;
+
+        panel.SetActive(show);
+
+        if (show)
+            onShowCallback?.Invoke();
+
+        if (hasInitialized)
             AudioManager.Instance.PlayInteractSound(8);
     }
 

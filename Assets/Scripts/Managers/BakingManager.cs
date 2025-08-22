@@ -203,7 +203,7 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
     /// </summary>
     private void SelectCakeAtIndex(int index)
     {
-        if (spawnedCakeDisplays[index].IsLocked()) return;
+        if (index < 0 || spawnedCakeDisplays[index].IsLocked()) return;
 
         selectedCake = spawnedCakeDisplays[index];
         selectedIndex = index;
@@ -334,6 +334,7 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
     /// Returns a list of all spawned cake displays.
     /// </summary>
     public List<CakeDisplay> GetAllCakeDisplays() => spawnedCakeDisplays;
+    public void SelectCurrentCake() => SelectCakeAtIndex(selectedIndex);
 
     // ─────────────────────────────────────────────────────
     // PLATE UI CLASS
@@ -373,7 +374,7 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
 
             if (remainingTime <= 0f)
             {
-                FoodInventoryUI.Instance.AddItem(cakeData, 1);
+                CakeInventoryUI.Instance.AddItem(cakeData, 1);
                 Clear();
             }
 

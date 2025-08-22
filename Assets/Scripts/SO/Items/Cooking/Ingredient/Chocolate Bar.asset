@@ -15,7 +15,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 146f2e533386c7b41a0db3d5eba69d12, type: 3}
   itemName: Chocolate Bar
   description: Solid chocolate for melting or decoration.
-  itemType: 0
+  itemType: 2
   ingredientType: 6
   requiredIngredients:
   - ingredientType: 6
@@ -27,12 +27,12 @@ MonoBehaviour:
   - ingredientType: 7
     icon: {fileID: -1476512224, guid: 4e2a8781c4ae171469315681a3eb2fd8, type: 3}
     amount: 2
-  canBeSold: 1
+  canBeSold: 0
   sellPrice: 300
   craftingTime: 130
   requiredLevel: 0
-  energy: 16
-  mood: 20
+  energy: 6
+  mood: 4
   purchaseCost: 3.5
   canStackItem: 1
   maxStackAmount: 50
