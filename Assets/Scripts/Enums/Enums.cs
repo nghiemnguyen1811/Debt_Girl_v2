@@ -137,7 +137,9 @@ public enum IngredientType
     SaltedEggSpongeCake,
     SpongeCake,
     StrawberryMousseCake,
-    Tiramisu
+    Tiramisu,
+
+    Meat
 }
 
 public enum InteractionPropType
