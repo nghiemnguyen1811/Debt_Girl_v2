@@ -135,9 +135,7 @@ public class RoomManager : SingletonMonobehaviour<RoomManager>
         foreach (Transform cam in mainCameras)
         {
             if (cam == null) continue;
-            Vector3 camPos = cam.localPosition;
-            camPos.x = target.CameraSpawnPosition;
-            cam.localPosition = camPos;
+            cam.position = target.CameraSpawnPosition;
         }
 
         // Activate correct room, deactivate others
