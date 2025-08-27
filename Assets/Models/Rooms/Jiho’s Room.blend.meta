@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 457bcce23fe24ce4384b17a2aae839fa
+guid: 8bc7c0b1113863e478fa2a42a18aa0d5
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -52,11 +52,6 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Book 1.007
-    second: {fileID: 2100000, guid: c1fa9c27a39a82a43960e05514698b5f, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
       name: Book 1.008
     second: {fileID: 2100000, guid: bb0cac0ed686a9e4ea3ecccdba571929, type: 2}
   - first:
@@ -87,11 +82,6 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Material
-    second: {fileID: 2100000, guid: 55ea215625b6fd24f8dde41e48f4e69b, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
       name: Material.001
     second: {fileID: 2100000, guid: 300a9ec69fed37a469898f69b8fbcaf3, type: 2}
   - first:
@@ -112,8 +102,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: Material.009
-    second: {fileID: 2100000, guid: 220d1b5a7982ec64f987208d90481773, type: 2}
+      name: Material.007
+    second: {fileID: 2100000, guid: 862b4f87c9be3ad47b2654abb379c0eb, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -137,6 +127,16 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Material.042
+    second: {fileID: 2100000, guid: 7a3cf3e34081fcf45b0b4a1ae72f57c3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Metal.001
+    second: {fileID: 2100000, guid: bf40088dd54e13d43a7a25538cae9847, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: White
     second: {fileID: 2100000, guid: f9f03ba46435ebc4fb8abdc47d8eb7b3, type: 2}
   - first:
@@ -152,8 +152,48 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Wood procedural
+    second: {fileID: 2100000, guid: ea74cb1b44c18124bb14f7a995168565, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: book cover
+    second: {fileID: 2100000, guid: 630ede4e26bb0ac41bfb7faf4b63bc9e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: gray 3
     second: {fileID: 2100000, guid: 36c3a8dfe178e39428a3f66187152106, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: led X
+    second: {fileID: 2100000, guid: aa47246d28bb1a24ebc59bf2864d2b46, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: led o
+    second: {fileID: 2100000, guid: 5390c39b3c413e94d8a5b92ae813c56a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: led q
+    second: {fileID: 2100000, guid: 9cf911793b63a314c858fda6bcd4b608, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: led t
+    second: {fileID: 2100000, guid: adfd0ece47ebd3749aa32e3a452417e1, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: progetor.001
+    second: {fileID: 2100000, guid: dc201f1b4a6239b44a58cd9513c7fce3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: stacked paper
+    second: {fileID: 2100000, guid: 84cfda39a8d291f4d953a51458b9e177, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -188,7 +228,7 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.5
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     useSRGBMaterialColor: 1
@@ -243,7 +283,7 @@ ModelImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 0.5
+    globalScale: 1
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
