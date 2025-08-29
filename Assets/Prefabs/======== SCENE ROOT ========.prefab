@@ -40807,6 +40807,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   currentRoom: 3
 --- !u!1 &9116369023623376075
 GameObject:
@@ -41662,11 +41665,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1343226205980574046, guid: a32f688fb61c0064488bd280c09aab21, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.7
+      value: -0.75
       objectReference: {fileID: 0}
     - target: {fileID: 1343226205980574046, guid: a32f688fb61c0064488bd280c09aab21, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.077
+      value: 0.072
       objectReference: {fileID: 0}
     - target: {fileID: 1343226205980574046, guid: a32f688fb61c0064488bd280c09aab21, type: 3}
       propertyPath: m_LocalPosition.z
