@@ -105,7 +105,6 @@ public class PlayerInteractDetector : MonoBehaviour
         if (data != null && data.requiredActionType != MoodConditionType.None)
             playerControl.visualizer?.ApplyFaceTextures(data.requiredActionType);
 
-
         switch (CurrentInteractable.GetInteractionMode())
         {
             case InteractionPlayMode.Instant:

@@ -9,15 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c731a44fa0590af40b37813c2c0aafb2, type: 3}
-  m_Name: Dirt
+  m_Script: {fileID: 11500000, guid: 7f4ca9bea53598946a96f1cfd389b990, type: 3}
+  m_Name: Brush Teeth
   m_EditorClassIdentifier: 
-  objectName: Dirt
-  animationName: Clean
-  interactionDuration: 3
-  requiredActionType: 6
-  clearsMoodType: 0
-  moodAmount: 0.5
-  energyAmount: -1
-  earnsMoney: 0
-  moneyEarned: 0
+  conditionType: 9
+  eyeSprite: {fileID: 21300000, guid: 99cc704fd03ced24b9efb0e0848ee494, type: 3}
+  mouthSprite: {fileID: 21300000, guid: 5b594a20be0369246ab24c27e57473ee, type: 3}

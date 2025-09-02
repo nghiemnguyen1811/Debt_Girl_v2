@@ -41,8 +41,11 @@ public enum MoodConditionType
     Sleep,
     Clean,
     Typing,
-    Cooking
+    Cooking,
+    DirtyTeeth,
+    BrushTeeth,
 }
+
 
 public enum AudioGroup
 {
@@ -146,5 +149,6 @@ public enum InteractionPropType
 {
     None,
     Broom,
-    CookingPan
+    CookingPan,
+    Toothbrush,
 }

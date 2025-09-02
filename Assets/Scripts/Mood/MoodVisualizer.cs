@@ -205,7 +205,9 @@ public class MoodVisualizer : MonoBehaviour
         {
             yield return new WaitForSeconds(Random.Range(minAnimDelay, maxAnimDelay));
 
-            if (playerControl == null || currentMood == null || playerControl.interactDetector?.IsInteracting == true)
+            if (playerControl == null || currentMood == null ||
+                string.IsNullOrEmpty(currentMood.moodAnimName) ||
+                playerControl.interactDetector?.IsInteracting == true)
                 continue;
 
             playerControl.animationHandler.SetMoodTrigger(currentMood.moodAnimName, currentMood.animatorLayerIndex);

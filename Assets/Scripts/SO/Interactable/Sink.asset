@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c731a44fa0590af40b37813c2c0aafb2, type: 3}
-  m_Name: Dirt
+  m_Name: Sink
   m_EditorClassIdentifier: 
-  objectName: Dirt
-  animationName: Clean
-  interactionDuration: 3
-  requiredActionType: 6
-  clearsMoodType: 0
-  moodAmount: 0.5
-  energyAmount: -1
+  objectName: Brush Teeth
+  animationName: BrushTeeth
+  interactionDuration: 7
+  requiredActionType: 10
+  clearsMoodType: 9
+  moodAmount: 1
+  energyAmount: 0
   earnsMoney: 0
   moneyEarned: 0
