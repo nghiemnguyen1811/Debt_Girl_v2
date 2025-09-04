@@ -38,7 +38,7 @@ public class RoomManager : SingletonMonobehaviour<RoomManager>
     private void Start()
     {
         player = PlayerControl.Instance;
-        InitRoom(RoomType.Danbi);
+        InitRoom(RoomType.WC_F1);
     }
 
     // ─────────────────────────────────────────────────────
