@@ -37,13 +37,14 @@ public enum MoodConditionType
     Normal,
     Yawn,
     Hungry,
-    Dirty,
+    Shower,
     Sleep,
     Clean,
     Typing,
     Cooking,
     DirtyTeeth,
     BrushTeeth,
+    DirtyBody,
 }
 
 

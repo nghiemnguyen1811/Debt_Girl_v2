@@ -29,8 +29,9 @@ public class RoomManager : SingletonMonobehaviour<RoomManager>
     // ─────────────────────────────────────────────────────
     [Header("Room Data")]
     [SerializeField] private Room[] rooms;
+    [SerializeField] private RoomType startRoom;
 
-    public RoomType currentRoom = RoomType.None;
+    private RoomType currentRoom = RoomType.None;
 
     // ─────────────────────────────────────────────────────
     // Unity Methods
@@ -38,7 +39,7 @@ public class RoomManager : SingletonMonobehaviour<RoomManager>
     private void Start()
     {
         player = PlayerControl.Instance;
-        InitRoom(RoomType.Danbi);
+        InitRoom(startRoom);
     }
 
     // ─────────────────────────────────────────────────────
