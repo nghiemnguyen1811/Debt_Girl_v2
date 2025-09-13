@@ -1,4 +1,13 @@
-﻿public enum FloorType
+﻿public enum CharacterType
+{
+    Danbi,
+    Jiho,
+    ChoHee,
+    YoonSeul,
+    TaeSeon
+}
+
+public enum FloorType
 {
     None,
     Yard,
