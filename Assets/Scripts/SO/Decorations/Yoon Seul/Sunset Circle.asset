@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a54dc5c4dc1aab7419cd23800e79f042, type: 3}
+  m_Name: Sunset Circle
+  m_EditorClassIdentifier: 
+  icon: {fileID: 21300000, guid: b3901cc1b6721734b91923ac21f9f4c5, type: 3}
+  itemName: Sunset Circle
+  description: "Warm-toned circular rug \u2014 simple, eye-catching, fits any interior."
+  itemID: 5
+  owner: 3
+  price: 1800

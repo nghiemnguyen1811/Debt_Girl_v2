@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a54dc5c4dc1aab7419cd23800e79f042, type: 3}
-  m_Name: Wall Paiting
+  m_Name: MintSoft Cushion
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: a644f8690f4757e44977b79d4146637e, type: 3}
-  itemName: Wall
-  description: Hello
+  icon: {fileID: 21300000, guid: bde4fa6c337bade4b99c3e7ca4f0183e, type: 3}
+  itemName: MintSoft Cushion
+  description: Minimalist mint-green floor cushion, perfect for a cozy and calm vibe.
+  itemID: 3
   owner: 2
-  price: 100
+  price: 600

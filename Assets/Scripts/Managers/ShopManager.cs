@@ -295,9 +295,7 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
         foreach (var container in spawnedDecorContainers)
         {
             if (container.GetCount() > 0)
-            {
                 container.ConfirmPurchase();
-            }
         }
 
         DeductTotalPrice();
@@ -310,7 +308,7 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
             container.ResetSelection();
 
         foreach (var container in spawnedDecorContainers)
-            container.Configure(container.GetItemData());
+            container.ResetSelection();
 
         ResetTempTotalPrice();
         UpdateAllUI();

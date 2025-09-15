@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a54dc5c4dc1aab7419cd23800e79f042, type: 3}
+  m_Name: TwinCats Display
+  m_EditorClassIdentifier: 
+  icon: {fileID: 21300000, guid: c8be6c5fc5ff1c546b8331917c99b6ea, type: 3}
+  itemName: TwinCats Display
+  description: "Framed twin cats \u2014 dark and light, perfect for anime and cat
+    lovers."
+  itemID: 6
+  owner: 2
+  price: 2500

@@ -19,7 +19,7 @@ public class DecorationItemContainer : MonoBehaviour
     [SerializeField] private GameObject outlinedText;
 
     private DecorationItemSO itemData;
-    private int currentCount = 0;
+    private int currentQuantity = 0;
     private bool isOwned;
 
     private void Start()
@@ -40,16 +40,16 @@ public class DecorationItemContainer : MonoBehaviour
         ownerText.text = $"{data.owner}";
         priceText.text = $"{data.price}$";
 
-        currentCount = 0;
+        currentQuantity = 0;
         isOwned = false;
         UpdateUI();
     }
 
     private void OnMinusClicked()
     {
-        if (isOwned || currentCount <= 0) return;
+        if (isOwned || currentQuantity <= 0) return;
 
-        currentCount--;
+        currentQuantity--;
         ShopManager.Instance.RefundFromTempPrice(itemData.price);
         UpdateUI();
         ShopManager.Instance.UpdateAllUI();
@@ -58,11 +58,11 @@ public class DecorationItemContainer : MonoBehaviour
 
     private void OnPlusClicked()
     {
-        if (isOwned || currentCount >= 1) return;
+        if (isOwned || currentQuantity >= 1) return;
 
         if (!ShopManager.Instance.TryAddToTempPrice(itemData.price)) return;
 
-        currentCount++;
+        currentQuantity++;
         UpdateUI();
         ShopManager.Instance.UpdateAllUI();
         AudioManager.Instance.PlayInteractSound(8);
@@ -84,21 +84,33 @@ public class DecorationItemContainer : MonoBehaviour
 
         if (!isOwned)
         {
-            countText.text = currentCount.ToString();
-            minusButton.interactable = currentCount > 0;
-            plusButton.interactable = currentCount < 1;
+            countText.text = currentQuantity.ToString();
+            minusButton.interactable = currentQuantity > 0;
+            plusButton.interactable = currentQuantity < 1;
         }
     }
 
     public void ConfirmPurchase()
     {
-        if (currentCount <= 0) return;
+        if (currentQuantity <= 0) return;
 
         isOwned = true;
+        currentQuantity = 0;
+
+        // Notify DecorationManager to unlock item in scene
+        if (itemData != null)
+            DecorationManager.Instance.UnlockDecoration(itemData.itemID, itemData.owner);
+
         UpdateUI();
     }
 
-    public int GetCount() => currentCount;
-    public double GetTotalPrice() => currentCount * (itemData != null ? itemData.price : 0);
+    public void ResetSelection()
+    {
+        currentQuantity = 0;
+        UpdateUI();
+    }
+
+    public int GetCount() => currentQuantity;
+    public double GetTotalPrice() => currentQuantity * (itemData != null ? itemData.price : 0);
     public DecorationItemSO GetItemData() => itemData;
 }
