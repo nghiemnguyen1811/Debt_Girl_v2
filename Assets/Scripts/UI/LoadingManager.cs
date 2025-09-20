@@ -29,13 +29,6 @@ public class LoadingManager : SingletonMonobehaviour<LoadingManager>
 
     private void Start()
     {
-        // Apply outline to the progress text for better visibility
-        if (progressText != null)
-        {
-            progressText.outlineWidth = 0.4f;
-            progressText.outlineColor = Color.grey;
-        }
-
         StartCoroutine(AutoLoadScene());
 
         AudioManager.Instance.StopMusic();
@@ -75,13 +68,13 @@ public class LoadingManager : SingletonMonobehaviour<LoadingManager>
             timer += Time.deltaTime;
             float progress = Mathf.Clamp01(timer / duration);
             loadingBar.value = progress;
-            progressText.text = "남은 시간은..." + (progress * 100f).ToString("F0") + "%";
+            progressText.text = (progress * 100f).ToString("F0") + "%";
             yield return null;
         }
 
         // Ensure bar is full and text is accurate
         loadingBar.value = 1f;
-        progressText.text = "남은 시간은...100%";
+        progressText.text = "100%";
 
         // Load the next scene on the next frame
         yield return null;

@@ -18,6 +18,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     [SerializeField] private TextMeshProUGUI warningText;
 
     [Header("UI Panels")]
+    [SerializeField] private GameObject phonePanel;
     [SerializeField] private GameObject postPanel;
     [SerializeField] private GameObject upgradePanel;
     [SerializeField] private GameObject coinTradePanel;
@@ -29,6 +30,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     [SerializeField] private GameObject selectRoomPanel;
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject pausePanel;
+    [SerializeField] private GameObject exitPanel;
 
     [Header("UI Buttons")]
     [SerializeField] private GameObject payDebtButton;
@@ -41,23 +43,20 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     private Tween[] moneyTweens = new Tween[2];
     private Tween debtTween;
 
-    private bool hasInitialized = false; // Chỉ phát âm sau khi Start()
+    private bool hasInitialized = false;
 
     // ─────────────────────────────────────────────────────
+    #region Unity Lifecycle
 
     private void Start()
     {
-        InitializeUI();
+        HideAllPanels();
         hasInitialized = true;
     }
 
-    private void InitializeUI()
-    {
-        HideAllPanels();
-    }
+    #endregion
 
     // ─────────────────────────────────────────────────────
-
     #region UI Updates
 
     public void UpdateMoney(double totalCoins, bool animate = true)
@@ -77,7 +76,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     public void UpdateStatPoints(int total)
     {
         if (statPointText != null)
-            statPointText.text = $"Stat Points: {total}";
+            statPointText.text = $"{total}";
     }
 
     public void UpdateTotalPriceUI(double total)
@@ -89,12 +88,115 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     #endregion
 
     // ─────────────────────────────────────────────────────
-
     #region Panel Controls
 
+    /// <summary>
+    /// Centralized panel toggle handler.
+    /// </summary>
+    public void TogglePanelByType(PanelType type, bool show)
+    {
+        GameObject panel = null;
+        System.Action callback = null;
+        bool callbackOnShow = false;
+
+        switch (type)
+        {
+            case PanelType.Phone: panel = phonePanel; break;
+            case PanelType.Post: panel = postPanel; break;
+            case PanelType.Exit: panel = exitPanel; break;
+
+            case PanelType.Upgrade:
+                panel = upgradePanel;
+                callback = () => StatUpgradeManager.Instance.ResetAll();
+                break;
+
+            case PanelType.CoinTrade:
+                panel = coinTradePanel;
+                callback = () => CoinTradeManager.Instance.ResetAll();
+                break;
+
+            case PanelType.Shopping:
+                panel = shoppingPanel;
+                callback = () => ShopManager.Instance.ResetAllSelections();
+                break;
+
+            case PanelType.FoodInventory:
+                panel = foodInventoryPanel;
+                callback = () => FoodInventoryUI.Instance.DeSelectItem();
+                break;
+
+            case PanelType.CakeInventory:
+                panel = cakeInventoryPanel;
+                callback = () => CakeInventoryUI.Instance.DeSelectItem();
+                break;
+
+            case PanelType.Baking:
+                panel = bakingPanel;
+                callback = () => BakingManager.Instance.SelectCurrentCake();
+                callbackOnShow = true;
+                break;
+
+            case PanelType.Cooking:
+                panel = cookingPanel;
+                callback = () => CookingManager.Instance.RefreshAllCookingContainers();
+                callbackOnShow = true;
+                break;
+
+            case PanelType.SelectRoom: panel = selectRoomPanel; break;
+
+            case PanelType.Settings:
+                panel = settingsPanel;
+                TogglePausePanel(!show, show);
+                break;
+
+            case PanelType.Pause:
+                TogglePausePanel(show);
+                return;
+        }
+
+        if (panel == null) return;
+
+        panel.SetActive(show);
+
+        if (type == PanelType.CoinTrade || type == PanelType.Upgrade ||
+            type == PanelType.Shopping || type == PanelType.SelectRoom ||
+            type == PanelType.Post)
+        {
+            phonePanel.SetActive(!show);
+        }
+
+        if (show && callbackOnShow)
+            callback?.Invoke();
+
+        else if (!show && !callbackOnShow)
+            callback?.Invoke();
+
+        if (hasInitialized)
+            AudioManager.Instance.PlayInteractSound(8);
+    }
+
+
+    // Wrappers for Inspector (Unity Buttons only accept basic parameter types)
+    public void TogglePhonePanel(bool show) => TogglePanelByType(PanelType.Phone, show);
+    public void TogglePostPanel(bool show) => TogglePanelByType(PanelType.Post, show);
+    public void ToggleExitPanel(bool show) => TogglePanelByType(PanelType.Exit, show);
+    public void ToggleUpgradePanel(bool show) => TogglePanelByType(PanelType.Upgrade, show);
+    public void ToggleCoinTradePanel(bool show) => TogglePanelByType(PanelType.CoinTrade, show);
+    public void ToggleShoppingPanel(bool show) => TogglePanelByType(PanelType.Shopping, show);
+    public void ToggleFoodInventoryPanel(bool show) => TogglePanelByType(PanelType.FoodInventory, show);
+    public void ToggleCakeInventoryPanel(bool show) => TogglePanelByType(PanelType.CakeInventory, show);
+    public void ToggleBakingPanel(bool show) => TogglePanelByType(PanelType.Baking, show);
+    public void ToggleCookingPanel(bool show) => TogglePanelByType(PanelType.Cooking, show);
+    public void ToggleSelectRoomPanel(bool show) => TogglePanelByType(PanelType.SelectRoom, show);
+    public void ToggleSettingsPanel(bool show) => TogglePanelByType(PanelType.Settings, show);
+    public void TogglePausePanelFromButton(bool show) => TogglePanelByType(PanelType.Pause, show);
+
+    /// <summary>
+    /// Hide all panels on initialization.
+    /// </summary>
     private void HideAllPanels()
     {
-        TogglePausePanelFromButton(false);
+        TogglePausePanel(false);
         TogglePostPanel(false);
         ToggleUpgradePanel(false);
         ToggleCoinTradePanel(false);
@@ -104,16 +206,12 @@ public class UIManager : SingletonMonobehaviour<UIManager>
         ToggleFoodInventoryPanel(false);
         ToggleCakeInventoryPanel(false);
         ToggleSelectRoomPanel(false);
+        TogglePhonePanel(false);
     }
 
-    public void ReturnToMenu()
-    {
-        Time.timeScale = 1;
-        SceneManager.LoadScene(0);
-    }
-
-    public void TogglePausePanelFromButton(bool show) => TogglePausePanel(show);
-
+    /// <summary>
+    /// Pause panel has special handling (timeScale).
+    /// </summary>
     public void TogglePausePanel(bool show, bool isPausedBySettings = false)
     {
         bool shouldPauseGame = show || isPausedBySettings;
@@ -125,108 +223,27 @@ public class UIManager : SingletonMonobehaviour<UIManager>
             AudioManager.Instance.PlayInteractSound(8);
     }
 
-    public void TogglePostPanel(bool show)
-    {
-        postPanel?.SetActive(show);
-        if (hasInitialized)
-            AudioManager.Instance.PlayInteractSound(8);
-    }
-
-    public void ToggleUpgradePanel(bool show)
-    {
-        TogglePanel(upgradePanel, show, () => StatUpgradeManager.Instance.ResetAll());
-    }
-
-    public void ToggleCoinTradePanel(bool show)
-    {
-        TogglePanel(coinTradePanel, show, () => CoinTradeManager.Instance.ResetAll());
-    }
-
-    public void ToggleShoppingPanel(bool show)
-    {
-        TogglePanel(shoppingPanel, show, () => ShopManager.Instance.ResetAllSelections());
-    }
-
-    public void ToggleFoodInventoryPanel(bool show)
-    {
-        TogglePanel(foodInventoryPanel, show, () => FoodInventoryUI.Instance.DeSelectItem(), false);
-    }
-
-    public void ToggleCakeInventoryPanel(bool show)
-    {
-        TogglePanel(cakeInventoryPanel, show, () => CakeInventoryUI.Instance.DeSelectItem(), false);
-    }
-
-    public void ToggleBakingPanel(bool show)
-    {
-        TogglePanelShow(bakingPanel, show, () => BakingManager.Instance.SelectCurrentCake());
-    }
-
-    public void ToggleCookingPanel(bool show)
-    {
-        TogglePanelShow(cookingPanel, show, () => CookingManager.Instance.RefreshAllCookingContainers());
-    }
-
-    public void ToggleSettingsPanel(bool show)
-    {
-        if (settingsPanel == null) return;
-
-        settingsPanel.SetActive(show);
-
-        TogglePausePanel(!show, show);
-
-        if (hasInitialized)
-            AudioManager.Instance.PlayInteractSound(8);
-    }
-
-    public void ToggleSelectRoomPanel(bool show)
-    {
-        if (selectRoomPanel == null) return;
-
-        selectRoomPanel.SetActive(show);
-
-        if (hasInitialized)
-            AudioManager.Instance.PlayInteractSound(8);
-    }
-
     public void TogglePayDebtButton(bool show) => payDebtButton?.SetActive(show);
 
-    /// <summary>
-    /// Generic panel toggler with optional callback when hiding.
-    /// </summary>
-    private void TogglePanel(GameObject panel, bool show, System.Action onHideCallback = null, bool playSound = true)
+    #endregion
+
+    // ─────────────────────────────────────────────────────
+    #region Scene / Game Controls
+
+    public void ReturnToMenu()
     {
-        if (panel == null) return;
-
-        panel.SetActive(show);
-
-        if (!show)
-            onHideCallback?.Invoke();
-
-        if ((playSound || (!show && !playSound)) && hasInitialized)
-            AudioManager.Instance.PlayInteractSound(8);
+        Time.timeScale = 1;
+        SceneManager.LoadScene(0);
     }
 
-    /// <summary>
-    /// Toggle a panel and optionally run a callback when the panel is shown.
-    /// </summary>
-    private void TogglePanelShow(GameObject panel, bool show, System.Action onShowCallback = null)
+    public void QuitGame()
     {
-        if (panel == null) return;
-
-        panel.SetActive(show);
-
-        if (show)
-            onShowCallback?.Invoke();
-
-        if (hasInitialized)
-            AudioManager.Instance.PlayInteractSound(8);
+        Application.Quit();
     }
 
     #endregion
 
     // ─────────────────────────────────────────────────────
-
     #region Warning Text
 
     public void ShowWarningText(string message)
@@ -245,7 +262,6 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     #endregion
 
     // ─────────────────────────────────────────────────────
-
     #region Internal Helpers
 
     private void UpdateText(TextMeshProUGUI textMesh, double value, bool animate, ref Tween tween)

@@ -162,3 +162,20 @@ public enum InteractionPropType
     CookingPan,
     Toothbrush,
 }
+
+public enum PanelType
+{
+    Phone,
+    Post,
+    Exit,
+    Upgrade,
+    CoinTrade,
+    Shopping,
+    FoodInventory,
+    CakeInventory,
+    Baking,
+    Cooking,
+    SelectRoom,
+    Settings,
+    Pause
+}

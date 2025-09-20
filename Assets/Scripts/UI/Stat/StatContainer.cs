@@ -68,7 +68,7 @@ public class StatContainer : MonoBehaviour
 
     private void RefreshUI()
     {
-        levelText.text = $"Level: {statData.level}";
+        levelText.text = $"{statData.level}";
     }
 
     public void CommitPendingLevel()

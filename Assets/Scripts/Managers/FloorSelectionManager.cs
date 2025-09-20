@@ -231,6 +231,7 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
 
         RoomManager.Instance.SetActiveRoom(room);
         UIManager.Instance.ToggleSelectRoomPanel(false);
+        UIManager.Instance.TogglePhonePanel(false);
     }
 
     // ─────────────────────────────────────────────────────
