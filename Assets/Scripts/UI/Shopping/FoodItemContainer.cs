@@ -46,7 +46,7 @@ public class FoodItemContainer : MonoBehaviour
         itemNameText.text = data.itemName;
         itemDescriptionText.text = data.description;
         itemPrice = data.purchaseCost;
-        itemPriceText.text = $"{itemPrice}$";
+        itemPriceText.text = $"{itemPrice}원";
 
         DisplayStatUI(data);
         UpdateQuantityUI();
