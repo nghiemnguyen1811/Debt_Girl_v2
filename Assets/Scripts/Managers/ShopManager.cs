@@ -24,7 +24,9 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
     [Header("Shop Tabs (Food / Decor / Fashion)")]
     [SerializeField] private List<ShopTab> shopTabs;
     [SerializeField] private GameObject characterSelectionPanel;
-    [SerializeField] private Color tabColor;
+
+    [SerializeField] private Color tabOn;
+    [SerializeField] private Color tabOff;
 
     [Header("Buttons")]
     [SerializeField] private Button purchaseButton;
@@ -206,21 +208,17 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
         // Only for Decoration and Fashion → enable CharacterSelection Panel
         if (tab.tabName == "Decoration" || tab.tabName == "Fashion")
             characterSelectionPanel.SetActive(true);
-        else
-            characterSelectionPanel.SetActive(false);
+
+        else characterSelectionPanel.SetActive(false);
     }
 
     private void SetTabVisual(ShopTab tab, bool isActive)
     {
         if (tab.labelText != null)
-            tab.labelText.color = isActive ? Color.white : tabColor;
+            tab.labelText.color = isActive ? tabOn : tabOff;
 
-        if (tab.backgroundImage != null)
-        {
-            var color = tab.backgroundImage.color;
-            color.a = isActive ? 1f : 0f;
-            tab.backgroundImage.color = color;
-        }
+        if (tab.outline != null)
+            tab.outline.SetActive(isActive);
     }
 
     // ─────────────────────────────────────────────────────
@@ -361,7 +359,7 @@ public class ShopTab
 {
     public string tabName;              // "Food" / "Decoration" / "Fashion"
     public Button button;               // Button reference
-    public Image backgroundImage;       // Background image of the tab
     public TMP_Text labelText;          // Text label of the tab
+    public GameObject outline;          // Outline image of the tab
     public GameObject scrollRectGO;     // Corresponding ScrollRect
 }

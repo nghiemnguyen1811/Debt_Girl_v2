@@ -13,7 +13,6 @@ public class PostContainer : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI likeCountText;
     [SerializeField] private TextMeshProUGUI commentCountText;
-    [SerializeField] private TextMeshProUGUI shareCountText;
 
     #endregion
 
@@ -23,7 +22,6 @@ public class PostContainer : MonoBehaviour
     [SerializeField] private float updateInterval = 2f;
     [SerializeField] private Vector2 likeRange = new Vector2(200, 3000);
     [SerializeField] private Vector2 commentRange = new Vector2(20, 500);
-    [SerializeField] private Vector2 shareRange = new Vector2(10, 200);
 
     #endregion
 
@@ -34,11 +32,9 @@ public class PostContainer : MonoBehaviour
 
     private int currentLikes;
     private int currentComments;
-    private int currentShares;
 
     private int targetLikes;
     private int targetComments;
-    private int targetShares;
 
     private Coroutine updateRoutine;
 
@@ -70,14 +66,12 @@ public class PostContainer : MonoBehaviour
         // Set random target values for interaction counts
         targetLikes = Random.Range((int)likeRange.x, (int)likeRange.y);
         targetComments = Random.Range((int)commentRange.x, (int)commentRange.y);
-        targetShares = Random.Range((int)shareRange.x, (int)shareRange.y);
 
         // Reset current values
-        currentLikes = currentComments = currentShares = 0;
+        currentLikes = currentComments = 0;
 
         likeCountText.text = "0";
         commentCountText.text = "0";
-        shareCountText.text = "0";
 
         StartUpdatingInteractions();
     }
@@ -117,12 +111,10 @@ public class PostContainer : MonoBehaviour
             // Apply deltas with clamping to target max values
             currentLikes = Mathf.Clamp(currentLikes + likeDelta, 0, targetLikes);
             currentComments = Mathf.Clamp(currentComments + Random.Range(1, 10), 0, targetComments);
-            currentShares = Mathf.Clamp(currentShares + Random.Range(1, 5), 0, targetShares);
 
             // Update the UI
             likeCountText.text = DoubleUtilities.ToIdleNotation(currentLikes);
             commentCountText.text = DoubleUtilities.ToIdleNotation(currentComments);
-            shareCountText.text = DoubleUtilities.ToIdleNotation(currentShares);
 
             yield return new WaitForSeconds(updateInterval);
         }

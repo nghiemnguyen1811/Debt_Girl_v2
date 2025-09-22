@@ -229,12 +229,12 @@ public class ReactionAndFollowerFX : MonoBehaviour
         followerTween = DOTween.To(() => currentDisplay, x =>
         {
             currentDisplay = x;
-            followerText.text = currentDisplay + " Followers";
+            followerText.text = currentDisplay.ToString();
         },
         newCount,
         followerChangeDuration).SetEase(Ease.OutCubic);
 
-        followerText.text = DoubleUtilities.ToIdleNotation(currentDisplay) + " Followers";
+        followerText.text = DoubleUtilities.ToIdleNotation(currentDisplay);
         followerCount = newCount;
     }
 
