@@ -58,14 +58,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.34543964, g: 0.5266325, b: 0.7660377, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6ae0d300f20716340974f35247661202, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 33cdbc9efb9b9bf4988a3cd55ad01f05, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -357,8 +357,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: daed3c00837c27140b911ac78d3973ca, type: 3}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 7b466c08fa7d596468107baa90b75516, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
@@ -440,6 +440,9 @@ MonoBehaviour:
   quantityText: {fileID: 5872967160457848017}
   plusIcon: {fileID: 6234627631669307304}
   highlight: {fileID: 2134796021068147935}
+  spriteBtns:
+  - {fileID: 21300000, guid: 7b466c08fa7d596468107baa90b75516, type: 3}
+  - {fileID: 21300000, guid: 9d2a95c63568e7c45b31b55fa4c21a89, type: 3}
   selectButton: {fileID: 2913046777141685584}
 --- !u!1 &6234627631669307304
 GameObject:
@@ -499,14 +502,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.33333334, g: 0.5019608, b: 0.7058824, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 221e802394c4945cc865cd66cc3c43e3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 6ab0e2830761e9f48a68442747b2eb67, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

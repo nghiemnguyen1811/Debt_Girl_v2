@@ -44,10 +44,10 @@ public abstract class InventoryBase<T> : SingletonMonobehaviour<T> where T : Inv
         for (int i = 0; i < slotCount; i++)
         {
             var newSlot = Instantiate(slotPrefab, slotContainer);
-            newSlot.SetEmpty();
+            newSlot.ResetSlot();
 
             int itemIndex = i;
-            newSlot.GetSelectButton().onClick.AddListener(() => SelectItem(itemIndex, true));
+            newSlot.SelectButton.onClick.AddListener(() => SelectItem(itemIndex, true));
             slots.Add(newSlot);
         }
 
@@ -129,7 +129,7 @@ public abstract class InventoryBase<T> : SingletonMonobehaviour<T> where T : Inv
 
                 if (slots[i].Quantity == 0)
                 {
-                    slots[i].SetEmpty();
+                    slots[i].ResetSlot();
                     DeSelectItem();
                     DecrementFilledSlot();
                 }
@@ -242,7 +242,7 @@ public abstract class InventoryBase<T> : SingletonMonobehaviour<T> where T : Inv
 
         if (selectedItem.Quantity == 0)
         {
-            selectedItem.SetEmpty();
+            selectedItem.ResetSlot();
             DeSelectItem();
             DecrementFilledSlot();
             return;
@@ -259,9 +259,10 @@ public abstract class InventoryBase<T> : SingletonMonobehaviour<T> where T : Inv
     {
         foreach (var slot in slots)
         {
-            if (!slot.IsEmpty()) slot.UpdateSlotUI();
-            else slot.SetEmpty();
+            if (!slot.IsEmpty()) slot.RefreshUI();
+            else slot.ResetSlot();
         }
+
         RaiseSlotUsageChanged();
     }
 

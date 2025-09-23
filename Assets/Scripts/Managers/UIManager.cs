@@ -82,7 +82,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     public void UpdateTotalPriceUI(double total)
     {
         if (totalPriceText != null)
-            totalPriceText.text = DoubleUtilities.ToIdleNotation(total) + "$";
+            totalPriceText.text = DoubleUtilities.ToIdleNotation(total) + "원";
     }
 
     #endregion

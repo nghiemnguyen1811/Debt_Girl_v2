@@ -13,7 +13,6 @@ public class FoodInventoryUI : InventoryBase<FoodInventoryUI>
     [SerializeField] private TextMeshProUGUI sellPriceText;
     [SerializeField] private TextMeshProUGUI energyText;
     [SerializeField] private TextMeshProUGUI moodText;
-    [SerializeField] private TextMeshProUGUI slotUsageText;
     [SerializeField] private Image itemIconImage;
     [SerializeField] private Transform statGroupRoot;
     [SerializeField] private GameObject infoDisplayGroup;
@@ -50,7 +49,7 @@ public class FoodInventoryUI : InventoryBase<FoodInventoryUI>
         itemNameText.text = data.itemName;
         itemQuantityText.text = slot.Quantity.ToString();
         itemDescriptionText.text = data.description;
-        sellPriceText.text = $"{data.SellPrice}$";
+        sellPriceText.text = $"{data.SellPrice}원";
 
         // Toggle buttons and groups
         useButton.gameObject.SetActive(data.CanBeUsed);
@@ -79,14 +78,6 @@ public class FoodInventoryUI : InventoryBase<FoodInventoryUI>
         useButton.gameObject.SetActive(false);
         sellButton.gameObject.SetActive(false);
         dropButton.gameObject.SetActive(false);
-    }
-
-    /// <summary>
-    /// Updates slot usage UI text (e.g. "3 / 52").
-    /// </summary>
-    protected override void OnSlotUsageChanged(int used, int total)
-    {
-        slotUsageText.text = $"{used} / {total}";
     }
 
     /// <summary>

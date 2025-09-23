@@ -12,6 +12,8 @@ public class ItemSlot : MonoBehaviour
     [SerializeField] private TextMeshProUGUI quantityText;
     [SerializeField] private GameObject plusIcon;
     [SerializeField] private GameObject highlight;
+    [SerializeField] private GameObject framequantity;
+    [SerializeField] private Sprite[] spriteBtns;        // [0] = empty, [1] = filled
     [SerializeField] private Button selectButton;
 
     // ─────────────────────────────────────────────────────
@@ -25,103 +27,102 @@ public class ItemSlot : MonoBehaviour
     // ─────────────────────────────────────────────────────
     public int Quantity => quantity;
     public ItemDataSO ItemData => itemData;
-
-    public Button GetSelectButton() => selectButton;
+    public Button SelectButton => selectButton;
 
     // ─────────────────────────────────────────────────────
     // Public Methods
     // ─────────────────────────────────────────────────────
 
     /// <summary>
-    /// Set item data and quantity, then refresh the UI.
+    /// Assign item data and quantity, then update UI.
     /// </summary>
     public void SetItemData(ItemDataSO newItemData, int newQuantity)
     {
         itemData = newItemData;
         quantity = newQuantity;
-        UpdateSlotUI();
+        RefreshUI();
     }
 
-    /// <summary>
-    /// Increase the item quantity by 1 and refresh the UI.
-    /// </summary>
     public void IncreaseQuantity()
     {
         quantity++;
-        UpdateSlotUI();
+        RefreshUI();
     }
 
     public void DecreaseQuantity()
     {
         quantity--;
-        UpdateSlotUI();
+        RefreshUI();
     }
 
     /// <summary>
-    /// Updates UI visuals for this slot based on item data and quantity.
+    /// Reset slot completely (empty + deselect).
     /// </summary>
-    public void UpdateSlotUI()
+    public void ResetSlot()
     {
-        if (itemData == null)
-        {
-            SetEmpty();
-            return;
-        }
-
-        if (itemImage != null)
-        {
-            itemImage.sprite = itemData.icon;
-            itemImage.gameObject.SetActive(true);
-        }
-
-        if (plusIcon != null)
-            plusIcon.SetActive(false);
-
-        quantityText.text = quantity > 1 ? quantity.ToString() : "";
-        selectButton.interactable = true;
+        ClearData();
+        RefreshUI();
+        SetSelected(false);
     }
 
-    /// <summary>
-    /// Clears the item data and shows plus icon.
-    /// </summary>
-    public void SetEmpty()
-    {
-        itemData = null;
-        quantity = 0;
-
-        if (itemImage != null)
-            itemImage.gameObject.SetActive(false);
-
-        if (plusIcon != null)
-            plusIcon.SetActive(true);
-
-        quantityText.text = "";
-        selectButton.interactable = false;
-    }
-
-    /// <summary>
-    /// Enable or disable selection highlight.
-    /// </summary>
     public void SetSelected(bool selected)
     {
         if (highlight != null)
             highlight.SetActive(selected);
     }
 
-    /// <summary>
-    /// Reset slot to default state.
-    /// </summary>
-    public void ResetSlot()
+    public bool IsEmpty() => itemData == null;
+
+    // ─────────────────────────────────────────────────────
+    // Private Helpers
+    // ─────────────────────────────────────────────────────
+
+    private void ClearData()
     {
-        SetEmpty();
-        SetSelected(false);
+        itemData = null;
+        quantity = 0;
     }
 
     /// <summary>
-    /// Check if the slot is empty (no item data).
+    /// Refresh slot UI depending on whether it has item.
     /// </summary>
-    public bool IsEmpty()
+    public void RefreshUI()
     {
-        return itemData == null;
+        bool hasItem = (itemData != null);
+        ApplyState(hasItem);
+    }
+
+    /// <summary>
+    /// Apply UI state (filled or empty).
+    /// </summary>
+    private void ApplyState(bool hasItem)
+    {
+        // Button sprite
+        if (spriteBtns != null && selectButton != null)
+        {
+            int index = hasItem ? 1 : 0;
+            if (spriteBtns.Length > index)
+                selectButton.image.sprite = spriteBtns[index];
+        }
+
+        // Item image
+        if (itemImage != null)
+        {
+            bool showItem = hasItem && itemData != null;
+            itemImage.gameObject.SetActive(showItem);
+            if (showItem) itemImage.sprite = itemData.icon;
+        }
+
+        // Plus icon & Frame quantity
+        if (plusIcon != null) plusIcon.SetActive(!hasItem);
+        if (framequantity != null) framequantity.SetActive(hasItem);
+
+        // Quantity text
+        if (quantityText != null)
+            quantityText.text = quantity.ToString();
+
+        // Button interaction
+        if (selectButton != null)
+            selectButton.interactable = hasItem;
     }
 }
