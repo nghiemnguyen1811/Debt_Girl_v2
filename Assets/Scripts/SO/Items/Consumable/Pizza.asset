@@ -13,15 +13,18 @@ MonoBehaviour:
   m_Name: Pizza
   m_EditorClassIdentifier: 
   icon: {fileID: -92017918, guid: 4e2a8781c4ae171469315681a3eb2fd8, type: 3}
-  itemName: Pizza
-  description: Consumable Pizza
+  itemName: "\uD53C\uC790"
+  description: "\uCE58\uC988\uC640 \uD1A0\uD551\uC774 \uC62C\uB824\uC9C4 \uAC04\uD3B8
+    \uC74C\uC2DD."
   itemType: 2
   ingredientType: 12
   requiredIngredients: []
-  canBeSold: 1
+  canBeSold: 0
   sellPrice: 0
+  craftingTime: 3
+  requiredLevel: 0
   energy: 15
   mood: 2
-  purchaseCost: 350
+  purchaseCost: 13500
   canStackItem: 0
   maxStackAmount: 1

@@ -12,16 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6acbbd15e75140948b9abbe0097c4bec, type: 3}
   m_Name: DrinkCup
   m_EditorClassIdentifier: 
-  icon: {fileID: -1354050252, guid: 4e2a8781c4ae171469315681a3eb2fd8, type: 3}
-  itemName: Drink Cup
-  description: Consumable Drink Cup
+  icon: {fileID: 21300000, guid: 066257a814e51484da6804dbca3ffe2b, type: 3}
+  itemName: "\uC74C\uB8CC \uCEF5"
+  description: "\uC2DC\uC6D0\uD55C \uC74C\uB8CC\uAC00 \uB2F4\uAE34 \uC77C\uD68C\uC6A9
+    \uCEF5."
   itemType: 2
   ingredientType: 13
   requiredIngredients: []
-  canBeSold: 1
+  canBeSold: 0
   sellPrice: 0
+  craftingTime: 3
+  requiredLevel: 0
   energy: 10
   mood: 5
-  purchaseCost: 60
+  purchaseCost: 1350
   canStackItem: 0
   maxStackAmount: 1

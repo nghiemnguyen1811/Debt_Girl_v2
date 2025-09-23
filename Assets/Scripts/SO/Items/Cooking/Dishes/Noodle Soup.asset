@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6acbbd15e75140948b9abbe0097c4bec, type: 3}
   m_Name: Noodle Soup
   m_EditorClassIdentifier: 
-  icon: {fileID: -108870395, guid: 4e2a8781c4ae171469315681a3eb2fd8, type: 3}
+  icon: {fileID: 21300000, guid: a1dd7c0a9fdabf84e8cce627f40e8553, type: 3}
   itemName: Noodle Soup
   description: 'Instant noodles with meat and hot broth.
 
@@ -31,6 +31,8 @@ MonoBehaviour:
     amount: 1
   canBeSold: 0
   sellPrice: 0
+  craftingTime: 3
+  requiredLevel: 0
   energy: 20
   mood: 20
   purchaseCost: 0

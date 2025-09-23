@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: Milk
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 29a1c78b0dd09574c9486634e6d65dba, type: 3}
-  itemName: Milk
-  description: Fresh dairy milk for baking and drinks.
+  itemName: "\uC6B0\uC720"
+  description: "\uC74C\uB8CC\uC640 \uBCA0\uC774\uD0B9\uC5D0 \uBAA8\uB450 \uC4F0\uC774\uB294
+    \uAE30\uBCF8 \uC720\uC81C\uD488."
   itemType: 2
   ingredientType: 22
   requiredIngredients:
