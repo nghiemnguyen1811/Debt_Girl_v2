@@ -25,8 +25,7 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
     [SerializeField] private List<ShopTab> shopTabs;
     [SerializeField] private GameObject characterSelectionPanel;
 
-    [SerializeField] private Color tabOn;
-    [SerializeField] private Color tabOff;
+    [SerializeField] private UIColorsConfig uiColorsConfig;
 
     [Header("Buttons")]
     [SerializeField] private Button purchaseButton;
@@ -215,7 +214,8 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
     private void SetTabVisual(ShopTab tab, bool isActive)
     {
         if (tab.labelText != null)
-            tab.labelText.color = isActive ? tabOn : tabOff;
+            tab.labelText.color = isActive ?
+                uiColorsConfig.tabOn : uiColorsConfig.tabOff;
 
         if (tab.outline != null)
             tab.outline.SetActive(isActive);

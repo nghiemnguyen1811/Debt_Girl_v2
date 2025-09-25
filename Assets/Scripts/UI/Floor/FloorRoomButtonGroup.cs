@@ -9,23 +9,19 @@ public class FloorRoomButtonGroup : MonoBehaviour
     // Inspector Fields
     // ─────────────────────────────────────────────────────
     [Header("Room Buttons")]
-    [Tooltip("Assign all room buttons in the exact display order.")]
     [SerializeField] private Button[] roomButtons;
 
     [Header("Behaviour")]
-    [Tooltip("If true, will (re)bind buttons on Start using current mapped rooms.")]
     [SerializeField] private bool autoBindOnStart = true;
 
     // ─────────────────────────────────────────────────────
     // Events
     // ─────────────────────────────────────────────────────
-    /// <summary>Raised when a room button is clicked.</summary>
     public event Action<RoomType> onRoomSelected;
 
     // ─────────────────────────────────────────────────────
     // Runtime Data
     // ─────────────────────────────────────────────────────
-    [Tooltip("Rooms mapped by index to roomButtons. Set via ApplyFloor/SetRooms.")]
     private RoomType[] mappedRooms;
 
     // ─────────────────────────────────────────────────────
@@ -45,7 +41,6 @@ public class FloorRoomButtonGroup : MonoBehaviour
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        // Preview in editor: rebind immediately when something changes in the inspector.
         if (!Application.isPlaying && autoBindOnStart)
             RebindAllButtons();
     }
@@ -54,7 +49,6 @@ public class FloorRoomButtonGroup : MonoBehaviour
     // ─────────────────────────────────────────────────────
     // Public API
     // ─────────────────────────────────────────────────────
-    /// <summary>Populate from a FloorDataSO and re-bind the buttons.</summary>
     public void ApplyFloor(FloorDataSO floor)
     {
         mappedRooms = (floor != null && floor.roomTypes != null)
@@ -64,29 +58,20 @@ public class FloorRoomButtonGroup : MonoBehaviour
         RebindAllButtons();
     }
 
-    /// <summary>Returns the current mapped rooms (index-aligned with roomButtons).</summary>
     public RoomType[] GetMappedRooms() => mappedRooms;
 
-    /// <summary>Returns the current button array.</summary>
     public Button[] GetRoomButtons() => roomButtons;
 
     // ─────────────────────────────────────────────────────
     // Internal Wiring
     // ─────────────────────────────────────────────────────
-    /// <summary>
-    /// (Re)wires all buttons according to the current mappedRooms.
-    /// Buttons without a corresponding room or with RoomType.None are hidden.
-    /// Extra buttons beyond mappedRooms length are hidden.
-    /// </summary>
     private void RebindAllButtons()
     {
         int btnCount = roomButtons?.Length ?? 0;
         int roomCount = mappedRooms?.Length ?? 0;
 
-        if (btnCount == 0)
-            return;
+        if (btnCount == 0) return;
 
-        // Always clear listeners first
         UnbindAllButtons();
 
         for (int i = 0; i < btnCount; i++)
@@ -95,6 +80,7 @@ public class FloorRoomButtonGroup : MonoBehaviour
             if (!button) continue;
 
             bool hasValidRoom = (i < roomCount) && (mappedRooms[i] != RoomType.None);
+
             if (!hasValidRoom)
             {
                 DeactivateButton(button);
@@ -105,7 +91,6 @@ public class FloorRoomButtonGroup : MonoBehaviour
         }
     }
 
-    /// <summary>Removes all listeners from every button.</summary>
     private void UnbindAllButtons()
     {
         if (roomButtons == null) return;

@@ -12,4 +12,8 @@ public class UIColorsConfig : ScriptableObject
     [Header("Plate Timer Colors")]
     public Color plateEmptyColor;
     public Color plateOccupiedColor;
+
+    [Header("Tab Colors")]
+    public Color tabOn;
+    public Color tabOff;
 }

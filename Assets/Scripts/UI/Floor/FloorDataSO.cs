@@ -5,29 +5,24 @@ using Sirenix.OdinInspector;
 public class FloorDataSO : ScriptableObject
 {
     // ─────────────────────────────────────────────────────
-    // 1) Floor Info
+    // Floor Info
     // ─────────────────────────────────────────────────────
     [Title("Floor Info")]
-    [LabelWidth(120), Tooltip("Display name shown to players (e.g., '2nd Floor').")]
     public string floorName;
-
-    [LabelWidth(120), Tooltip("Logical enum of the floor used by code / selection.")]
     public FloorType floorType;
+    [TextArea(2, 4)]
+    public string floorDescription;
 
     // ─────────────────────────────────────────────────────
-    // 2) Rooms
+    // Rooms
     // ─────────────────────────────────────────────────────
     [Title("Rooms in Floor")]
-    [LabelWidth(120), Tooltip("All rooms available on this floor (used to build room buttons).")]
     [ListDrawerSettings(ShowIndexLabels = true, DraggableItems = false)]
     public RoomType[] roomTypes;
 
     // ─────────────────────────────────────────────────────
-    // 3) UI (Prefab Group)
+    // UI
     // ─────────────────────────────────────────────────────
     [Title("UI")]
-    [LabelWidth(120)]
-    [Tooltip("Prefab of FloorRoomButtonGroup for this floor. It will be instantiated once and toggled on selection.")]
-    [AssetsOnly, Required]
     public FloorRoomButtonGroup floorUIPrefab;
 }

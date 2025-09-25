@@ -10,25 +10,21 @@ public class FloorSelectButton : MonoBehaviour
     // Inspector Fields
     // ─────────────────────────────────────────────────────
     [Header("Data")]
-    [Tooltip("ScriptableObject describing this floor.")]
-    private FloorDataSO floorAsset;
+    private FloorDataSO floorData;
 
     [Header("UI")]
-    [Tooltip("Text label showing the floor's display name.")]
     [SerializeField] private TextMeshProUGUI floorNameLabel;
-
-    [Header("Runtime Cache")]
-    [Tooltip("Button reference. Drag in manually or it will auto-assign.")]
-    [SerializeField] private Button cachedButton;
+    [SerializeField] private GameObject outline;
 
     [Header("Behaviour")]
-    [Tooltip("If true, the label will refresh on Start/Validate.")]
     [SerializeField] private bool autoRefreshOnStart = true;
+
+    [Header("Runtime Cache")]
+    [SerializeField] private Button cachedButton;
 
     // ─────────────────────────────────────────────────────
     // Unity Lifecycle
     // ─────────────────────────────────────────────────────
-
     private void Start()
     {
         if (autoRefreshOnStart) RefreshUI();
@@ -46,28 +42,34 @@ public class FloorSelectButton : MonoBehaviour
     // ─────────────────────────────────────────────────────
     // Public API
     // ─────────────────────────────────────────────────────
-    /// <summary>Returns the underlying Unity Button.</summary>
     public Button GetButton()
     {
         if (!cachedButton) cachedButton = GetComponent<Button>();
         return cachedButton;
     }
 
-    /// <summary>Returns the currently assigned floor asset.</summary>
-    public FloorDataSO GetFloorAsset() => floorAsset;
+    public FloorDataSO GetFloorAsset() => floorData;
 
-    /// <summary>Assigns the floor asset and refreshes visuals.</summary>
-    public void SetFloor(FloorDataSO asset)
+    public void SetFloor(FloorDataSO data)
     {
-        floorAsset = asset;
+        floorData = data;
         RefreshUI();
     }
 
-    /// <summary>Enables/disables user interaction.</summary>
     public void SetInteractable(bool interactable)
     {
         var btn = GetButton();
         if (btn) btn.interactable = interactable;
+    }
+
+    public void SetOutlineActive(bool active)
+    {
+        if (outline) outline.SetActive(active);
+    }
+
+    public void SetLabelColor(Color color)
+    {
+        if (floorNameLabel) floorNameLabel.color = color;
     }
 
     // ─────────────────────────────────────────────────────
@@ -77,20 +79,20 @@ public class FloorSelectButton : MonoBehaviour
     {
         if (!floorNameLabel) return;
 
-        if (!floorAsset)
+        if (!floorData)
         {
             floorNameLabel.text = "(No Floor)";
             return;
         }
 
-        floorNameLabel.text = BuildDisplayName(floorAsset);
+        floorNameLabel.text = BuildDisplayName(floorData);
     }
 
-    private static string BuildDisplayName(FloorDataSO asset)
+    private static string BuildDisplayName(FloorDataSO data)
     {
-        if (!asset) return "(No Floor)";
-        return string.IsNullOrWhiteSpace(asset.floorName)
-            ? asset.floorType.ToString()
-            : asset.floorName;
+        if (!data) return "(No Floor)";
+        return string.IsNullOrWhiteSpace(data.floorName)
+            ? data.floorType.ToString()
+            : data.floorName;
     }
 }

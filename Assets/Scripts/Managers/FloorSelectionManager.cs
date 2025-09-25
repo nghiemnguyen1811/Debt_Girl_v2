@@ -8,37 +8,35 @@ using System.Linq;
 public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManager>
 {
     // ─────────────────────────────────────────────────────
-    // Inspector Fields
+    // Inspector Fields (Serialized configuration and references)
     // ─────────────────────────────────────────────────────
     [Header("Floor Button Prefab & Root")]
     [SerializeField] private FloorSelectButton floorButtonPrefab;
     [SerializeField] private Transform floorButtonsRoot;
 
     [Header("Floors")]
-    [Tooltip("List of floors in the order you want them displayed.")]
-    [SerializeField] private FloorDataSO[] floors;
+    [SerializeField] private FloorDataSO[] floorDataArray;
 
     [Header("Room Groups Container")]
-    [Tooltip("All FloorRoomButtonGroup instances (from FloorDataSO.floorUIPrefab) will be parented here.")]
-    [SerializeField] private Transform floorUiRoot;
+    [SerializeField] private Transform roomGroupsRoot;
 
     [Header("UI References")]
-    [Tooltip("Shows the current floor name.")]
-    [SerializeField] private TextMeshProUGUI floorNameLabel;
+    [SerializeField] private TextMeshProUGUI floorInfoText;
 
     [Header("Behaviour")]
-    [Tooltip("If true, the first floor in the list will be auto-selected on Start.")]
     [SerializeField] private bool autoSelectFirst = true;
 
+    [Header("Config")]
+    [SerializeField] private UIColorsConfig colorsConfig;
+
     // ─────────────────────────────────────────────────────
-    // Runtime State
+    // Runtime State (variables maintained during play)
     // ─────────────────────────────────────────────────────
     private readonly List<FloorSelectButton> spawnedFloorButtons = new();
     private readonly Dictionary<FloorDataSO, FloorRoomButtonGroup> roomGroupsByFloor = new();
-
     private FloorDataSO currentFloor;
 
-    /// <summary>Currently selected floor (may be null if nothing is selected).</summary>
+    /// <summary>Currently selected floor (null if nothing is selected).</summary>
     public FloorDataSO CurrentFloor => currentFloor;
 
     // ─────────────────────────────────────────────────────
@@ -46,13 +44,13 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
     // ─────────────────────────────────────────────────────
     private void Start()
     {
-        RebuildFloorButtons();
-        BuildAllRoomGroupsOnce();
+        BuildFloorButtons();
+        BuildRoomGroups();
 
-        if (autoSelectFirst && floors != null && floors.Length > 0)
-            SelectFloor(floors[0]);
-
-        else UpdateFloorNameLabel(null);
+        if (autoSelectFirst && floorDataArray != null && floorDataArray.Length > 0)
+            SelectFloor(floorDataArray[0]);
+        else
+            UpdateFloorDescriptionText(null);
     }
 
     private void OnDestroy()
@@ -66,42 +64,48 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
         }
         spawnedFloorButtons.Clear();
 
-        // Unwire room groups (we don't have to destroy; scene unload will handle it)
+        // Unwire room groups
         foreach (var kv in roomGroupsByFloor)
         {
             var grp = kv.Value;
             if (!grp) continue;
             grp.onRoomSelected -= HandleRoomChosen;
         }
-
         roomGroupsByFloor.Clear();
     }
 
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        // Keep inspector previews tidy (no runtime allocation)
-        if (!Application.isPlaying)
-        {
-            // Ensure label reflects no selection when editing
-            if (autoSelectFirst == false)
-                UpdateFloorNameLabel(null);
-        }
+        // Keep inspector previews tidy (no runtime allocation in edit mode)
+        if (!Application.isPlaying && autoSelectFirst == false)
+            UpdateFloorDescriptionText(null);
     }
 #endif
 
     // ─────────────────────────────────────────────────────
-    // Public API
+    // Public API (called externally to control floor selection)
     // ─────────────────────────────────────────────────────
-    /// <summary>Selects the given floor: updates label and toggles the matching room group.</summary>
+    /// <summary>Selects the given floor: updates label, highlights, and toggles the matching room group.</summary>
     public void SelectFloor(FloorDataSO floor)
     {
         if (!floor || floor == currentFloor) return;
 
         currentFloor = floor;
 
-        UpdateFloorNameLabel(floor);
-        ShowOnlyGroupFor(floor);
+        UpdateFloorDescriptionText(floor);
+        ShowRoomGroupForFloor(floor);
+
+        // Update button visuals
+        foreach (var fsb in spawnedFloorButtons)
+        {
+            if (!fsb) continue;
+            bool isActive = fsb.GetFloorAsset() == floor;
+            fsb.SetOutlineActive(isActive);
+
+            if (colorsConfig)
+                fsb.SetLabelColor(isActive ? colorsConfig.tabOn : colorsConfig.tabOff);
+        }
 
         Debug.Log($"[FloorSelectionManager] Floor selected: {floor.floorName}");
     }
@@ -109,7 +113,7 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
     /// <summary>Selects a floor by its FloorType enum value.</summary>
     public void SelectFloorByType(FloorType type)
     {
-        var found = floors?.FirstOrDefault(f => f && f.floorType.Equals(type));
+        var found = floorDataArray?.FirstOrDefault(f => f && f.floorType.Equals(type));
         if (found) SelectFloor(found);
     }
 
@@ -117,15 +121,14 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
     public void RefreshCurrentFloor()
     {
         if (!currentFloor) return;
-        UpdateFloorNameLabel(currentFloor);
-        ShowOnlyGroupFor(currentFloor);
+        UpdateFloorDescriptionText(currentFloor);
+        ShowRoomGroupForFloor(currentFloor);
     }
 
     // ─────────────────────────────────────────────────────
-    // Floor Buttons
+    // Floor Buttons (create, clear, and manage floor button instances)
     // ─────────────────────────────────────────────────────
-    /// <summary>Builds the floor buttons from the prefab and wires their clicks.</summary>
-    private void RebuildFloorButtons()
+    private void BuildFloorButtons()
     {
         if (!floorButtonPrefab || !floorButtonsRoot)
         {
@@ -133,13 +136,13 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
             return;
         }
 
-        ClearFloorButtonsOnly();
+        ClearFloorButtons();
 
-        if (floors == null || floors.Length == 0) return;
+        if (floorDataArray == null || floorDataArray.Length == 0) return;
 
-        for (int i = 0; i < floors.Length; i++)
+        for (int i = 0; i < floorDataArray.Length; i++)
         {
-            var data = floors[i];
+            var data = floorDataArray[i];
             if (!data) continue;
 
             var btnInstance = Instantiate(floorButtonPrefab, floorButtonsRoot);
@@ -152,8 +155,8 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
                 int idx = i; // capture index for closure
                 uiBtn.onClick.AddListener(() =>
                 {
-                    if (floors != null && idx < floors.Length && floors[idx])
-                        SelectFloor(floors[idx]);
+                    if (floorDataArray != null && idx < floorDataArray.Length && floorDataArray[idx])
+                        SelectFloor(floorDataArray[idx]);
                 });
             }
 
@@ -161,8 +164,7 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
         }
     }
 
-    /// <summary>Unwires and destroys all spawned floor buttons.</summary>
-    private void ClearFloorButtonsOnly()
+    private void ClearFloorButtons()
     {
         foreach (var fsb in spawnedFloorButtons)
         {
@@ -175,29 +177,26 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
     }
 
     // ─────────────────────────────────────────────────────
-    // Room Groups (build once from FloorDataSO.floorUIPrefab, then toggle)
+    // Room Groups (create and toggle groups for each floor)
     // ─────────────────────────────────────────────────────
-    /// <summary>Instantiates one FloorRoomButtonGroup per floor (once) and subscribes to selection.</summary>
-    private void BuildAllRoomGroupsOnce()
+    private void BuildRoomGroups()
     {
-        if (!floorUiRoot || floors == null || floors.Length == 0) return;
+        if (!roomGroupsRoot || floorDataArray == null || floorDataArray.Length == 0) return;
 
-        foreach (var floor in floors)
+        foreach (var floor in floorDataArray)
         {
             if (!floor) continue;
             if (roomGroupsByFloor.ContainsKey(floor) && roomGroupsByFloor[floor]) continue;
 
-            var prefabGroup = floor.floorUIPrefab; // FloorRoomButtonGroup prefab from FloorDataSO
+            var prefabGroup = floor.floorUIPrefab;
             if (!prefabGroup)
             {
                 Debug.LogWarning($"[FloorSelectionManager] Missing floorUIPrefab on floor: {floor.floorName}");
                 continue;
             }
 
-            var group = Instantiate(prefabGroup, floorUiRoot);
+            var group = Instantiate(prefabGroup, roomGroupsRoot);
             group.name = $"RoomGroup_{floor.floorName}";
-
-            // Optional: if your group needs it, bind rooms against the SO
             group.ApplyFloor(floor);
 
             // Subscribe to room selection
@@ -210,20 +209,18 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
         }
     }
 
-    /// <summary>Activates only the group belonging to the given floor; deactivates others.</summary>
-    private void ShowOnlyGroupFor(FloorDataSO floor)
+    private void ShowRoomGroupForFloor(FloorDataSO floor)
     {
         foreach (var kv in roomGroupsByFloor)
         {
             bool shouldBeActive = (floor != null && kv.Key == floor);
-
             if (kv.Value && kv.Value.gameObject.activeSelf != shouldBeActive)
                 kv.Value.gameObject.SetActive(shouldBeActive);
         }
     }
 
     // ─────────────────────────────────────────────────────
-    // Room Selection Callback
+    // Callbacks
     // ─────────────────────────────────────────────────────
     private void HandleRoomChosen(RoomType room)
     {
@@ -237,12 +234,11 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
     // ─────────────────────────────────────────────────────
     // UI Helpers
     // ─────────────────────────────────────────────────────
-    /// <summary>Updates the floor name label based on the provided floor.</summary>
-    private void UpdateFloorNameLabel(FloorDataSO floor)
+    private void UpdateFloorDescriptionText(FloorDataSO floor)
     {
-        if (!floorNameLabel) return;
-        floorNameLabel.text = (floor != null && !string.IsNullOrEmpty(floor.floorName))
-            ? floor.floorName
+        if (!floorInfoText) return;
+        floorInfoText.text = (floor != null && !string.IsNullOrEmpty(floor.floorDescription))
+            ? floor.floorDescription
             : string.Empty;
     }
 }

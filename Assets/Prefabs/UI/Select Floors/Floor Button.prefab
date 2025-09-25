@@ -455,8 +455,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   floorNameLabel: {fileID: 468221528764334764}
-  cachedButton: {fileID: 3134003836158088232}
+  outline: {fileID: 2422371744201877112}
   autoRefreshOnStart: 1
+  cachedButton: {fileID: 3134003836158088232}
 --- !u!1 &8744833753142702530
 GameObject:
   m_ObjectHideFlags: 0

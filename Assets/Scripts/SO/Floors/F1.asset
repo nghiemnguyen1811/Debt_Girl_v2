@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5ac700a7b278c744a9f98dfe2769c89, type: 3}
   m_Name: F1
   m_EditorClassIdentifier: 
-  floorName: F1
+  floorName: "1\uCE35"
   floorType: 2
+  floorDescription: "1\uCE35 \uBC29\uC5D0 \uB300\uD55C \uC124\uBA85\uC774\uC5D0\uC694.\r\n\uD55C\uC18C\uD76C\uC758
+    \uBC29, \uAC70\uC2E4, \uBD80\uC5CC, \uD604\uAD00"
   roomTypes: 01000000020000000300000004000000
   floorUIPrefab: {fileID: 3310749851163169463, guid: 1d051f09cdaf91d4a8681c64e9bee434, type: 3}
