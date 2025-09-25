@@ -28,7 +28,7 @@ public static class DoubleUtilities
             return ToScientificNotation(value);
 
         string abbreviation = abbreviations[abbreviationIndex];
-        return tValue.ToString("F2") + abbreviation;
+        return tValue.ToString("F1") + abbreviation;
     }
 
     public static string ToScientificNotation(double value)

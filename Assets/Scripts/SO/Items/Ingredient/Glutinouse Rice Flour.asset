@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6acbbd15e75140948b9abbe0097c4bec, type: 3}
   m_Name: Glutinouse Rice Flour
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: 058fc48c2cd1f184fbf7b2f226a58aea, type: 3}
+  icon: {fileID: 21300000, guid: 01b34452101a0bb4dacabcf05f7988c7, type: 3}
   itemName: "\uCC39\uC300\uAC00\uB8E8"
   description: "\uCAC4\uAE43\uD55C \uC2DD\uAC10\uC744 \uB0B4\uB294 \uB370 \uC4F0\uC774\uB294
     \uCC39\uC300\uAC00\uB8E8."
@@ -34,6 +34,6 @@ MonoBehaviour:
   requiredLevel: 0
   energy: 16
   mood: 20
-  purchaseCost: 4.5
+  purchaseCost: 6075
   canStackItem: 1
   maxStackAmount: 10

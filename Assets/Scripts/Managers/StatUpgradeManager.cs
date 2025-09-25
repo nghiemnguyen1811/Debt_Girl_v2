@@ -110,6 +110,8 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
         UpdateStatPointUI();
 
         playerControl.stats.UpdateScaledStats();
+
+        AudioManager.Instance.PlayInteractSound(8);
     }
 
     public void ResetAll()

@@ -13,8 +13,8 @@ public class CookingContainer : MonoBehaviour
     [Header("Ingredients")]
     [SerializeField] private List<IngredientUI> ingredients = new List<IngredientUI>();
 
-    [Header("Plus Icons Between Ingredients")]
-    [SerializeField] private List<GameObject> plusIcons = new List<GameObject>();
+    [Header("Shared UI Color Config")]
+    [SerializeField] private UIColorsConfig colorConfig;
 
     // ─────────────────────────────────────────────────────
     // Item Data
@@ -47,14 +47,11 @@ public class CookingContainer : MonoBehaviour
             if (i < shownCount)
             {
                 var data = itemData.requiredIngredients[i];
-                ingredients[i].SetData(data);
+                ingredients[i].SetData(data, colorConfig);
             }
 
             else ingredients[i].Hide();
         }
-
-        for (int i = 0; i < plusIcons.Count; i++)
-            plusIcons[i].SetActive(i < shownCount - 1);
 
         UpdateCookButtonInteractable();
     }
@@ -69,7 +66,7 @@ public class CookingContainer : MonoBehaviour
         for (int i = 0; i < shownCount; i++)
         {
             var data = itemData.requiredIngredients[i];
-            ingredients[i].SetData(data);
+            ingredients[i].SetData(data, colorConfig);
         }
 
         UpdateCookButtonInteractable();
@@ -130,14 +127,25 @@ public class IngredientUI
 {
     public GameObject ingredientsContainer;
     public Image ingredientImage;
+    public Image frameQuantity;
     public TextMeshProUGUI quantityText;
 
-    public void SetData(RequiredIngredient data)
+    public void SetData(RequiredIngredient data, UIColorsConfig colorConfig)
     {
         ingredientImage.sprite = data.icon;
+
         int owned = FoodInventoryUI.Instance.GetTotalQuantityOfItem(data.ingredientType);
         quantityText.text = $"{owned}/{data.amount}";
-        quantityText.color = owned >= data.amount ? Color.green : Color.red;
+
+        bool isEnough = owned >= data.amount;
+
+        // Change text color
+        quantityText.color = isEnough ? colorConfig.textEnoughColor : colorConfig.textNotEnoughColor;
+
+        // Change frame color
+        if (frameQuantity != null)
+            frameQuantity.color = isEnough ? colorConfig.frameEnoughColor : colorConfig.frameNotEnoughColor;
+
         ingredientsContainer.SetActive(true);
     }
 
@@ -146,3 +154,4 @@ public class IngredientUI
         ingredientsContainer.SetActive(false);
     }
 }
+

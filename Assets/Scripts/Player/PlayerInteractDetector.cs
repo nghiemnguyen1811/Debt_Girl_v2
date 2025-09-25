@@ -23,11 +23,11 @@ public class PlayerInteractDetector : MonoBehaviour
     [TextArea(2, 5)]
     [SerializeField]
     private string[] energyWarningMessages = {
-        "Not enough energy.",
-        "You're too tired for that.",
-        "Better rest first.",
-        "This action requires more energy.",
-        "Your energy is too low."
+        "에너지가 부족합니다.",
+        "너무 피곤해서 할 수 없습니다.",
+        "먼저 쉬는 게 좋습니다.",
+        "이 행동은 더 많은 에너지가 필요합니다.",
+        "에너지가 너무 낮습니다."
     };
 
     #endregion

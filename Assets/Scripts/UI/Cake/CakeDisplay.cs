@@ -14,7 +14,7 @@ public class CakeDisplay : MonoBehaviour
     [SerializeField] private Button selectButton;
 
     [Header("Lock State Visuals")]
-    [SerializeField] private RectTransform lockStateVisualGroup;
+    [SerializeField] private RectTransform cakeDisplayTransform;
 
     // ─────────────────────────────────────────────────────
     // Runtime Data
@@ -87,14 +87,14 @@ public class CakeDisplay : MonoBehaviour
     /// </summary>
     private void UpdateLockVisuals(bool isLocked)
     {
-        if (lockStateVisualGroup == null || lockStateVisualGroup.childCount < 2)
+        if (cakeDisplayTransform == null || cakeDisplayTransform.childCount < 2)
         {
             Debug.LogWarning("Lock visual group is not properly configured.");
             return;
         }
 
-        lockStateVisualGroup.GetChild(0).gameObject.SetActive(!isLocked);
-        lockStateVisualGroup.GetChild(1).gameObject.SetActive(isLocked);
+        cakeDisplayTransform.GetChild(0).gameObject.SetActive(!isLocked);
+        cakeDisplayTransform.GetChild(1).gameObject.SetActive(isLocked);
 
         selectButton.interactable = !isLocked;
     }
