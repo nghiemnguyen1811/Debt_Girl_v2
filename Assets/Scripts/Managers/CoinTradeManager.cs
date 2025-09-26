@@ -171,7 +171,7 @@ public class CoinTradeManager : SingletonMonobehaviour<CoinTradeManager>
 
     private void UpdateUI()
     {
-        coinValueText.text = $"${Mathf.RoundToInt((float)coinValue)}";
+        coinValueText.text = $"{Mathf.RoundToInt((float)coinValue)}원";
         buyAmountText.text = buyAmount.ToString();
         sellAmountText.text = sellAmount.ToString();
         ownedCoinsText.text = ownedCoins.ToString();

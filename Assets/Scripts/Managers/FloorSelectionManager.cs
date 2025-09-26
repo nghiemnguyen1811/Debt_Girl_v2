@@ -8,7 +8,7 @@ using System.Linq;
 public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManager>
 {
     // ─────────────────────────────────────────────────────
-    // Inspector Fields (Serialized configuration and references)
+    // Inspector Fields
     // ─────────────────────────────────────────────────────
     [Header("Floor Button Prefab & Root")]
     [SerializeField] private FloorSelectButton floorButtonPrefab;
@@ -22,6 +22,11 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
 
     [Header("UI References")]
     [SerializeField] private TextMeshProUGUI floorInfoText;
+    [SerializeField] private Button confirmRoomButton;
+
+    [Header("Navigation Buttons")]
+    [SerializeField] private Button prevButton;
+    [SerializeField] private Button nextButton;
 
     [Header("Behaviour")]
     [SerializeField] private bool autoSelectFirst = true;
@@ -30,13 +35,18 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
     [SerializeField] private UIColorsConfig colorsConfig;
 
     // ─────────────────────────────────────────────────────
-    // Runtime State (variables maintained during play)
+    // Runtime State
     // ─────────────────────────────────────────────────────
     private readonly List<FloorSelectButton> spawnedFloorButtons = new();
     private readonly Dictionary<FloorDataSO, FloorRoomButtonGroup> roomGroupsByFloor = new();
-    private FloorDataSO currentFloor;
 
-    /// <summary>Currently selected floor (null if nothing is selected).</summary>
+    private FloorDataSO currentFloor;
+    private int currentIndex;
+    private RoomType? pendingRoom;
+
+    // ─────────────────────────────────────────────────────
+    // Properties
+    // ─────────────────────────────────────────────────────
     public FloorDataSO CurrentFloor => currentFloor;
 
     // ─────────────────────────────────────────────────────
@@ -44,90 +54,132 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
     // ─────────────────────────────────────────────────────
     private void Start()
     {
-        BuildFloorButtons();
-        BuildRoomGroups();
+        InitFloorButtons();
+        InitRoomGroups();
+        InitNavigation();
+        InitConfirmButton();
 
         if (autoSelectFirst && floorDataArray != null && floorDataArray.Length > 0)
             SelectFloor(floorDataArray[0]);
-        else
-            UpdateFloorDescriptionText(null);
+
+        else UpdateFloorDescriptionText(null);
+
+        UpdateNavButtons();
     }
 
     private void OnDestroy()
     {
-        // Unwire floor buttons
-        foreach (var fsb in spawnedFloorButtons)
-        {
-            if (!fsb) continue;
-            var btn = fsb.GetButton();
-            if (btn) btn.onClick.RemoveAllListeners();
-        }
-        spawnedFloorButtons.Clear();
-
-        // Unwire room groups
-        foreach (var kv in roomGroupsByFloor)
-        {
-            var grp = kv.Value;
-            if (!grp) continue;
-            grp.onRoomSelected -= HandleRoomChosen;
-        }
-        roomGroupsByFloor.Clear();
+        CleanupFloorButtons();
+        CleanupRoomGroups();
+        CleanupNavigation();
+        CleanupConfirmButton();
     }
 
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        // Keep inspector previews tidy (no runtime allocation in edit mode)
         if (!Application.isPlaying && autoSelectFirst == false)
             UpdateFloorDescriptionText(null);
     }
 #endif
 
     // ─────────────────────────────────────────────────────
-    // Public API (called externally to control floor selection)
+    // Public API
     // ─────────────────────────────────────────────────────
-    /// <summary>Selects the given floor: updates label, highlights, and toggles the matching room group.</summary>
+
+    /// <summary>
+    /// Select a floor by reference.
+    /// </summary>
     public void SelectFloor(FloorDataSO floor)
     {
         if (!floor || floor == currentFloor) return;
 
         currentFloor = floor;
+        currentIndex = System.Array.IndexOf(floorDataArray, floor);
 
         UpdateFloorDescriptionText(floor);
         ShowRoomGroupForFloor(floor);
-
-        // Update button visuals
-        foreach (var fsb in spawnedFloorButtons)
-        {
-            if (!fsb) continue;
-            bool isActive = fsb.GetFloorAsset() == floor;
-            fsb.SetOutlineActive(isActive);
-
-            if (colorsConfig)
-                fsb.SetLabelColor(isActive ? colorsConfig.tabOn : colorsConfig.tabOff);
-        }
+        UpdateButtonVisuals(floor);
+        UpdateNavButtons();
+        ResetPendingSelection();
 
         Debug.Log($"[FloorSelectionManager] Floor selected: {floor.floorName}");
     }
 
-    /// <summary>Selects a floor by its FloorType enum value.</summary>
+    /// <summary>
+    /// Select a floor by its type (FloorType enum).
+    /// </summary>
     public void SelectFloorByType(FloorType type)
     {
         var found = floorDataArray?.FirstOrDefault(f => f && f.floorType.Equals(type));
         if (found) SelectFloor(found);
     }
 
-    /// <summary>Re-applies UI for the currently selected floor (label + visible group).</summary>
+    /// <summary>
+    /// Refreshes the currently selected floor's UI,
+    /// including re-applying room group to update button states.
+    /// </summary>
     public void RefreshCurrentFloor()
     {
         if (!currentFloor) return;
+
         UpdateFloorDescriptionText(currentFloor);
         ShowRoomGroupForFloor(currentFloor);
+
+        if (roomGroupsByFloor.TryGetValue(currentFloor, out var group) && group)
+            group.ApplyFloor(currentFloor);
+    }
+
+    public void RefreshAllFloors()
+    {
+        foreach (var kv in roomGroupsByFloor)
+            if (kv.Value)
+                kv.Value.ApplyFloor(kv.Key);
     }
 
     // ─────────────────────────────────────────────────────
-    // Floor Buttons (create, clear, and manage floor button instances)
+    // Room Selection Logic
     // ─────────────────────────────────────────────────────
+    private void CachePendingRoom(RoomType room)
+    {
+        pendingRoom = room;
+        if (confirmRoomButton) confirmRoomButton.interactable = true;
+        Debug.Log($"[FloorSelectionManager] Pending room set: {room}");
+    }
+
+    private void ConfirmPendingRoom()
+    {
+        if (!pendingRoom.HasValue)
+        {
+            ResetPendingSelection();
+            Debug.Log("[FloorSelectionManager] No pending room to confirm.");
+            return;
+        }
+
+        RoomType chosenRoom = pendingRoom.Value;
+
+        // Thực hiện dịch chuyển
+        HandleRoomChosen(chosenRoom);
+
+        // Reset state
+        ResetPendingSelection();
+    }
+
+
+    private void HandleRoomChosen(RoomType room)
+    {
+        Debug.Log($"[FloorSelectionManager] Room confirmed: {room}");
+
+        RoomManager.Instance.SetActiveRoom(room);
+        UIManager.Instance.ToggleSelectRoomPanel(false);
+        UIManager.Instance.TogglePhonePanel(false);
+    }
+
+    // ─────────────────────────────────────────────────────
+    // Floor Buttons
+    // ─────────────────────────────────────────────────────
+    private void InitFloorButtons() => BuildFloorButtons();
+
     private void BuildFloorButtons()
     {
         if (!floorButtonPrefab || !floorButtonsRoot)
@@ -150,9 +202,10 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
             btnInstance.SetFloor(data);
 
             var uiBtn = btnInstance.GetButton();
+
             if (uiBtn)
             {
-                int idx = i; // capture index for closure
+                int idx = i;
                 uiBtn.onClick.AddListener(() =>
                 {
                     if (floorDataArray != null && idx < floorDataArray.Length && floorDataArray[idx])
@@ -170,15 +223,44 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
         {
             if (!fsb) continue;
             var btn = fsb.GetButton();
+
             if (btn) btn.onClick.RemoveAllListeners();
             Destroy(fsb.gameObject);
         }
+
         spawnedFloorButtons.Clear();
     }
 
+    private void CleanupFloorButtons()
+    {
+        foreach (var fsb in spawnedFloorButtons)
+        {
+            if (!fsb) continue;
+            var btn = fsb.GetButton();
+            if (btn) btn.onClick.RemoveAllListeners();
+        }
+
+        spawnedFloorButtons.Clear();
+    }
+
+    private void UpdateButtonVisuals(FloorDataSO selectedFloor)
+    {
+        foreach (var fsb in spawnedFloorButtons)
+        {
+            if (!fsb) continue;
+            bool isActive = fsb.GetFloorAsset() == selectedFloor;
+            fsb.SetOutlineActive(isActive);
+
+            if (colorsConfig)
+                fsb.SetLabelColor(isActive ? colorsConfig.tabOn : colorsConfig.tabOff);
+        }
+    }
+
     // ─────────────────────────────────────────────────────
-    // Room Groups (create and toggle groups for each floor)
+    // Room Groups
     // ─────────────────────────────────────────────────────
+    private void InitRoomGroups() => BuildRoomGroups();
+
     private void BuildRoomGroups()
     {
         if (!roomGroupsRoot || floorDataArray == null || floorDataArray.Length == 0) return;
@@ -189,6 +271,7 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
             if (roomGroupsByFloor.ContainsKey(floor) && roomGroupsByFloor[floor]) continue;
 
             var prefabGroup = floor.floorUIPrefab;
+
             if (!prefabGroup)
             {
                 Debug.LogWarning($"[FloorSelectionManager] Missing floorUIPrefab on floor: {floor.floorName}");
@@ -199,12 +282,9 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
             group.name = $"RoomGroup_{floor.floorName}";
             group.ApplyFloor(floor);
 
-            // Subscribe to room selection
-            group.onRoomSelected += HandleRoomChosen;
+            group.onRoomSelected += CachePendingRoom;
 
-            // Hidden by default; we only show the selected one
             group.gameObject.SetActive(false);
-
             roomGroupsByFloor[floor] = group;
         }
     }
@@ -214,21 +294,82 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
         foreach (var kv in roomGroupsByFloor)
         {
             bool shouldBeActive = (floor != null && kv.Key == floor);
+
             if (kv.Value && kv.Value.gameObject.activeSelf != shouldBeActive)
                 kv.Value.gameObject.SetActive(shouldBeActive);
         }
     }
 
-    // ─────────────────────────────────────────────────────
-    // Callbacks
-    // ─────────────────────────────────────────────────────
-    private void HandleRoomChosen(RoomType room)
+    private void CleanupRoomGroups()
     {
-        Debug.Log($"[FloorSelectionManager] Room chosen: {room}");
+        foreach (var kv in roomGroupsByFloor)
+        {
+            var grp = kv.Value;
+            if (!grp) continue;
+            grp.onRoomSelected -= CachePendingRoom;
+        }
 
-        RoomManager.Instance.SetActiveRoom(room);
-        UIManager.Instance.ToggleSelectRoomPanel(false);
-        UIManager.Instance.TogglePhonePanel(false);
+        roomGroupsByFloor.Clear();
+    }
+
+    // ─────────────────────────────────────────────────────
+    // Navigation
+    // ─────────────────────────────────────────────────────
+    private void InitNavigation()
+    {
+        BindButton(prevButton, SelectPrevFloor, true);
+        BindButton(nextButton, SelectNextFloor, true);
+    }
+
+    private void SelectPrevFloor()
+    {
+        if (floorDataArray == null || floorDataArray.Length == 0) return;
+        if (currentIndex <= 0) return;
+
+        currentIndex--;
+        SelectFloor(floorDataArray[currentIndex]);
+
+        AudioManager.Instance.PlayInteractSound(8);
+    }
+
+    private void SelectNextFloor()
+    {
+        if (floorDataArray == null || floorDataArray.Length == 0) return;
+        if (currentIndex >= floorDataArray.Length - 1) return;
+
+        currentIndex++;
+        SelectFloor(floorDataArray[currentIndex]);
+
+        AudioManager.Instance.PlayInteractSound(8);
+    }
+
+    private void UpdateNavButtons()
+    {
+        if (prevButton) prevButton.interactable = (currentIndex > 0);
+        if (nextButton) nextButton.interactable = (currentIndex < floorDataArray.Length - 1);
+    }
+
+    private void CleanupNavigation()
+    {
+        BindButton(prevButton, SelectPrevFloor, false);
+        BindButton(nextButton, SelectNextFloor, false);
+    }
+
+    // ─────────────────────────────────────────────────────
+    // Confirm Button
+    // ─────────────────────────────────────────────────────
+    private void InitConfirmButton()
+    {
+        if (confirmRoomButton)
+        {
+            BindButton(confirmRoomButton, ConfirmPendingRoom, true);
+            confirmRoomButton.interactable = false;
+        }
+    }
+
+    private void CleanupConfirmButton()
+    {
+        BindButton(confirmRoomButton, ConfirmPendingRoom, false);
     }
 
     // ─────────────────────────────────────────────────────
@@ -240,5 +381,21 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
         floorInfoText.text = (floor != null && !string.IsNullOrEmpty(floor.floorDescription))
             ? floor.floorDescription
             : string.Empty;
+    }
+
+    // ─────────────────────────────────────────────────────
+    // Utility Helpers
+    // ─────────────────────────────────────────────────────
+    private void ResetPendingSelection()
+    {
+        pendingRoom = null;
+        if (confirmRoomButton) confirmRoomButton.interactable = false;
+    }
+
+    private void BindButton(Button button, UnityEngine.Events.UnityAction action, bool bind)
+    {
+        if (!button) return;
+        if (bind) button.onClick.AddListener(action);
+        else button.onClick.RemoveListener(action);
     }
 }

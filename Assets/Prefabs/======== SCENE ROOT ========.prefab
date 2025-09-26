@@ -12385,7 +12385,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 618814300660000820}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5268858973890148738}
+        m_TargetAssemblyTypeName: RoomManager, Assembly-CSharp
+        m_MethodName: GoToExcitedRoom
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &2429149535745847499
 GameObject:
   m_ObjectHideFlags: 0
@@ -14668,6 +14680,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b67fe4ed7b645bf43888eb21ff6b5517, type: 2}
   roomGroupsRoot: {fileID: 7278870699079044145}
   floorInfoText: {fileID: 9062647390046713297}
+  confirmRoomButton: {fileID: 4156309573891579128}
+  prevButton: {fileID: 7274507361591222268}
+  nextButton: {fileID: 5545392261960829066}
   autoSelectFirst: 1
   colorsConfig: {fileID: 11400000, guid: 13aa80d6700607f45819c813f49d6f89, type: 2}
 --- !u!1 &3097235032139667388
@@ -22443,7 +22458,7 @@ GameObject:
   - component: {fileID: 2438252325989559749}
   - component: {fileID: 2046361695340037049}
   m_Layer: 5
-  m_Name: Left Button
+  m_Name: Prev Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -23956,7 +23971,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8957085499308529139}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5268858973890148738}
+        m_TargetAssemblyTypeName: RoomManager, Assembly-CSharp
+        m_MethodName: GoToWareHouse
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &4601146429372844049
 GameObject:
   m_ObjectHideFlags: 0
@@ -28519,6 +28546,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2753660307109567526}
   - component: {fileID: 1857425537760673239}
+  - component: {fileID: 7640739691810617387}
   m_Layer: 5
   m_Name: PriceInfo Group
   m_TagString: Untagged
@@ -28545,7 +28573,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 482.5, y: -102}
-  m_SizeDelta: {x: 420, y: 220}
+  m_SizeDelta: {x: 402.9, y: 220}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1857425537760673239
 MonoBehaviour:
@@ -28565,7 +28593,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 4
-  m_Spacing: 0
+  m_Spacing: 20
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 0
@@ -28573,6 +28601,20 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &7640739691810617387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5736571899277305823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 2
+  m_VerticalFit: 0
 --- !u!1 &5760346265287081206
 GameObject:
   m_ObjectHideFlags: 0
@@ -31556,8 +31598,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4284114791
-  m_fontColor: {r: 0.40392157, g: 0.40392157, b: 0.3529412, a: 1}
+    rgba: 4286615182
+  m_fontColor: {r: 0.5568628, g: 0.5568628, b: 0.5019608, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -31762,6 +31804,7 @@ GameObject:
   - component: {fileID: 4566989637163782333}
   - component: {fileID: 5811435319367519843}
   - component: {fileID: 4647611971455639228}
+  - component: {fileID: 5164660057795218993}
   m_Layer: 5
   m_Name: PriceValue Text
   m_TagString: Untagged
@@ -31785,8 +31828,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 275, y: -110}
-  m_SizeDelta: {x: 280, y: 100}
+  m_AnchoredPosition: {x: 271.45, y: -110}
+  m_SizeDelta: {x: 262.9, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5811435319367519843
 CanvasRenderer:
@@ -31816,10 +31859,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 7.00k
+  m_text: "214\uC6D0"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: d7de4e7a1935d7f4cb8c5f6d66297a1b, type: 2}
-  m_sharedMaterial: {fileID: -914551256021618152, guid: d7de4e7a1935d7f4cb8c5f6d66297a1b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: bbcc67452c32b064b960dd30bc6b50b4, type: 2}
+  m_sharedMaterial: {fileID: 5439797245525787225, guid: bbcc67452c32b064b960dd30bc6b50b4, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -31850,7 +31893,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 32
   m_fontStyle: 0
-  m_HorizontalAlignment: 2
+  m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -31887,6 +31930,20 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &5164660057795218993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6388378054925293248}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 2
+  m_VerticalFit: 0
 --- !u!1 &6420813568118319373
 GameObject:
   m_ObjectHideFlags: 0
@@ -36149,7 +36206,7 @@ GameObject:
   - component: {fileID: 9090890545113077824}
   - component: {fileID: 6055799234245276940}
   m_Layer: 5
-  m_Name: Right Button
+  m_Name: Next Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -39792,7 +39849,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 65, y: -110}
+  m_AnchoredPosition: {x: 60, y: -110}
   m_SizeDelta: {x: 120, y: 124}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6729012611555013346

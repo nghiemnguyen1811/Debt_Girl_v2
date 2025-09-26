@@ -29,8 +29,7 @@ public class FloorRoomButtonGroup : MonoBehaviour
     // ─────────────────────────────────────────────────────
     private void Start()
     {
-        if (autoBindOnStart)
-            RebindAllButtons();
+        if (autoBindOnStart) RebindAllButtons();
     }
 
     private void OnDestroy()
@@ -59,7 +58,6 @@ public class FloorRoomButtonGroup : MonoBehaviour
     }
 
     public RoomType[] GetMappedRooms() => mappedRooms;
-
     public Button[] GetRoomButtons() => roomButtons;
 
     // ─────────────────────────────────────────────────────
@@ -109,10 +107,13 @@ public class FloorRoomButtonGroup : MonoBehaviour
     {
         button.gameObject.SetActive(true);
         button.onClick.RemoveAllListeners();
-        button.onClick.AddListener(() =>
-        {
-            onRoomSelected?.Invoke(room);
-        });
+
+        // Disable if this is the currently active room
+        bool isCurrentRoom = RoomManager.Instance && RoomManager.Instance.ActiveRoom == room;
+        button.interactable = !isCurrentRoom;
+
+        if (!isCurrentRoom)
+            button.onClick.AddListener(() => onRoomSelected?.Invoke(room));
     }
 
     private void DeactivateButton(Button button)

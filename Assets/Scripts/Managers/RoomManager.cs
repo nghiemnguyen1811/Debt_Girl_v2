@@ -33,6 +33,8 @@ public class RoomManager : SingletonMonobehaviour<RoomManager>
 
     private RoomType currentRoom = RoomType.None;
 
+    public RoomType ActiveRoom => currentRoom;
+
     // ─────────────────────────────────────────────────────
     // Unity Methods
     // ─────────────────────────────────────────────────────
@@ -146,7 +148,23 @@ public class RoomManager : SingletonMonobehaviour<RoomManager>
             room.gameObject.SetActive(room.RoomType == targetRoom);
         }
 
-        DirtManager.Instance.SetFloorCollider(target.RoomBounds);
         SetCurrentRoom(targetRoom);
+        FloorSelectionManager.Instance?.RefreshAllFloors();
+        DirtManager.Instance.SetFloorCollider(target.RoomBounds);
+    }
+
+    // ─────────────────────────────────────────────────────
+    // Quick Button Methods
+    // ─────────────────────────────────────────────────────
+    public void GoToWareHouse()
+    {
+        SetActiveRoom(RoomType.WareHouse);
+        UIManager.Instance.TogglePhonePanel(false);
+    }
+
+    public void GoToExcitedRoom()
+    {
+        SetActiveRoom(RoomType.ExcitedRoom);
+        UIManager.Instance.TogglePhonePanel(false);
     }
 }
