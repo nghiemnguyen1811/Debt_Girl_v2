@@ -210,6 +210,17 @@ public class PlayerInteractDetector : MonoBehaviour
         IsInteracting = false;
     }
 
+    /// <summary>
+    /// Clears the current interactable and hides the interact UI.
+    /// Useful when forcing a reset from other scripts.
+    /// </summary>
+    public void ClearCurrentInteractable()
+    {
+        IsInteracting = true;
+        CurrentInteractable = null;
+        ToggleUI(false, true);
+    }
+
     #endregion
 
     #region === Detection ===

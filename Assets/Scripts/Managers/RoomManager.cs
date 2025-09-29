@@ -99,7 +99,7 @@ public class RoomManager : SingletonMonobehaviour<RoomManager>
     /// </summary>
     private IEnumerator SetActiveRoomRoutine(RoomType targetRoom)
     {
-        player.interactDetector.IsInteracting = true;
+        player.interactDetector.ClearCurrentInteractable();
         isTransitioning = true;
 
         AudioManager.Instance.PlayInteractSound(6);

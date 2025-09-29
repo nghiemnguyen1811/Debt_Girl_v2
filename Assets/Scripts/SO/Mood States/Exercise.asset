@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2906d38c16a7bca4082cf89680b21d04, type: 3}
-  m_Name: Hungry
+  m_Name: Exercise
   m_EditorClassIdentifier: 
-  conditionType: 3
-  moodIcon: {fileID: 192999894, guid: 2fd481fa2786e114f8d118d6746a76e0, type: 3}
-  moodAnimName: Hungry
-  animatorLayerIndex: 2
-  moodDecayRate: 1
-  minTime: 100
-  maxTime: 200
+  conditionType: 12
+  moodIcon: {fileID: -1186588496, guid: 2fd481fa2786e114f8d118d6746a76e0, type: 3}
+  moodAnimName: 
+  animatorLayerIndex: 0
+  moodDecayRate: 0.5
+  minTime: 5
+  maxTime: 6

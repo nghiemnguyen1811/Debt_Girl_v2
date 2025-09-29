@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5875013790906071396}
   - component: {fileID: 8804415834043886862}
   m_Layer: 0
-  m_Name: Waterdrops
+  m_Name: WaterdropsSlow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -41,8 +41,8 @@ ParticleSystem:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8922377522292268155}
   serializedVersion: 8
-  lengthInSec: 0.1
-  simulationSpeed: 1
+  lengthInSec: 0.4
+  simulationSpeed: 0.8
   stopAction: 0
   cullingMode: 1
   ringBufferMode: 0
@@ -151,8 +151,8 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 2
-      minScalar: 0.9
+      scalar: 1
+      minScalar: 0.5
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -944,7 +944,7 @@ ParticleSystem:
       countCurve:
         serializedVersion: 2
         minMaxState: 0
-        scalar: 4
+        scalar: 10
         minScalar: 14
         maxCurve:
           serializedVersion: 2

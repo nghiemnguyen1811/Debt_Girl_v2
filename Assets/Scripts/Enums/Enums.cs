@@ -30,7 +30,8 @@ public enum RoomType
     SonsRoom,
     TaeSeon,
     ExcitedRoom,
-    YoonSeul
+    YoonSeul,
+    Rooftop
 }
 
 public enum StatType
@@ -54,6 +55,7 @@ public enum MoodConditionType
     DirtyTeeth,
     BrushTeeth,
     DirtyBody,
+    Exercise
 }
 
 
@@ -161,6 +163,8 @@ public enum InteractionPropType
     Broom,
     CookingPan,
     Toothbrush,
+    Dumbbell,
+    Towel
 }
 
 public enum PanelType

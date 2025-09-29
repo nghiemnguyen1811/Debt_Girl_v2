@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Yawn
   m_EditorClassIdentifier: 
   conditionType: 2
-  moodIcon: {fileID: 2008723437, guid: 4e2a8781c4ae171469315681a3eb2fd8, type: 3}
+  moodIcon: {fileID: 2099301544, guid: 2fd481fa2786e114f8d118d6746a76e0, type: 3}
   moodAnimName: Yawn
   animatorLayerIndex: 1
-  moodDecayRate: 2
+  moodDecayRate: 1.5
   minTime: 600
   maxTime: 700
