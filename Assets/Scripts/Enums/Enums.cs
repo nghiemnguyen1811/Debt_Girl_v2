@@ -164,7 +164,8 @@ public enum InteractionPropType
     CookingPan,
     Toothbrush,
     Dumbbell,
-    Towel
+    Towel,
+    Phone
 }
 
 public enum PanelType

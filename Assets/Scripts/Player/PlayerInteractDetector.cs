@@ -34,7 +34,7 @@ public class PlayerInteractDetector : MonoBehaviour
 
     #region === Private Fields ===
 
-    private PlayerControl playerControl;
+    private PlayerControl control;
     private Vector3 originalPosition;
     private Quaternion originalRotation;
 
@@ -54,7 +54,7 @@ public class PlayerInteractDetector : MonoBehaviour
 
     private void Start()
     {
-        playerControl = GetComponent<PlayerControl>();
+        control = GetComponent<PlayerControl>();
 
         ToggleUI(false, true);
         durationSlider.gameObject.SetActive(false);
@@ -78,9 +78,9 @@ public class PlayerInteractDetector : MonoBehaviour
     /// </summary>
     public void InteractIndicator()
     {
-        if (CurrentInteractable == null || IsInteracting) return;
+        if (CurrentInteractable == null || IsInteracting || control.animationHandler.IsPhoneActive) return;
 
-        if (playerControl.stats.energy.current < -CurrentInteractable.GetEnergyAmount())
+        if (control.stats.energy.current < -CurrentInteractable.GetEnergyAmount())
         {
             string warning = energyWarningMessages[Random.Range(0, energyWarningMessages.Length)];
             UIManager.Instance.ShowWarningText(warning);
@@ -99,11 +99,11 @@ public class PlayerInteractDetector : MonoBehaviour
 
 
         if (CurrentInteractable.MoodIconOffset != Vector3.zero)
-            playerControl.visualizer?.OffsetMoodIcon(CurrentInteractable.MoodIconOffset);
+            control.visualizer?.OffsetMoodIcon(CurrentInteractable.MoodIconOffset);
 
         var data = CurrentInteractable.Data;
         if (data != null && data.requiredActionType != MoodConditionType.None)
-            playerControl.visualizer?.ApplyFaceTextures(data.requiredActionType);
+            control.visualizer?.ApplyFaceTextures(data.requiredActionType);
 
         switch (CurrentInteractable.GetInteractionMode())
         {
@@ -158,7 +158,7 @@ public class PlayerInteractDetector : MonoBehaviour
         string anim = CurrentInteractable.GetAnimationName();
 
         if (!string.IsNullOrEmpty(anim))
-            playerControl.animationHandler.SetBoolParameter(anim, true);
+            control.animationHandler.SetBoolParameter(anim, true);
 
         StartCoroutine(HandleInteraction(anim, CurrentInteractable.GetDuration()));
     }
@@ -183,7 +183,7 @@ public class PlayerInteractDetector : MonoBehaviour
         durationSlider.gameObject.SetActive(false);
 
         if (!string.IsNullOrEmpty(animName))
-            playerControl.animationHandler.SetBoolParameter(animName, false);
+            control.animationHandler.SetBoolParameter(animName, false);
 
         transform.SetPositionAndRotation(originalPosition, originalRotation);
         CurrentInteractable.OnStopInteract();
@@ -192,8 +192,8 @@ public class PlayerInteractDetector : MonoBehaviour
 
         if (data != null)
         {
-            playerControl.stats.ApplyStatChange(StatType.Mood, data.moodAmount);
-            playerControl.stats.ApplyStatChange(StatType.Productivity, data.energyAmount);
+            control.stats.ApplyStatChange(StatType.Mood, data.moodAmount);
+            control.stats.ApplyStatChange(StatType.Productivity, data.energyAmount);
 
             if (data.earnsMoney)
                 MoneyManager.Instance.ChangeMoneys(data.moneyEarned);
@@ -204,7 +204,7 @@ public class PlayerInteractDetector : MonoBehaviour
                 MoodManager.Instance.ClearMood(data.clearsMoodType);
         }
 
-        playerControl.visualizer?.ResetMoodIconPosition();
+        control.visualizer?.ResetMoodIconPosition();
 
         yield return new WaitForSeconds(0.5f);
         IsInteracting = false;

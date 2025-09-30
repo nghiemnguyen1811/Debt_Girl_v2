@@ -63,6 +63,9 @@ public class RoomManager : SingletonMonobehaviour<RoomManager>
     {
         if (isTransitioning || player.interactDetector.IsInteracting) return;
 
+        UIManager.Instance.TogglePhonePanel(false);
+        player.animationHandler.HidePhone();
+
         fader.gameObject.SetActive(true);
         StartCoroutine(SetActiveRoomRoutine(targetRoom));
     }
@@ -159,12 +162,10 @@ public class RoomManager : SingletonMonobehaviour<RoomManager>
     public void GoToWareHouse()
     {
         SetActiveRoom(RoomType.WareHouse);
-        UIManager.Instance.TogglePhonePanel(false);
     }
 
     public void GoToExcitedRoom()
     {
         SetActiveRoom(RoomType.ExcitedRoom);
-        UIManager.Instance.TogglePhonePanel(false);
     }
 }

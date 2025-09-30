@@ -171,7 +171,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
         else if (!show && !callbackOnShow)
             callback?.Invoke();
 
-        if (hasInitialized)
+        if (hasInitialized && type != PanelType.Phone)
             AudioManager.Instance.PlayInteractSound(8);
     }
 

@@ -5,17 +5,25 @@
 /// </summary>
 public class PlayerAnimation : MonoBehaviour
 {
-    #region === Animator Setup ===
+    #region === References ===
 
-    [Header(" Animator Reference ")]
+    private PlayerControl control;
     private Animator animator;
 
-    [Header(" Mood Animation ")]
+    #endregion
+
+    #region === Values ===
+
     private int activeMoodLayerIndex;
+    public bool IsPhoneActive { get; set; }
+
+    #endregion
+
+    #region === Animator Setup ===
 
     private void Start()
     {
-        // Get the Animator component from child (e.g., model or rig root)
+        control = GetComponent<PlayerControl>();
         animator = GetComponentInChildren<Animator>();
     }
 
@@ -59,6 +67,8 @@ public class PlayerAnimation : MonoBehaviour
     /// <param name="layerIndex">Animator layer index for mood</param>
     public void SetMoodTrigger(string triggerName, int layerIndex)
     {
+        if (IsPhoneActive) return;
+
         activeMoodLayerIndex = layerIndex;
         animator.SetLayerWeight(layerIndex, 1f);
         animator.ResetTrigger(triggerName); // Ensure retrigger
@@ -71,6 +81,46 @@ public class PlayerAnimation : MonoBehaviour
     public void ResetMoodLayerWeight()
     {
         animator.SetLayerWeight(activeMoodLayerIndex, 0f);
+    }
+
+    #endregion
+
+    #region === Phone Animation Layer ===
+
+    /// <summary>
+    /// Show phone animation and UI.
+    /// </summary>
+    public void ShowPhone()
+    {
+        if (control.interactDetector.IsInteracting) return;
+
+        IsPhoneActive = true;
+        ResetMoodLayerWeight();
+        control.propSwitcher.SetPropActiveByType(InteractionPropType.Phone, true);
+        SetPhoneAnimationState(4, true);
+    }
+
+    /// <summary>
+    /// Hide phone animation and UI.
+    /// </summary>
+    public void HidePhone()
+    {
+        if (control.interactDetector.IsInteracting) return;
+
+        UIManager.Instance.TogglePhonePanel(false);
+        SetPhoneAnimationState(4, false);
+    }
+
+    /// <summary>
+    /// Set phone layer and bool state.
+    /// </summary>
+    public void SetPhoneAnimationState(int layerIndex, bool isActive)
+    {
+        activeMoodLayerIndex = layerIndex;
+        animator.SetLayerWeight(layerIndex, 1f);
+        animator.SetBool("UsePhone", isActive);
+
+        AudioManager.Instance.PlayInteractSound(8);
     }
 
     #endregion

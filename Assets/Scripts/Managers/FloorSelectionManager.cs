@@ -170,9 +170,8 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
     {
         Debug.Log($"[FloorSelectionManager] Room confirmed: {room}");
 
-        RoomManager.Instance.SetActiveRoom(room);
         UIManager.Instance.ToggleSelectRoomPanel(false);
-        UIManager.Instance.TogglePhonePanel(false);
+        RoomManager.Instance.SetActiveRoom(room);
     }
 
     // ─────────────────────────────────────────────────────

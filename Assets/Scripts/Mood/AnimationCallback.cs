@@ -10,7 +10,7 @@ public class AnimationCallback : MonoBehaviour
     #region === References ===
 
     [Header(" Elements ")]
-    private PlayerControl playerControl;
+    private PlayerControl control;
 
     #endregion
 
@@ -18,9 +18,9 @@ public class AnimationCallback : MonoBehaviour
 
     private void Start()
     {
-        playerControl = GetComponentInParent<PlayerControl>();
+        control = GetComponentInParent<PlayerControl>();
 
-        if (playerControl == null)
+        if (control == null)
             Debug.LogWarning("[AnimationCallback] PlayerControl not found in parent.");
     }
 
@@ -34,9 +34,9 @@ public class AnimationCallback : MonoBehaviour
     /// </summary>
     public void EndMoodAnimation()
     {
-        if (playerControl?.visualizer == null) return;
+        if (control?.visualizer == null) return;
 
-        playerControl.animationHandler.ResetMoodLayerWeight();
+        control.animationHandler.ResetMoodLayerWeight();
     }
 
     /// <summary>
@@ -57,6 +57,25 @@ public class AnimationCallback : MonoBehaviour
     public void PlayMoodSound(int moodIndex)
     {
         AudioManager.Instance.PlayMoodSound(moodIndex);
+    }
+
+    /// <summary>
+    /// Called from an animation event when the character takes out the phone.
+    /// Opens the phone UI panel.
+    /// </summary>
+    public void OnPhoneTakenOut()
+    {
+        UIManager.Instance.TogglePhonePanel(true);
+    }
+
+    /// <summary>
+    /// Called from an animation event when the character puts the phone away.
+    /// Resets the phone active state in the animation handler.
+    /// </summary>
+    public void OnPhonePutAway()
+    {
+        control.animationHandler.IsPhoneActive = false;
+        control.propSwitcher.SetPropActiveByType(InteractionPropType.Phone, false);
     }
 
     #endregion
