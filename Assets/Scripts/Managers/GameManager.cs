@@ -1,13 +1,25 @@
 ﻿using UnityEngine;
+using System;
 
 /// <summary>
-/// Manages global game state such as player level and starting music.
+/// GameManager is the global controller for player progress and core game state.
+/// It manages player level, triggers level change events, and starts background music.
 /// </summary>
 public class GameManager : SingletonMonobehaviour<GameManager>
 {
-    #region === Player Progress ===
+    // ─────────────────────────────────────────────────────
+    // Events
+    // ─────────────────────────────────────────────────────
+    /// <summary>
+    /// Event fired whenever the player's level changes.
+    /// </summary>
+    public event Action OnLevelChanged;
 
+    // ─────────────────────────────────────────────────────
+    // Player Progress
+    // ─────────────────────────────────────────────────────
     [Header("Player Progress")]
+    [SerializeField, Min(1)]
     private int currentLevel = 1;
 
     /// <summary>
@@ -15,35 +27,47 @@ public class GameManager : SingletonMonobehaviour<GameManager>
     /// </summary>
     public int CurrentLevel => currentLevel;
 
-    #endregion
-
-    #region === Unity Events ===
-
-    // Play background music when the game starts
+    // ─────────────────────────────────────────────────────
+    // Unity Lifecycle
+    // ─────────────────────────────────────────────────────
     private void Start()
     {
-        AudioManager.Instance.PlayMusic(1);
+        // Start background music
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayMusic(1);
     }
 
-    #endregion
-
-    #region === Public Methods ===
+    // ─────────────────────────────────────────────────────
+    // Public API
+    // ─────────────────────────────────────────────────────
 
     /// <summary>
-    /// Increases the current level by 1.
+    /// Increases the current level by 1 and notifies listeners.
     /// </summary>
     public void IncreaseLevel()
     {
         currentLevel++;
+        NotifyLevelChanged();
     }
 
     /// <summary>
-    /// Sets the current level to a specific value (minimum = 1).
+    /// Sets the current level to a specific value (minimum = 1) and notifies listeners.
     /// </summary>
     public void SetLevel(int level)
     {
         currentLevel = Mathf.Max(1, level);
+        NotifyLevelChanged();
     }
 
-    #endregion
+    // ─────────────────────────────────────────────────────
+    // Helpers
+    // ─────────────────────────────────────────────────────
+    /// <summary>
+    /// Fires the OnLevelChanged event.
+    /// </summary>
+    private void NotifyLevelChanged()
+    {
+        OnLevelChanged?.Invoke();
+        Debug.Log($"[GameManager] Player level updated: {currentLevel}");
+    }
 }

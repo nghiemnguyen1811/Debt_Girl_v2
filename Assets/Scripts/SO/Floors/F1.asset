@@ -16,5 +16,13 @@ MonoBehaviour:
   floorType: 2
   floorDescription: "1\uCE35 \uBC29\uC5D0 \uB300\uD55C \uC124\uBA85\uC774\uC5D0\uC694.\r\n\uD55C\uC18C\uD76C\uC758
     \uBC29, \uAC70\uC2E4, \uBD80\uC5CC, \uD604\uAD00"
-  roomTypes: 01000000030000000200000004000000
+  rooms:
+  - roomType: 1
+    level: 16
+  - roomType: 3
+    level: 1
+  - roomType: 2
+    level: 1
+  - roomType: 4
+    level: 3
   floorUIPrefab: {fileID: 3310749851163169463, guid: 1d051f09cdaf91d4a8681c64e9bee434, type: 3}

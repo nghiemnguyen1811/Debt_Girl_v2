@@ -9,7 +9,7 @@ public class FloorRoomButtonGroup : MonoBehaviour
     // Inspector Fields
     // ─────────────────────────────────────────────────────
     [Header("Room Buttons")]
-    [SerializeField] private Button[] roomButtons;
+    [SerializeField] private RoomButtonDisplay[] roomButtons; // Array of custom room buttons
 
     [Header("Behaviour")]
     [SerializeField] private bool autoBindOnStart = true;
@@ -22,7 +22,7 @@ public class FloorRoomButtonGroup : MonoBehaviour
     // ─────────────────────────────────────────────────────
     // Runtime Data
     // ─────────────────────────────────────────────────────
-    private RoomType[] mappedRooms;
+    private RoomLevelData[] mappedRooms;
 
     // ─────────────────────────────────────────────────────
     // Unity Lifecycle
@@ -50,15 +50,14 @@ public class FloorRoomButtonGroup : MonoBehaviour
     // ─────────────────────────────────────────────────────
     public void ApplyFloor(FloorDataSO floor)
     {
-        mappedRooms = (floor != null && floor.roomTypes != null)
-            ? floor.roomTypes
-            : Array.Empty<RoomType>();
+        mappedRooms = (floor != null && floor.rooms != null)
+            ? floor.rooms
+            : Array.Empty<RoomLevelData>();
 
         RebindAllButtons();
     }
 
-    public RoomType[] GetMappedRooms() => mappedRooms;
-    public Button[] GetRoomButtons() => roomButtons;
+    public RoomButtonDisplay[] GetRoomButtons() => roomButtons;
 
     // ─────────────────────────────────────────────────────
     // Internal Wiring
@@ -74,18 +73,18 @@ public class FloorRoomButtonGroup : MonoBehaviour
 
         for (int i = 0; i < btnCount; i++)
         {
-            var button = roomButtons[i];
-            if (!button) continue;
+            var buttonDisplay = roomButtons[i];
+            if (!buttonDisplay) continue;
 
-            bool hasValidRoom = (i < roomCount) && (mappedRooms[i] != RoomType.None);
+            bool hasValidRoom = (i < roomCount) && (mappedRooms[i].roomType != RoomType.None);
 
             if (!hasValidRoom)
             {
-                DeactivateButton(button);
+                DeactivateButton(buttonDisplay);
                 continue;
             }
 
-            ActivateButton(button, mappedRooms[i]);
+            ActivateButton(buttonDisplay, mappedRooms[i]);
         }
     }
 
@@ -93,32 +92,39 @@ public class FloorRoomButtonGroup : MonoBehaviour
     {
         if (roomButtons == null) return;
 
-        foreach (var button in roomButtons)
+        foreach (var buttonDisplay in roomButtons)
         {
-            if (!button) continue;
-            button.onClick.RemoveAllListeners();
+            if (!buttonDisplay) continue;
+            buttonDisplay.RoomButton.onClick.RemoveAllListeners();
         }
     }
 
     // ─────────────────────────────────────────────────────
     // Helpers
     // ─────────────────────────────────────────────────────
-    private void ActivateButton(Button button, RoomType room)
+    private void ActivateButton(RoomButtonDisplay buttonDisplay, RoomLevelData roomData)
     {
-        button.gameObject.SetActive(true);
-        button.onClick.RemoveAllListeners();
+        var btn = buttonDisplay.RoomButton;
+        buttonDisplay.gameObject.SetActive(true);
+        btn.onClick.RemoveAllListeners();
 
-        // Disable if this is the currently active room
-        bool isCurrentRoom = RoomManager.Instance && RoomManager.Instance.ActiveRoom == room;
-        button.interactable = !isCurrentRoom;
+        bool isCurrentRoom = RoomManager.Instance && RoomManager.Instance.ActiveRoom == roomData.roomType;
+        bool hasEnoughLevel = GameManager.Instance && GameManager.Instance.CurrentLevel >= roomData.level;
 
-        if (!isCurrentRoom)
-            button.onClick.AddListener(() => onRoomSelected?.Invoke(room));
+        // Update visual state through RoomButtonDisplay
+        buttonDisplay.Setup(roomData.level);
+        buttonDisplay.Refresh(hasEnoughLevel);
+
+        btn.interactable = !isCurrentRoom && hasEnoughLevel;
+
+        if (!isCurrentRoom && hasEnoughLevel)
+            btn.onClick.AddListener(() => onRoomSelected?.Invoke(roomData.roomType));
     }
 
-    private void DeactivateButton(Button button)
+    private void DeactivateButton(RoomButtonDisplay buttonDisplay)
     {
-        button.onClick.RemoveAllListeners();
-        button.gameObject.SetActive(false);
+        var btn = buttonDisplay.RoomButton;
+        btn.onClick.RemoveAllListeners();
+        buttonDisplay.gameObject.SetActive(false);
     }
 }

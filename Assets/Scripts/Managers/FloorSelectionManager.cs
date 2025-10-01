@@ -65,6 +65,9 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
         else UpdateFloorDescriptionText(null);
 
         UpdateNavButtons();
+
+        // Subscribe to level changes
+        GameManager.Instance.OnLevelChanged += RefreshAllFloors;
     }
 
     private void OnDestroy()
@@ -73,6 +76,9 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
         CleanupRoomGroups();
         CleanupNavigation();
         CleanupConfirmButton();
+
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnLevelChanged -= RefreshAllFloors;
     }
 
 #if UNITY_EDITOR

@@ -184,3 +184,11 @@ public enum PanelType
     Settings,
     Pause
 }
+
+public enum AppType
+{
+    Sns,
+    Baking,
+    Cooking,
+    TradingCoin
+}
