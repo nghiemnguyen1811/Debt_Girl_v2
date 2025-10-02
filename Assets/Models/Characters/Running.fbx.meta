@@ -3,42 +3,7 @@ guid: 1a8ac0dde661b2c499d680f6c1248c8b
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Blue T shirt.002
-    second: {fileID: 2100000, guid: 39436f371a0a038429702263b24ad756, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: black.002
-    second: {fileID: 2100000, guid: a127583a1f2e16749a030a600ccb4416, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: eye.002
-    second: {fileID: 2100000, guid: 6fa25e0665976104e994c9587c8749ec, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: hair.002
-    second: {fileID: 2100000, guid: 382a9ee2a665e7a4c8cd9c5585d7637d, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: mouth.002
-    second: {fileID: 2100000, guid: 6d36382064081094facb5b16cb1162bc, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: skin .002
-    second: {fileID: 2100000, guid: e38e958c1373d5240be23f1095f9bfea, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: white.002
-    second: {fileID: 2100000, guid: ca3845bc61ad29b47a6401b8af8ae0fb, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0

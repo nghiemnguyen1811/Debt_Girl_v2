@@ -184,7 +184,7 @@ public class CoinTradeManager : SingletonMonobehaviour<CoinTradeManager>
         if (coinTrendImage == null || sprite == null) return;
 
         coinTrendImage.sprite = sprite;
-        coinTrendImage.enabled = false; // force refresh
+        coinTrendImage.enabled = false;
         coinTrendImage.enabled = true;
     }
 
