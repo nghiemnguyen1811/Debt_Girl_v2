@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Sirenix.OdinInspector;
+using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewMoodCondition", menuName = "Mood/Mood Condition Data")]
 public class MoodConditionDataSO : ScriptableObject
@@ -28,4 +29,16 @@ public class MoodConditionDataSO : ScriptableObject
 
     [Tooltip("Maximum time (in seconds) before this mood can be triggered.")]
     public float maxTime = 300f;
+
+    [Header("Level Requirement")]
+    [Tooltip("The required level for this mood condition (>= 1).")]
+    [MinValue(1)]
+    [ValidateInput("@$value >= 1", "Required level must be at least 1")]
+    [OnValueChanged(nameof(ClampRequiredLevel))]
+    public int requiredLevel = 1;
+
+    private void ClampRequiredLevel()
+    {
+        requiredLevel = Mathf.Max(1, requiredLevel);
+    }
 }

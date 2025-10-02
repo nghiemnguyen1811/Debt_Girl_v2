@@ -57,7 +57,8 @@ public class MoodManager : SingletonMonobehaviour<MoodManager>
             float waitTime = Random.Range(moodData.minTime, moodData.maxTime);
             yield return new WaitForSeconds(waitTime);
 
-            if (moodQueue.Contains(moodData.conditionType)) continue;
+            if (GameManager.Instance.CurrentLevel < moodData.requiredLevel ||
+                moodQueue.Contains(moodData.conditionType)) continue;
 
             moodQueue.Enqueue(moodData.conditionType);
             Debug.Log($"[MoodManager] Mood {moodData.conditionType} added to queue.");
