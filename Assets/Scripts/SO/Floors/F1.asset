@@ -18,11 +18,15 @@ MonoBehaviour:
     \uBC29, \uAC70\uC2E4, \uBD80\uC5CC, \uD604\uAD00"
   rooms:
   - roomType: 1
+    markerIcon: {fileID: 21300000, guid: b138b7c81fae7b64fae03ecd56fb539b, type: 3}
     level: 16
   - roomType: 3
+    markerIcon: {fileID: 21300000, guid: 2db48f05e2e74b54b836ad925b15c448, type: 3}
     level: 1
   - roomType: 2
+    markerIcon: {fileID: 21300000, guid: 97714c6a08adb2442a9114aa32447145, type: 3}
     level: 1
   - roomType: 4
+    markerIcon: {fileID: 21300000, guid: a5781aac7a8e61d4db0e9bf5e2f1af8b, type: 3}
     level: 3
   floorUIPrefab: {fileID: 3310749851163169463, guid: 1d051f09cdaf91d4a8681c64e9bee434, type: 3}

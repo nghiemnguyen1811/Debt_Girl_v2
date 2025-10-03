@@ -5,15 +5,25 @@ using System.Collections;
 
 /// <summary>
 /// Manages coin trading with delayed hidden price fluctuation logic.
+/// Coin value scales with player level but only updates to the new level's value
+/// after the player has sold all previously owned coins.
 /// </summary>
 public class CoinTradeManager : SingletonMonobehaviour<CoinTradeManager>
 {
+    // ─────────────────────────────────────────────────────
+    // Inspector Fields
+    // ─────────────────────────────────────────────────────
+
     [Header("Coin UI")]
     [SerializeField] private Image coinTrendImage;
     [SerializeField] private TextMeshProUGUI coinValueText;
     [SerializeField] private TextMeshProUGUI buyAmountText;
     [SerializeField] private TextMeshProUGUI sellAmountText;
     [SerializeField] private TextMeshProUGUI ownedCoinsText;
+    [SerializeField] private TextMeshProUGUI fluctuationTimerText;
+
+    [Header("Price Delta UI Array (0 = decrease, 1 = increase)")]
+    [SerializeField] private PriceDeltaUI[] priceDeltaUIs;
 
     [Header("Buy Buttons")]
     [SerializeField] private Button buyButton;
@@ -31,31 +41,52 @@ public class CoinTradeManager : SingletonMonobehaviour<CoinTradeManager>
     [SerializeField] private Sprite downSprite;
 
     [Header("Fluctuation Settings")]
-    [SerializeField] private Vector2 fluctuationInterval = new(30f, 60f);
-    [SerializeField] private Vector2 fluctuationPercentRange = new(0.1f, 0.3f);
+    [SerializeField] private Vector2 fluctuationInterval = new(120f, 180f);
+    [SerializeField] private Vector2 fluctuationPercentRange = new(0.1f, 0.4f);
     [SerializeField] private float minCoinValue = 10f;
+
+    [Header("Level Scaling Settings")]
+    [SerializeField] private double baseValue = 100;
+    [SerializeField] private double growthFactor = 20;
+
+    // ─────────────────────────────────────────────────────
+    // Runtime Data
+    // ─────────────────────────────────────────────────────
 
     private double coinValue;
     private double pendingCoinValue;
+    private double nextLevelCoinValue;
+
     private int buyAmount = 0;
     private int sellAmount = 0;
     private int ownedCoins = 0;
+
     private Coroutine fluctuationCoroutine;
 
+    // ─────────────────────────────────────────────────────
+    // Unity Lifecycle
     // ─────────────────────────────────────────────────────
 
     private void Start()
     {
-        InitializeCoinValue();
         SetupUI();
         RegisterUIEvents();
+        HandleLevelChanged();
+        ResetFluctuationTimer();
+        HideAllPriceDeltaUI();
+
+        GameManager.Instance.OnLevelChanged += HandleLevelChanged;
     }
 
-    private void InitializeCoinValue()
+    private void OnDestroy()
     {
-        coinValue = Random.Range(100, 501);
-        pendingCoinValue = coinValue;
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnLevelChanged -= HandleLevelChanged;
     }
+
+    // ─────────────────────────────────────────────────────
+    // Setup
+    // ─────────────────────────────────────────────────────
 
     private void SetupUI()
     {
@@ -73,6 +104,29 @@ public class CoinTradeManager : SingletonMonobehaviour<CoinTradeManager>
         minusSellButton.onClick.AddListener(() => ChangeSellAmount(-1));
         buyButton.onClick.AddListener(HandleBuy);
         sellButton.onClick.AddListener(HandleSell);
+    }
+
+    // ─────────────────────────────────────────────────────
+    // Level Scaling
+    // ─────────────────────────────────────────────────────
+
+    private void HandleLevelChanged()
+    {
+        int level = GameManager.Instance.CurrentLevel;
+
+        if (ownedCoins <= 0)
+        {
+            // Apply new value immediately if no coins owned
+            coinValue = baseValue + (level - 1) * growthFactor;
+            pendingCoinValue = coinValue;
+        }
+        else
+        {
+            // Store next level value until player sells all coins
+            nextLevelCoinValue = baseValue + (level - 1) * growthFactor;
+        }
+
+        UpdateUI();
     }
 
     // ─────────────────────────────────────────────────────
@@ -98,7 +152,7 @@ public class CoinTradeManager : SingletonMonobehaviour<CoinTradeManager>
         if (newAmount >= 0 && newAmount <= ownedCoins)
         {
             sellAmount = newAmount;
-            sellAmountText.text = sellAmount.ToString(); 
+            sellAmountText.text = sellAmount.ToString();
         }
     }
 
@@ -129,6 +183,7 @@ public class CoinTradeManager : SingletonMonobehaviour<CoinTradeManager>
     {
         if (sellAmount <= 0 || ownedCoins <= 0) return;
 
+        // Apply current pending value for this transaction
         coinValue = pendingCoinValue;
         double gain = sellAmount * coinValue;
 
@@ -138,6 +193,14 @@ public class CoinTradeManager : SingletonMonobehaviour<CoinTradeManager>
 
         if (ownedCoins <= 0)
         {
+            // Apply next stored level value if available
+            if (nextLevelCoinValue > 0)
+            {
+                coinValue = nextLevelCoinValue;
+                pendingCoinValue = nextLevelCoinValue;
+                nextLevelCoinValue = 0;
+            }
+
             buyButton.interactable = true;
             sellButton.interactable = false;
 
@@ -145,6 +208,8 @@ public class CoinTradeManager : SingletonMonobehaviour<CoinTradeManager>
                 StopCoroutine(fluctuationCoroutine);
 
             UpdateCoinTrend(normalSprite);
+            ResetFluctuationTimer();
+            HideAllPriceDeltaUI();
         }
 
         UpdateUI();
@@ -152,17 +217,26 @@ public class CoinTradeManager : SingletonMonobehaviour<CoinTradeManager>
     }
 
     // ─────────────────────────────────────────────────────
-    // Reset Logic
+    // Reset Helpers
     // ─────────────────────────────────────────────────────
 
-    /// <summary>
-    /// Resets coin trading state to initial values.
-    /// </summary>
     public void ResetAll()
     {
         buyAmount = 0;
         sellAmount = 0;
         UpdateUI();
+        ResetFluctuationTimer();
+    }
+
+    private void ResetFluctuationTimer()
+    {
+        UpdateFluctuationTimer(0f);
+    }
+
+    private void UpdateFluctuationTimer(float remaining)
+    {
+        if (fluctuationTimerText == null) return;
+        fluctuationTimerText.text = DoubleUtilities.UpdateTime(Mathf.CeilToInt(remaining));
     }
 
     // ─────────────────────────────────────────────────────
@@ -188,6 +262,15 @@ public class CoinTradeManager : SingletonMonobehaviour<CoinTradeManager>
         coinTrendImage.enabled = true;
     }
 
+    private void HideAllPriceDeltaUI()
+    {
+        if (priceDeltaUIs.Length >= 2)
+        {
+            priceDeltaUIs[0].Hide();
+            priceDeltaUIs[1].Hide();
+        }
+    }
+
     // ─────────────────────────────────────────────────────
     // Price Fluctuation Logic
     // ─────────────────────────────────────────────────────
@@ -198,22 +281,74 @@ public class CoinTradeManager : SingletonMonobehaviour<CoinTradeManager>
 
         while (true)
         {
-            yield return new WaitForSeconds(Random.Range(fluctuationInterval.x, fluctuationInterval.y));
+            // Random wait time for next fluctuation
+            float waitTime = Random.Range(fluctuationInterval.x, fluctuationInterval.y);
+            float remaining = waitTime;
 
+            // Countdown until fluctuation
+            while (remaining > 0)
+            {
+                UpdateFluctuationTimer(remaining);
+                yield return new WaitForSeconds(1f);
+                remaining -= 1f;
+            }
+
+            // Apply price fluctuation when countdown ends
             float random = Random.value;
             float fluctuation = Random.Range(fluctuationPercentRange.x, fluctuationPercentRange.y);
 
             if (random < 0.8f)
             {
-                pendingCoinValue = System.Math.Max(minCoinValue, pendingCoinValue * (1 - fluctuation));
-                UpdateCoinTrend(downSprite);
+                double newValue = System.Math.Max(minCoinValue, coinValue * (1 - fluctuation));
+                ApplyFluctuation(true, newValue);
             }
 
             else
             {
-                pendingCoinValue *= (1 + fluctuation);
-                UpdateCoinTrend(upSprite);
+                double newValue = coinValue * (1 + fluctuation);
+                ApplyFluctuation(false, newValue);
             }
         }
+    }
+
+    private void ApplyFluctuation(bool isDecrease, double newValue)
+    {
+        pendingCoinValue = newValue;
+
+        UpdateCoinTrend(isDecrease ? downSprite : upSprite);
+
+        if (priceDeltaUIs.Length >= 2)
+        {
+            int showIndex = isDecrease ? 0 : 1;
+            int hideIndex = isDecrease ? 1 : 0;
+
+            priceDeltaUIs[showIndex].Show(pendingCoinValue);
+            priceDeltaUIs[hideIndex].Hide();
+        }
+    }
+}
+
+// ─────────────────────────────────────────────────────
+// Nested Serializable Class
+// ─────────────────────────────────────────────────────
+
+[System.Serializable]
+public class PriceDeltaUI
+{
+    [SerializeField] private GameObject deltaGroup;     // UI group (icon + text)
+    [SerializeField] private TextMeshProUGUI deltaText; // UI text
+
+    public void Show(double value)
+    {
+        if (deltaGroup == null || deltaText == null) return;
+
+        deltaGroup.SetActive(true);
+        deltaText.text = $"{System.Math.Round(value)}원";
+    }
+
+    public void Hide()
+    {
+        if (deltaGroup != null)
+            deltaGroup.SetActive(false);
     }
 }

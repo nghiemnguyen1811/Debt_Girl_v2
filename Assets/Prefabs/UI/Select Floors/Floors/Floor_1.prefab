@@ -110,6 +110,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room Button_2
       objectReference: {fileID: 0}
+    - target: {fileID: 479871732183661925, guid: 276492b6e214eea4997083873a84bbf5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5301300826123550709, guid: 276492b6e214eea4997083873a84bbf5, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -336,6 +340,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room Button_3
       objectReference: {fileID: 0}
+    - target: {fileID: 479871732183661925, guid: 276492b6e214eea4997083873a84bbf5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5301300826123550709, guid: 276492b6e214eea4997083873a84bbf5, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -449,6 +457,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Room Button_1
       objectReference: {fileID: 0}
+    - target: {fileID: 479871732183661925, guid: 276492b6e214eea4997083873a84bbf5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5301300826123550709, guid: 276492b6e214eea4997083873a84bbf5, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -527,6 +539,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5301300826123550709, guid: 276492b6e214eea4997083873a84bbf5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9178998246797631748, guid: 276492b6e214eea4997083873a84bbf5, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
@@ -6,23 +6,31 @@ using TMPro;
 [RequireComponent(typeof(Button))]
 public class RoomButtonDisplay : MonoBehaviour
 {
+    // ─────────────────────────────────────────────────────
+    // Inspector Fields
+    // ─────────────────────────────────────────────────────
     [Header("UI References")]
     [SerializeField] private Button roomButton;
+    [SerializeField] private Image buttonImage;
+    [SerializeField] private Image mapMarkerImg;
     [SerializeField] private GameObject lockPanel;
+    [SerializeField] private GameObject unlockPanel;
     [SerializeField] private TMP_Text requiredLevelText;
 
-    [Header("Room Data")]
-    private int requiredLevel;
+    // ─────────────────────────────────────────────────────
+    // Room Data
+    // ─────────────────────────────────────────────────────
+    private RoomData roomData;
 
-    private Image buttonImage;
-
+    // ─────────────────────────────────────────────────────
+    // Properties
+    // ─────────────────────────────────────────────────────
+    public RoomType RoomType => roomData != null ? roomData.roomType : RoomType.None;
     public Button RoomButton => roomButton;
 
-    private void Awake()
-    {
-        roomButton = GetComponent<Button>();
-        buttonImage = roomButton.GetComponent<Image>();
-    }
+    // ─────────────────────────────────────────────────────
+    // Public API
+    // ─────────────────────────────────────────────────────
 
     /// <summary>
     /// Refresh the UI depending on unlock status.
@@ -31,34 +39,45 @@ public class RoomButtonDisplay : MonoBehaviour
     {
         if (unlocked)
         {
-            // Player can interact with the button
-            roomButton.interactable = true;
             SetButtonAlpha(1f);
+
+            if (roomButton) roomButton.interactable = true;
             if (lockPanel) lockPanel.SetActive(false);
         }
 
         else
         {
-            // Player cannot interact with the button
-            roomButton.interactable = false;
             SetButtonAlpha(0f);
+
+            if (roomButton) roomButton.interactable = false;
             if (lockPanel) lockPanel.SetActive(true);
-            if (requiredLevelText) requiredLevelText.text = $"Lv. {requiredLevel}";
+            if (requiredLevelText) requiredLevelText.text = $"Lv. {roomData.level}";
         }
     }
 
     /// <summary>
-    /// Setup required level (for initialization).
+    /// Setup room data and initialize UI.
     /// </summary>
-    public void Setup(int reqLevel)
+    public void Setup(RoomData data)
     {
-        requiredLevel = reqLevel;
-        if (requiredLevelText) requiredLevelText.text = $"Lv. {requiredLevel}";
+        roomData = data;
+
+        if (mapMarkerImg) mapMarkerImg.sprite = roomData.markerIcon;
+        if (requiredLevelText) requiredLevelText.text = $"Lv. {roomData.level}";
     }
 
     /// <summary>
-    /// Change only the alpha of the button�s background image.
+    /// Show or hide the unlock panel.
     /// </summary>
+    public void ShowUnlockPanel(bool show)
+    {
+        if (unlockPanel) unlockPanel.SetActive(show);
+    }
+
+    // ─────────────────────────────────────────────────────
+    // Private Helpers
+    // ─────────────────────────────────────────────────────
+
     private void SetButtonAlpha(float alpha)
     {
         if (buttonImage)

@@ -143,6 +143,24 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
                 kv.Value.ApplyFloor(kv.Key);
     }
 
+    /// <summary>
+    /// Hide all unlock panels in all room buttons across all floors
+    /// </summary>
+    public void HideAllUnlockPanels()
+    {
+        foreach (var kv in roomGroupsByFloor)
+        {
+            var group = kv.Value;
+            if (!group) continue;
+
+            foreach (var roomBtn in group.GetRoomButtons())
+            {
+                if (!roomBtn) continue;
+                roomBtn.ShowUnlockPanel(false);
+            }
+        }
+    }
+
     // ─────────────────────────────────────────────────────
     // Room Selection Logic
     // ─────────────────────────────────────────────────────
@@ -287,7 +305,23 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
             group.name = $"RoomGroup_{floor.floorName}";
             group.ApplyFloor(floor);
 
-            group.onRoomSelected += CachePendingRoom;
+            group.onRoomSelected += (room) =>
+            {
+                HideAllUnlockPanels();
+                
+                var buttons = group.GetRoomButtons();
+
+                foreach (var btn in buttons)
+                {
+                    if (btn && btn.RoomType == room)
+                    {
+                        btn.ShowUnlockPanel(true);
+                        break;
+                    }
+                }
+
+                CachePendingRoom(room);
+            };
 
             group.gameObject.SetActive(false);
             roomGroupsByFloor[floor] = group;

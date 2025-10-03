@@ -19,7 +19,7 @@ public class FloorDataSO : ScriptableObject
     // ─────────────────────────────────────────────────────
     [Title("Rooms in Floor")]
     [ListDrawerSettings(ShowIndexLabels = true, DraggableItems = false)]
-    public RoomLevelData[] rooms;
+    public RoomData[] rooms;
 
     // ─────────────────────────────────────────────────────
     // UI
@@ -30,9 +30,10 @@ public class FloorDataSO : ScriptableObject
 
 
 [Serializable]
-public class RoomLevelData
+public class RoomData
 {
     public RoomType roomType;
+    public Sprite markerIcon;
     [MinValue(1)]
     public int level = 1;
 }

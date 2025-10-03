@@ -22,7 +22,7 @@ public class FloorRoomButtonGroup : MonoBehaviour
     // ─────────────────────────────────────────────────────
     // Runtime Data
     // ─────────────────────────────────────────────────────
-    private RoomLevelData[] mappedRooms;
+    private RoomData[] mappedRooms;
 
     // ─────────────────────────────────────────────────────
     // Unity Lifecycle
@@ -52,7 +52,7 @@ public class FloorRoomButtonGroup : MonoBehaviour
     {
         mappedRooms = (floor != null && floor.rooms != null)
             ? floor.rooms
-            : Array.Empty<RoomLevelData>();
+            : Array.Empty<RoomData>();
 
         RebindAllButtons();
     }
@@ -102,7 +102,7 @@ public class FloorRoomButtonGroup : MonoBehaviour
     // ─────────────────────────────────────────────────────
     // Helpers
     // ─────────────────────────────────────────────────────
-    private void ActivateButton(RoomButtonDisplay buttonDisplay, RoomLevelData roomData)
+    private void ActivateButton(RoomButtonDisplay buttonDisplay, RoomData roomData)
     {
         var btn = buttonDisplay.RoomButton;
         buttonDisplay.gameObject.SetActive(true);
@@ -112,7 +112,7 @@ public class FloorRoomButtonGroup : MonoBehaviour
         bool hasEnoughLevel = GameManager.Instance && GameManager.Instance.CurrentLevel >= roomData.level;
 
         // Update visual state through RoomButtonDisplay
-        buttonDisplay.Setup(roomData.level);
+        buttonDisplay.Setup(roomData);
         buttonDisplay.Refresh(hasEnoughLevel);
 
         btn.interactable = !isCurrentRoom && hasEnoughLevel;
