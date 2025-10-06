@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2819aacf38c437943b3537fb7dddf2d3, type: 3}
+  m_Name: DLG_Danbi_YoonSeul
+  m_EditorClassIdentifier: 
+  lines:
+  - speaker: {fileID: 11400000, guid: 0afea3f00dcbb294b8c51fb0f24180c3, type: 2}
+    text: "Xin ch\xE0o, t\xF4i mu\u1ED1n mua thu\u1ED1c."
+  - speaker: {fileID: 11400000, guid: 191d24556ea1a714f971623c7b0eac68, type: 2}
+    text: "Ch\xE0o Danbi, t\xF4i c\xF3 thu\u1ED1c m\u1EDBi nh\u1EADp h\xF4m nay."
