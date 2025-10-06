@@ -138,7 +138,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
 
             case PanelType.Cooking:
                 panel = cookingPanel;
-                callback = () => CookingManager.Instance.RefreshAllCookingContainers();
+                callback = () => CookingManager.Instance.SelectFirstUnlockedRecipe();
                 callbackOnShow = true;
                 break;
 
