@@ -19,7 +19,7 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
     [Header("Character Tabs")]
     [SerializeField] private Transform characterTabParent;
     [SerializeField] private CharacterTabButton characterTabPrefab;
-    [SerializeField] private List<CharacterTabSO> characterTabList;
+    [SerializeField] private List<CharacterProfileSO> characterTabList;
 
     [Header("Shop Tabs (Food / Decor / Fashion)")]
     [SerializeField] private List<ShopTab> shopTabs;

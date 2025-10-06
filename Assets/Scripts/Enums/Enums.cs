@@ -181,6 +181,7 @@ public enum PanelType
     Baking,
     Cooking,
     SelectRoom,
+    Dialogue,
     Settings,
     Pause
 }

@@ -24,6 +24,14 @@ public class PlayerControl : SingletonMonobehaviour<PlayerControl>
 
     #endregion
 
+    #region === Dialogue Integration ===
+
+    [Header("Dialogue Settings")]
+    [SerializeField] private CharacterProfileSO characterProfile;
+    public CharacterProfileSO CharacterProfile => characterProfile;
+
+    #endregion
+
     #region === Unity Lifecycle ===
 
     protected override void Awake()

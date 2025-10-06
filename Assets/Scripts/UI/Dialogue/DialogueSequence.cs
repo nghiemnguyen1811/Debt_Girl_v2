@@ -3,7 +3,7 @@
 [System.Serializable]
 public class DialogueLine
 {
-    public CharacterData speaker;
+    public CharacterProfileSO speaker;
     [TextArea] public string text;
 }
 

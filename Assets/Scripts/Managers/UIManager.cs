@@ -28,6 +28,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     [SerializeField] private GameObject cookingPanel;
     [SerializeField] private GameObject bakingPanel;
     [SerializeField] private GameObject selectRoomPanel;
+    [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject exitPanel;
@@ -103,6 +104,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
         {
             case PanelType.Phone: panel = phonePanel; break;
             case PanelType.Post: panel = postPanel; break;
+            case PanelType.Dialogue: panel = dialoguePanel; break;
             case PanelType.Exit: panel = exitPanel; break;
 
             case PanelType.Upgrade:
@@ -188,6 +190,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     public void ToggleBakingPanel(bool show) => TogglePanelByType(PanelType.Baking, show);
     public void ToggleCookingPanel(bool show) => TogglePanelByType(PanelType.Cooking, show);
     public void ToggleSelectRoomPanel(bool show) => TogglePanelByType(PanelType.SelectRoom, show);
+    public void ToggleDialoguePanel(bool show) => TogglePanelByType(PanelType.Dialogue, show);
     public void ToggleSettingsPanel(bool show) => TogglePanelByType(PanelType.Settings, show);
     public void TogglePausePanelFromButton(bool show) => TogglePanelByType(PanelType.Pause, show);
 

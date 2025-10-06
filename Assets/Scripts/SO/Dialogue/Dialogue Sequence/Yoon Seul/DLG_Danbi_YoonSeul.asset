@@ -13,7 +13,14 @@ MonoBehaviour:
   m_Name: DLG_Danbi_YoonSeul
   m_EditorClassIdentifier: 
   lines:
-  - speaker: {fileID: 11400000, guid: 0afea3f00dcbb294b8c51fb0f24180c3, type: 2}
-    text: "Xin ch\xE0o, t\xF4i mu\u1ED1n mua thu\u1ED1c."
-  - speaker: {fileID: 11400000, guid: 191d24556ea1a714f971623c7b0eac68, type: 2}
-    text: "Ch\xE0o Danbi, t\xF4i c\xF3 thu\u1ED1c m\u1EDBi nh\u1EADp h\xF4m nay."
+  - speaker: {fileID: 11400000, guid: fff242c12f5beb44699b19ad07c33c70, type: 2}
+    text: "\uC724\uC2AC\uC544, \uC624\uB298 \uAC19\uC774 \uB180\uB7EC \uAC08\uB798?"
+  - speaker: {fileID: 11400000, guid: 66b55b5856639eb47a8d78813eb845ff, type: 2}
+    text: "\uC544, \uBBF8\uC548\uD574 \uB2E8\uBE44\uC57C. \uC624\uB298\uC740 \uC880
+      \uBC14\uBE60\uC11C \uC2DC\uAC04\uC774 \uC5C6\uC5B4."
+  - speaker: {fileID: 11400000, guid: fff242c12f5beb44699b19ad07c33c70, type: 2}
+    text: "\uADF8\uB798? \uC544\uC27D\uB2E4\u2026 \uB2E4\uC74C\uC5D0 \uAF2D \uAC19\uC774
+      \uAC00\uC790!"
+  - speaker: {fileID: 11400000, guid: 66b55b5856639eb47a8d78813eb845ff, type: 2}
+    text: "\uC751, \uC57D\uC18D\uD560\uAC8C. \uB2E4\uC74C\uC5D0\uB294 \uAF2D \uAC19\uC774
+      \uB180\uC790!"
