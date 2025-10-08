@@ -3,9 +3,6 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "UI/UIColorsConfig")]
 public class UIColorsConfig : ScriptableObject
 {
-    [Header("Cooking")]
-    public Color canCookColor;
-    public Color cantCookColor;
     [Header("Ingredient Colors")]
     public Color textEnoughColor;
     public Color textNotEnoughColor;

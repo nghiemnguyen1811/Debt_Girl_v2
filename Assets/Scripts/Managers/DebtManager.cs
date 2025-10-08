@@ -12,16 +12,11 @@ public class DebtManager : SingletonMonobehaviour<DebtManager>
     [SerializeField] private double initialDebt = 100;
     [SerializeField] private float debtMultiplier = 1.5f;
 
-    [Header("UI Buttons")]
-    [SerializeField] private GameObject payDebtButton;
-
     private double currentDebt;
 
     #endregion
 
     #region === Unity Events ===
-
-    public event System.Action<double> OnDebtChanged;
 
     // Recalculate debt on game start based on current level
     private void Start()
@@ -54,10 +49,8 @@ public class DebtManager : SingletonMonobehaviour<DebtManager>
     /// </summary>
     public void RefreshPayButton()
     {
-        TogglePayDebtButton(MoneyManager.Instance.HasEnoughMoney(currentDebt));
+        UIManager.Instance?.TogglePayDebtButton(MoneyManager.Instance.HasEnoughMoney(currentDebt));
     }
-
-    public void TogglePayDebtButton(bool show) => payDebtButton?.SetActive(show);
 
     /// <summary>
     /// Recalculate the debt amount based on the current level.
@@ -99,8 +92,6 @@ public class DebtManager : SingletonMonobehaviour<DebtManager>
     {
         UIManager.Instance?.UpdateDebt(currentDebt);
         RefreshPayButton();
-
-        OnDebtChanged?.Invoke(currentDebt);
     }
 
     #endregion

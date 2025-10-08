@@ -17,8 +17,6 @@ public class MoneyManager : SingletonMonobehaviour<MoneyManager>
 
     #region === Unity Events ===
 
-    public event System.Action<double> OnMoneyChanged;
-
     // Initialize with 0 money at start
     private void Start()
     {
@@ -43,8 +41,6 @@ public class MoneyManager : SingletonMonobehaviour<MoneyManager>
         totalMoneys += amount;
         UpdateMoneyUI();
 
-        OnMoneyChanged?.Invoke(totalMoneys);
-
         // Only spawn particle when gaining money and prefab is assigned
         if (moneyParticlePrefab != null && moneyVFXPoint != null)
         {
@@ -66,8 +62,6 @@ public class MoneyManager : SingletonMonobehaviour<MoneyManager>
     {
         totalMoneys = value;
         UpdateMoneyUI(immediate: true);
-
-        OnMoneyChanged?.Invoke(totalMoneys);
     }
 
     /// <summary>

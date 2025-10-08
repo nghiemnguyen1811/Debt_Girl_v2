@@ -183,7 +183,7 @@ public enum PanelType
     SelectRoom,
     Dialogue,
     Settings,
-    Pause,
+    Pause
 }
 
 public enum AppType
