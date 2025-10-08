@@ -182,7 +182,7 @@ public enum PanelType
     Cooking,
     SelectRoom,
     Settings,
-    Pause
+    Pause,
 }
 
 public enum AppType

@@ -26,14 +26,12 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     [SerializeField] private GameObject foodInventoryPanel;
     [SerializeField] private GameObject cakeInventoryPanel;
     [SerializeField] private GameObject cookingPanel;
+    [SerializeField] private GameObject bankPanel;
     [SerializeField] private GameObject bakingPanel;
     [SerializeField] private GameObject selectRoomPanel;
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject exitPanel;
-
-    [Header("UI Buttons")]
-    [SerializeField] private GameObject payDebtButton;
 
     [Header("Animation Settings")]
     [SerializeField] private float punchScale = 0.2f;
@@ -190,7 +188,6 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     public void ToggleSelectRoomPanel(bool show) => TogglePanelByType(PanelType.SelectRoom, show);
     public void ToggleSettingsPanel(bool show) => TogglePanelByType(PanelType.Settings, show);
     public void TogglePausePanelFromButton(bool show) => TogglePanelByType(PanelType.Pause, show);
-
     /// <summary>
     /// Hide all panels on initialization.
     /// </summary>
@@ -222,8 +219,6 @@ public class UIManager : SingletonMonobehaviour<UIManager>
         if (hasInitialized)
             AudioManager.Instance.PlayInteractSound(8);
     }
-
-    public void TogglePayDebtButton(bool show) => payDebtButton?.SetActive(show);
 
     #endregion
 
