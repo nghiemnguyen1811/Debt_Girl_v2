@@ -33,9 +33,6 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject exitPanel;
 
-    [Header("UI Buttons")]
-    [SerializeField] private GameObject payDebtButton;
-
     [Header("Animation Settings")]
     [SerializeField] private float punchScale = 0.2f;
     [SerializeField] private float punchDuration = 0.25f;
@@ -140,7 +137,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
 
             case PanelType.Cooking:
                 panel = cookingPanel;
-                callback = () => CookingManager.Instance.RefreshAllCookingContainers();
+                callback = () => CookingManager.Instance.SelectFirstUnlockedRecipe();
                 callbackOnShow = true;
                 break;
 
@@ -225,8 +222,6 @@ public class UIManager : SingletonMonobehaviour<UIManager>
         if (hasInitialized)
             AudioManager.Instance.PlayInteractSound(8);
     }
-
-    public void TogglePayDebtButton(bool show) => payDebtButton?.SetActive(show);
 
     #endregion
 

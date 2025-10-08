@@ -1,10 +1,9 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 
 /// <summary>
-/// Manages cooking UI and container setup for non-sellable crafted food.
+/// Manages the overall cooking UI, including spawning recipe slots and showing details.
 /// </summary>
 public class CookingManager : SingletonMonobehaviour<CookingManager>
 {
@@ -13,28 +12,21 @@ public class CookingManager : SingletonMonobehaviour<CookingManager>
     // ─────────────────────────────────────────────────────
 
     [Header("UI References")]
-    [SerializeField] private Transform cookingContainerParent;
+    [SerializeField] private Transform dishSlotParent;
+    [SerializeField] private DishSlot dishSlotPrefab;
+    [SerializeField] private RecipeDetailPanel detailPanel;
 
-    [Header("Data & Prefab")]
-    [SerializeField] private List<ItemDataSO> allRecipeList;
-    [SerializeField] private CookingContainer cookingContainerPrefab;
-
-    // ─────────────────────────────────────────────────────
-    // Runtime State
-    // ─────────────────────────────────────────────────────
-
-    private readonly List<CookingContainer> spawnedCookingContainers = new();
+    [Header("Data")]
+    [SerializeField] private List<ItemDataSO> allRecipes;
 
     // ─────────────────────────────────────────────────────
-    // MonoBehaviour
+    // Unity Lifecycle
     // ─────────────────────────────────────────────────────
 
-    /// <summary>
-    /// Called on startup to initialize the cooking interface.
-    /// </summary>
     private void Start()
     {
-        InitializeCookingUI();
+        InitializeRecipeSlots();
+        detailPanel.Hide();
     }
 
     // ─────────────────────────────────────────────────────
@@ -42,59 +34,53 @@ public class CookingManager : SingletonMonobehaviour<CookingManager>
     // ─────────────────────────────────────────────────────
 
     /// <summary>
-    /// Checks if a recipe is a cookable (non-sellable) crafted food.
+    /// Spawns all available recipe slots at the top panel.
     /// </summary>
-    private bool IsCookableRecipe(ItemDataSO item)
+    private void InitializeRecipeSlots()
     {
-        return item.itemType == ItemType.CraftedFood && !item.canBeSold;
+        foreach (Transform child in dishSlotParent)
+            Destroy(child.gameObject);
+
+        foreach (var recipe in allRecipes)
+        {
+            var slot = Instantiate(dishSlotPrefab, dishSlotParent);
+            slot.Setup(recipe, this);
+        }
     }
 
-    /// <summary>
-    /// Instantiates UI containers for each valid cooking recipe.
-    /// </summary>
-    private void InitializeCookingUI()
+    // ─────────────────────────────────────────────────────
+    // External Events
+    // ─────────────────────────────────────────────────────
+    public void SelectFirstUnlockedRecipe()
     {
-        ClearExistingContainers();
-
-        var filteredRecipes = allRecipeList.Where(IsCookableRecipe);
-
-        foreach (var recipe in filteredRecipes)
+        var firstUnlocked = allRecipes.FirstOrDefault(r => r.requiredLevel <= GameManager.Instance.CurrentLevel);
+        if (firstUnlocked != null)
         {
-            var container = Instantiate(cookingContainerPrefab, cookingContainerParent);
-            container.SetupCookingContainer(recipe);
-            spawnedCookingContainers.Add(container);
+            OnRecipeSelected(firstUnlocked);
+        }
+        else if (allRecipes.Count > 0)
+        {
+            OnRecipeSelected(allRecipes[0]);
         }
     }
 
     /// <summary>
-    /// Clears all existing cooking containers from the UI.
+    /// Called by a recipe slot when selected by the player.
     /// </summary>
-    private void ClearExistingContainers()
+    public void OnRecipeSelected(ItemDataSO recipe)
     {
-        foreach (var container in spawnedCookingContainers)
+        if (recipe.requiredLevel > GameManager.Instance.CurrentLevel)
         {
-            if (container != null)
-                Destroy(container.gameObject);
+            detailPanel.ShowLocked(recipe);
+            return;
         }
 
-        spawnedCookingContainers.Clear();
+        detailPanel.Show(recipe);
     }
 
-    // ─────────────────────────────────────────────────────
-    // UI Refresh & Utility
-    // ─────────────────────────────────────────────────────
 
     /// <summary>
-    /// Refreshes the ingredient UI in all active containers.
+    /// Returns the list of all available recipes.
     /// </summary>
-    public void RefreshAllCookingContainers()
-    {
-        foreach (var container in spawnedCookingContainers)
-            container.RefreshIngredientUI();
-    }
-
-    /// <summary>
-    /// Returns a list of all spawned cooking containers.
-    /// </summary>
-    public List<CookingContainer> GetAllCookingContainers() => spawnedCookingContainers;
+    public List<ItemDataSO> GetAllRecipes() => allRecipes;
 }
