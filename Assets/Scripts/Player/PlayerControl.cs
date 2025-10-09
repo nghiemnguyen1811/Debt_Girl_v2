@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using UnityEngine;
 
 [DisallowMultipleComponent]
 [RequireComponent(typeof(PlayerInputHandler))]
@@ -24,11 +26,20 @@ public class PlayerControl : SingletonMonobehaviour<PlayerControl>
 
     #endregion
 
-    #region === Dialogue Integration ===
+    #region === Character Profile ===
 
-    [Header("Dialogue Settings")]
-    [SerializeField] private CharacterProfileSO characterProfile;
-    public CharacterProfileSO CharacterProfile => characterProfile;
+    [Header("Character Profile")]
+    [SerializeField] private CharacterInfoSO characterProfile;
+
+    /// <summary>
+    /// Current character profile assigned to the player.
+    /// </summary>
+    public CharacterInfoSO CharacterProfile => characterProfile;
+
+    /// <summary>
+    /// Event fired whenever the character profile changes.
+    /// </summary>
+    public event Action<CharacterInfoSO> OnCharacterProfileChanged;
 
     #endregion
 
@@ -38,6 +49,7 @@ public class PlayerControl : SingletonMonobehaviour<PlayerControl>
     {
         base.Awake();
 
+        // Cache subsystem references
         inputHandler = GetComponent<PlayerInputHandler>();
         animationHandler = GetComponent<PlayerAnimation>();
         interactDetector = GetComponent<PlayerInteractDetector>();
@@ -47,13 +59,42 @@ public class PlayerControl : SingletonMonobehaviour<PlayerControl>
         visualizer = GetComponent<MoodVisualizer>();
         propSwitcher = GetComponent<HeldPropSwitcher>();
 
-        // Link private 'playerStats' field in statsUI
+        // Link private 'playerStats' field in PlayerStatsUI via reflection
         if (statsUI != null && stats != null)
         {
             statsUI.GetType()
                    .GetField("playerStats", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
                    ?.SetValue(statsUI, stats);
         }
+    }
+
+    private void Start()
+    {
+        StartCoroutine(DelayedInit());
+    }
+
+    private IEnumerator DelayedInit()
+    {
+        yield return null;
+        OnCharacterProfileChanged?.Invoke(characterProfile);
+    }
+
+    #endregion
+
+    #region === Public API ===
+
+    /// <summary>
+    /// Sets a new CharacterProfile for the player.
+    /// Invokes the OnCharacterProfileChanged event if the profile is updated.
+    /// </summary>
+    public void SetCharacterProfile(CharacterInfoSO newProfile)
+    {
+        if (newProfile == characterProfile) return;
+
+        characterProfile = newProfile;
+
+        // Notify subscribers
+        OnCharacterProfileChanged?.Invoke(characterProfile);
     }
 
     #endregion

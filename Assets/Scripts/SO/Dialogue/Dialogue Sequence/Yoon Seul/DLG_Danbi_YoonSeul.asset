@@ -13,14 +13,26 @@ MonoBehaviour:
   m_Name: DLG_Danbi_YoonSeul
   m_EditorClassIdentifier: 
   lines:
-  - speaker: {fileID: 11400000, guid: fff242c12f5beb44699b19ad07c33c70, type: 2}
-    text: "\uC724\uC2AC\uC544, \uC624\uB298 \uAC19\uC774 \uB180\uB7EC \uAC08\uB798?"
-  - speaker: {fileID: 11400000, guid: 66b55b5856639eb47a8d78813eb845ff, type: 2}
-    text: "\uC544, \uBBF8\uC548\uD574 \uB2E8\uBE44\uC57C. \uC624\uB298\uC740 \uC880
-      \uBC14\uBE60\uC11C \uC2DC\uAC04\uC774 \uC5C6\uC5B4."
-  - speaker: {fileID: 11400000, guid: fff242c12f5beb44699b19ad07c33c70, type: 2}
-    text: "\uADF8\uB798? \uC544\uC27D\uB2E4\u2026 \uB2E4\uC74C\uC5D0 \uAF2D \uAC19\uC774
-      \uAC00\uC790!"
-  - speaker: {fileID: 11400000, guid: 66b55b5856639eb47a8d78813eb845ff, type: 2}
-    text: "\uC751, \uC57D\uC18D\uD560\uAC8C. \uB2E4\uC74C\uC5D0\uB294 \uAF2D \uAC19\uC774
-      \uB180\uC790!"
+  - speakerType: 0
+    portraits:
+      playerPortrait: {fileID: 21300000, guid: 935478cff8b704f49a3a97c11c9f0952, type: 3}
+      npcPortrait: {fileID: 21300000, guid: f65c799e4c47d4b499e819571839ca32, type: 3}
+    dialogueText: "\uC548\uB155, \uC724\uC2AC\uC544! \uC774\uBC88 \uC8FC\uB9D0\uC5D0
+      \uAC19\uC774 \uC601\uD654 \uBCF4\uB7EC \uAC08\uB798?"
+  - speakerType: 3
+    portraits:
+      playerPortrait: {fileID: 21300000, guid: 935478cff8b704f49a3a97c11c9f0952, type: 3}
+      npcPortrait: {fileID: 21300000, guid: f65c799e4c47d4b499e819571839ca32, type: 3}
+    dialogueText: "\uBBF8\uC548, \uB2E8\uBE44\uC57C. \uC774\uBC88 \uC8FC\uB9D0\uC5D0\uB294
+      \uAC00\uC871\uC774\uB791 \uC57D\uC18D\uC774 \uC788\uC5B4."
+  - speakerType: 0
+    portraits:
+      playerPortrait: {fileID: 21300000, guid: 935478cff8b704f49a3a97c11c9f0952, type: 3}
+      npcPortrait: {fileID: 21300000, guid: f65c799e4c47d4b499e819571839ca32, type: 3}
+    dialogueText: "\uC544, \uADF8\uB807\uAD6C\uB098. \uB2E4\uC74C\uC5D0 \uC2DC\uAC04
+      \uB418\uBA74 \uAC19\uC774 \uAC00\uC790!"
+  - speakerType: 3
+    portraits:
+      playerPortrait: {fileID: 21300000, guid: 935478cff8b704f49a3a97c11c9f0952, type: 3}
+      npcPortrait: {fileID: 21300000, guid: f65c799e4c47d4b499e819571839ca32, type: 3}
+    dialogueText: "\uC751, \uAF2D! \uB2E4\uC74C\uC5D0 \uAC19\uC774 \uAC00\uC790~"

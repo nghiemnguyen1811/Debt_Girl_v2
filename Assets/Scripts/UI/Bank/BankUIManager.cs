@@ -88,13 +88,9 @@ public class BankUIManager : MonoBehaviour
     private void OnMoneyChanged(double newAmount)
     {
         if (showingBalance)
-        {
             balanceAmountText.text = DoubleUtilities.ToIdleNotation(newAmount);
-        }
-        else
-        {
-            UpdateDebtButtonUI();
-        }
+
+        else UpdateDebtButtonUI();
     }
 
     /// <summary>
@@ -140,6 +136,7 @@ public class BankUIManager : MonoBehaviour
             payDebtButtonEnabled.SetActive(canPay);
             payDebtButtonDisabled.SetActive(!canPay);
         }
+
         else
         {
             payDebtButtonEnabled.SetActive(false);

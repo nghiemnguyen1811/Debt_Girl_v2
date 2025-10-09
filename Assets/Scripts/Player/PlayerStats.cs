@@ -5,29 +5,28 @@ using System.Collections;
 [RequireComponent(typeof(PlayerControl))]
 public class PlayerStats : MonoBehaviour
 {
-    #region === References ===
-
+    // ─────────────────────────────────────────────────────
+    // References
+    // ─────────────────────────────────────────────────────
     public PlayerStatsSO playerStatsSO;
     private PlayerControl control;
 
-    #endregion
-
-    #region === Stat Values ===
-
+    // ─────────────────────────────────────────────────────
+    // Stat Values
+    // ─────────────────────────────────────────────────────
     [HideInInspector] public StatValue mood = new StatValue();
     [HideInInspector] public StatValue energy = new StatValue();
     [HideInInspector] public StatValue engagement = new StatValue();
 
-    #endregion
-
-    #region === Events ===
-
+    // ─────────────────────────────────────────────────────
+    // Events
+    // ─────────────────────────────────────────────────────
     public event Action OnStatsInitialized;
+    public static event Action<PlayerStats> OnStatsReadyForLoad;
 
-    #endregion
-
-    #region === Unity Events ===
-
+    // ─────────────────────────────────────────────────────
+    // Unity Lifecycle
+    // ─────────────────────────────────────────────────────
     private void Start()
     {
         control = GetComponent<PlayerControl>();
@@ -43,12 +42,14 @@ public class PlayerStats : MonoBehaviour
     private IEnumerator DelayedInvoke()
     {
         yield return null;
+        UpdateScaledStats();
+        OnStatsReadyForLoad?.Invoke(this);
         OnStatsInitialized?.Invoke();
     }
 
-    #endregion
-
-    #region === Public Methods ===
+    // ─────────────────────────────────────────────────────
+    // Public Methods
+    // ─────────────────────────────────────────────────────
 
     /// <summary>
     /// Apply a stat value change based on StatType and amount.
@@ -73,6 +74,7 @@ public class PlayerStats : MonoBehaviour
         }
 
         control.statsUI?.UpdateStatUI(type);
+        AutoSave();
     }
 
     /// <summary>
@@ -83,11 +85,11 @@ public class PlayerStats : MonoBehaviour
         switch (type)
         {
             case StatType.Mood:
-                mood.SetMax(GetScaledStatValue(playerStatsSO.maxMood));
+                mood.SetMax(GetScaledStatValue(playerStatsSO.maxMood, type));
                 break;
 
             case StatType.Productivity:
-                energy.SetMax(GetScaledStatValue(playerStatsSO.maxEnergy));
+                energy.SetMax(GetScaledStatValue(playerStatsSO.maxEnergy, type));
                 break;
         }
     }
@@ -103,34 +105,79 @@ public class PlayerStats : MonoBehaviour
     }
 
     /// <summary>
-    /// Initialize and refresh stat UI elements.
+    /// Calculate a scaled stat value based on base value and upgrade level.
     /// </summary>
-    private void UpdateStatsUI()
+    public float GetScaledStatValue(float baseValue, StatType type)
     {
-        control.statsUI?.InitUI();
+        int level = StatUpgradeManager.Instance.GetLevelOf(type);
+        return baseValue + 10 * (level - 1);
     }
 
     /// <summary>
-    /// Calculate a scaled stat value based on base value and IncomeRate upgrade level.
+    /// Save current stat values into SaveData.
     /// </summary>
-    public float GetScaledStatValue(float baseValue)
+    public void AutoSave()
     {
-        int incomeRateLevel = StatUpgradeManager.Instance.GetLevelOf(StatType.IncomeRate);
-        return baseValue + 10 * (incomeRateLevel - 1);
+        var data = SaveManager.Data;
+        data.hasStats = true;
+        data.moodCurrent = mood.current;
+        data.energyCurrent = energy.current;
+        data.engagementCurrent = engagement.current;
+
+        SaveManager.SaveGame();
     }
 
-    #endregion
+    /// <summary>
+    /// Load current stat values from SaveData.
+    /// </summary>
+    public void ImportSaveData(SaveData saveData)
+    {
+        if (saveData == null || !saveData.hasStats)
+        {
+            Debug.Log("[PlayerStats] No saved stats found → keep default initialized values.");
+            return;
+        }
 
-    #region === Private Methods ===
+        InitStat(mood, playerStatsSO.maxMood, StatType.Mood, saveData.moodCurrent);
+        InitStat(energy, playerStatsSO.maxEnergy, StatType.Productivity, saveData.energyCurrent);
+        InitStat(engagement, playerStatsSO.maxEngagement, StatType.IncomeRate, saveData.engagementCurrent);
+
+        UpdateStatsUI();
+    }
+
+    // ─────────────────────────────────────────────────────
+    // Private Methods
+    // ─────────────────────────────────────────────────────
 
     /// <summary>
     /// Initialize all stat values.
     /// </summary>
     private void InitializeStats()
     {
-        engagement.Init(playerStatsSO.maxEngagement, 50f);
-        energy.Init(GetScaledStatValue(playerStatsSO.maxEnergy));
-        mood.Init(GetScaledStatValue(playerStatsSO.maxMood));
+        InitStat(engagement, playerStatsSO.maxEngagement, StatType.IncomeRate, 50f);
+        InitStat(energy, playerStatsSO.maxEnergy, StatType.Productivity);
+        InitStat(mood, playerStatsSO.maxMood, StatType.Mood);
+    }
+
+    /// <summary>
+    /// Common init logic for stats (scaled max + optional current).
+    /// </summary>
+    private void InitStat(StatValue stat, float baseMax, StatType type, float? currentValue = null)
+    {
+        float scaledMax = GetScaledStatValue(baseMax, type);
+
+        if (currentValue.HasValue)
+            stat.Init(scaledMax, currentValue.Value);
+
+        else stat.Init(scaledMax);
+    }
+
+    /// <summary>
+    /// Initialize and refresh stat UI elements.
+    /// </summary>
+    private void UpdateStatsUI()
+    {
+        control.statsUI?.InitUI();
     }
 
     /// <summary>
@@ -155,12 +202,11 @@ public class PlayerStats : MonoBehaviour
         if (amount > 0) stat.Add(amount);
         else stat.Subtract(-amount);
     }
-
-    #endregion
 }
 
-#region === StatValue Struct ===
-
+// ─────────────────────────────────────────────────────
+// StatValue Class
+// ─────────────────────────────────────────────────────
 [System.Serializable]
 public class StatValue
 {
@@ -205,5 +251,3 @@ public class StatValue
         return Mathf.Abs(current - previous) > threshold;
     }
 }
-
-#endregion

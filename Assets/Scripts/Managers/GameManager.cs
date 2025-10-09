@@ -5,7 +5,7 @@ using System;
 /// GameManager is the global controller for player progress and core game state.
 /// It manages player level, triggers level change events, and starts background music.
 /// </summary>
-public class GameManager : SingletonMonobehaviour<GameManager>
+public class GameManager : SingletonMonobehaviour<GameManager>, ILoadable
 {
     // ─────────────────────────────────────────────────────
     // Events
@@ -48,6 +48,7 @@ public class GameManager : SingletonMonobehaviour<GameManager>
     {
         currentLevel++;
         NotifyLevelChanged();
+        AutoSave();
     }
 
     /// <summary>
@@ -57,6 +58,7 @@ public class GameManager : SingletonMonobehaviour<GameManager>
     {
         currentLevel = Mathf.Max(1, level);
         NotifyLevelChanged();
+        AutoSave();
     }
 
     // ─────────────────────────────────────────────────────
@@ -69,5 +71,19 @@ public class GameManager : SingletonMonobehaviour<GameManager>
     {
         OnLevelChanged?.Invoke();
         Debug.Log($"[GameManager] Player level updated: {currentLevel}");
+    }
+
+    // ─────────────────────────────────────────────────────
+    // Save/Load API
+    // ─────────────────────────────────────────────────────
+    protected void AutoSave()
+    {
+        SaveManager.Data.playerLevel = currentLevel;
+        SaveManager.SaveGame();
+    }
+
+    public void ImportSaveData(SaveData saveData)
+    {
+        SetLevel(saveData.playerLevel);
     }
 }

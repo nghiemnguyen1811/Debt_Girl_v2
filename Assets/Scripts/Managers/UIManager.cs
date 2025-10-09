@@ -206,6 +206,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
         ToggleFoodInventoryPanel(false);
         ToggleCakeInventoryPanel(false);
         ToggleSelectRoomPanel(false);
+        ToggleDialoguePanel(false);
         TogglePhonePanel(false);
     }
 

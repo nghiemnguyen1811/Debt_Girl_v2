@@ -1,35 +1,77 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 /// <summary>
-/// Handles player animations including movement and mood-specific layers.
+/// Handles player animations including movement, mood layers, and phone usage.
 /// </summary>
 public class PlayerAnimation : MonoBehaviour
 {
-    #region === References ===
+    #region === Inspector References ===
 
-    private PlayerControl control;
+    [Header("Character Models")]
+    [SerializeField] private Transform models;
+
+    #endregion
+
+    #region === Runtime References ===
+
+    private PlayerControl playerControl;
     private Animator animator;
 
     #endregion
 
-    #region === Values ===
+    #region === State Values ===
 
     private int activeMoodLayerIndex;
     public bool IsPhoneActive { get; set; }
 
     #endregion
 
-    #region === Animator Setup ===
+    #region === Unity Lifecycle ===
 
     private void Start()
     {
-        control = GetComponent<PlayerControl>();
+        playerControl = GetComponent<PlayerControl>();
         animator = GetComponentInChildren<Animator>();
+
+        // Subscribe to profile change
+        if (playerControl != null)
+            playerControl.OnCharacterProfileChanged += HandleCharacterProfileChanged;
+    }
+
+    private void OnDestroy()
+    {
+        // Unsubscribe to prevent memory leaks
+        if (playerControl != null)
+            playerControl.OnCharacterProfileChanged -= HandleCharacterProfileChanged;
     }
 
     #endregion
 
-    #region === Movement Control ===
+    #region === Event Handlers ===
+
+    /// <summary>
+    /// Called whenever the player's character profile changes.
+    /// Updates the active model and animator reference.
+    /// </summary>
+    private void HandleCharacterProfileChanged(CharacterInfoSO newProfile)
+    {
+        // Disable all models first
+        foreach (Transform model in models)
+            model.gameObject.SetActive(false);
+
+        // Convert enum to int index
+        int index = (int)newProfile.characterType;
+
+        if (index >= 0 && index < models.childCount)
+            models.GetChild(index).gameObject.SetActive(true);
+
+        else Debug.LogWarning($"[PlayerAnimation] Invalid characterType index: {index}");
+    }
+
+    #endregion
+
+    #region === Movement Animations ===
 
     /// <summary>
     /// Sets the movement speed float parameter to drive blend trees.
@@ -58,13 +100,11 @@ public class PlayerAnimation : MonoBehaviour
 
     #endregion
 
-    #region === Mood Animation Layer ===
+    #region === Mood Animations ===
 
     /// <summary>
     /// Plays a mood-specific animation on a separate layer.
     /// </summary>
-    /// <param name="triggerName">Trigger parameter name</param>
-    /// <param name="layerIndex">Animator layer index for mood</param>
     public void SetMoodTrigger(string triggerName, int layerIndex)
     {
         if (IsPhoneActive) return;
@@ -85,18 +125,19 @@ public class PlayerAnimation : MonoBehaviour
 
     #endregion
 
-    #region === Phone Animation Layer ===
+    #region === Phone Animations ===
 
     /// <summary>
     /// Show phone animation and UI.
     /// </summary>
     public void ShowPhone()
     {
-        if (control.interactDetector.IsInteracting) return;
+        if (playerControl.interactDetector.IsInteracting) return;
 
         IsPhoneActive = true;
         ResetMoodLayerWeight();
-        control.propSwitcher.SetPropActiveByType(InteractionPropType.Phone, true);
+
+        playerControl.propSwitcher.SetPropActiveByType(InteractionPropType.Phone, true);
         SetPhoneAnimationState(4, true);
     }
 
@@ -105,14 +146,14 @@ public class PlayerAnimation : MonoBehaviour
     /// </summary>
     public void HidePhone()
     {
-        if (control.interactDetector.IsInteracting) return;
+        if (playerControl.interactDetector.IsInteracting) return;
 
         UIManager.Instance.TogglePhonePanel(false);
         SetPhoneAnimationState(4, false);
     }
 
     /// <summary>
-    /// Set phone layer and bool state.
+    /// Sets the phone animation state on a given layer.
     /// </summary>
     public void SetPhoneAnimationState(int layerIndex, bool isActive)
     {

@@ -93,8 +93,15 @@ public class StatContainer : MonoBehaviour
         minusButton.interactable = pendingLevel > 0;
     }
 
-    public int GetCurrentLevel() => statData != null ? statData.level : 0;
+    public void SyncFromData()
+    {
+        pendingLevel = 0;
+        RefreshUI();
+        UpdatePendingUI();
+        UpdateButtonStates();
+    }
+
+    public int GetCurrentLevel() => statData != null ? statData.level : 1;
     public StatType GetStatType() => statData != null ? statData.statType : default;
-    public StatDataSO GetStatData() => statData;
     public int GetPendingLevel() => pendingLevel;
 }

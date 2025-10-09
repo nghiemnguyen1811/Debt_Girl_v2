@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using DG.Tweening;
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using DG.Tweening;
+using URandom = UnityEngine.Random;
 
 /// <summary>
 /// Handles cake selection, ingredient display, baking logic, and plate cooldown.
@@ -353,11 +355,12 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
             plate.SetData(SelectedCakeData);
             warningText.gameObject.SetActive(false);
 
+            AutoSave();
             SelectCakeAtIndex(selectedIndex);
             return;
         }
 
-        ShowWarningText(warningMessages[Random.Range(0, warningMessages.Length)]);
+        ShowWarningText(warningMessages[URandom.Range(0, warningMessages.Length)]);
         AudioManager.Instance.PlayInteractSound(8);
     }
 
@@ -405,6 +408,70 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
     /// </summary>
     public void SelectCurrentCake() => SelectCakeAtIndex(selectedIndex);
 
+
+    // ─────────────────────────────────────────────────────
+    // Save/Load API
+    // ─────────────────────────────────────────────────────
+
+    public void ImportSaveData(SaveData data)
+    {
+        // If no data or no plate records exist → skip
+        if (data == null || data.plates == null) return;
+
+        foreach (var plateData in data.plates)
+        {
+            // Find the cake recipe that matches the saved item type
+            var cake = allCakeRecipes.Find(c => c.itemType == plateData.itemType);
+            if (cake == null) continue;
+
+            // Find an empty plate slot to restore the saved cake
+            var emptyPlate = plateSlots.Find(p => p.IsEmpty());
+            if (emptyPlate == null) break;
+
+            // Calculate elapsed time since last save
+            var elapsed = (float)(DateTime.UtcNow.Ticks - plateData.lastBakeTimestamp) / TimeSpan.TicksPerSecond;
+
+            // Remaining time after subtracting elapsed offline time
+            float adjustedRemaining = plateData.remainingTime - elapsed;
+
+            // Cake finished while offline → add directly to CakeInventory
+            if (adjustedRemaining <= 0f)
+                CakeInventoryUI.Instance.AddItem(cake, 1);
+
+            // Cake still baking → restore plate with updated remaining time
+            else emptyPlate.SetData(cake, adjustedRemaining);
+        }
+    }
+
+
+    public void AutoSave()
+    {
+        if (SaveManager.Data == null) return;
+
+        SaveManager.Data.plates.Clear();
+
+        foreach (var plate in plateSlots)
+        {
+            if (!plate.IsEmpty())
+            {
+                SaveManager.Data.plates.Add(new PlateSaveData
+                {
+                    itemType = plate.GetCakeData().itemType,
+                    remainingTime = plate.GetRemainingTime(),
+                    lastBakeTimestamp = DateTime.UtcNow.Ticks
+                });
+            }
+        }
+
+        SaveManager.SaveGame();
+    }
+
+    private void OnApplicationQuit()
+    {
+        AutoSave();
+    }
+
+
     // ─────────────────────────────────────────────────────
     // PLATE UI CLASS
     // ─────────────────────────────────────────────────────
@@ -437,12 +504,28 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
         }
 
         /// <summary>
-        /// Sets cake data and starts countdown.
+        /// Set plate data when baking a new cake (start with default crafting time).
         /// </summary>
         public void SetData(ItemDataSO data)
         {
+            ApplyData(data, data.craftingTime);
+        }
+
+        /// <summary>
+        /// Set plate data when loading from SaveData (use remaining time from save).
+        /// </summary>
+        public void SetData(ItemDataSO data, float customTime)
+        {
+            ApplyData(data, customTime);
+        }
+
+        /// <summary>
+        /// Internal shared logic for setting plate data and updating UI.
+        /// </summary>
+        private void ApplyData(ItemDataSO data, float time)
+        {
             cakeData = data;
-            remainingTime = cakeData.craftingTime;
+            remainingTime = time;
 
             cakeImage.sprite = cakeData.icon;
             cakeImage.gameObject.SetActive(true);
@@ -451,6 +534,7 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
             if (timerFrame != null)
                 timerFrame.color = colors.plateOccupiedColor;
         }
+
 
         /// <summary>
         /// Updates timer countdown each frame.
@@ -465,11 +549,11 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
             {
                 CakeInventoryUI.Instance.AddItem(cakeData, 1);
                 Clear();
+
+                BakingManager.Instance.AutoSave();
             }
-            else
-            {
-                waitTimeText.text = DoubleUtilities.UpdateTime((int)remainingTime);
-            }
+
+            else waitTimeText.text = DoubleUtilities.UpdateTime((int)remainingTime);
         }
 
         /// <summary>
@@ -490,5 +574,15 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
         /// Checks if plate is empty.
         /// </summary>
         public bool IsEmpty() => cakeData == null;
+
+        /// <summary>
+        /// Get current cake data on this plate.
+        /// </summary>
+        public ItemDataSO GetCakeData() => cakeData;
+
+        /// <summary>
+        /// Get remaining baking time for this plate.
+        /// </summary>
+        public float GetRemainingTime() => remainingTime;
     }
 }

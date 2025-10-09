@@ -92,6 +92,8 @@ public class PlayerInteractDetector : MonoBehaviour
         originalPosition = transform.position;
         originalRotation = transform.rotation;
 
+        Debug.Log(IsInteracting);
+
 
         Transform point = CurrentInteractable.GetInteractPoint();
         if (point != null)

@@ -19,7 +19,7 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
     [Header("Character Tabs")]
     [SerializeField] private Transform characterTabParent;
     [SerializeField] private CharacterTabButton characterTabPrefab;
-    [SerializeField] private List<CharacterProfileSO> characterTabList;
+    [SerializeField] private List<CharacterInfoSO> characterTabList;
 
     [Header("Shop Tabs (Food / Decor / Fashion)")]
     [SerializeField] private List<ShopTab> shopTabs;
@@ -73,7 +73,7 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
         foreach (var tabData in characterTabList)
         {
             var tab = Instantiate(characterTabPrefab, characterTabParent);
-            tab.Configure(tabData.avatarIcon, tabData.character);
+            tab.Configure(tabData.avatarIcon, tabData.characterType);
             tab.SetSelected(false);
             spawnedCharacterTabs.Add(tab);
         }

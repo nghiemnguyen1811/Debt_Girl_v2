@@ -16,8 +16,9 @@ public class MoodVisualizer : MonoBehaviour
     [SerializeField] private Image moodIconImage;
 
     [Header("Face Materials")]
-    [SerializeField] private Material eyeMat;
-    [SerializeField] private Material mouthMat;
+    [SerializeField] private CharacterFaceData[] characterFaceDataArray;
+    private Material currentEyeMat;
+    private Material currentMouthMat;
 
     [Header("Face Sprite Sets")]
     [SerializeField] private FaceMaterialSetSO[] faceMaterialSets;
@@ -42,23 +43,58 @@ public class MoodVisualizer : MonoBehaviour
 
     #endregion
 
-    #region === Unity Methods ===
+    #region === Unity Lifecycle ===
 
-    void Start()
+    private void Start()
     {
         playerControl = GetComponent<PlayerControl>();
+
         originalIconLocalPosition = moodIconRoot.transform.localPosition;
         moodIconRoot.SetActive(false);
 
-        ApplyFaceTextures(MoodConditionType.Normal);
+        // Subscribe to profile change
+        if (playerControl != null)
+            playerControl.OnCharacterProfileChanged += HandleCharacterProfileChanged;
     }
+
+    private void OnDestroy()
+    {
+        // Unsubscribe to prevent memory leaks
+        if (playerControl != null)
+            playerControl.OnCharacterProfileChanged -= HandleCharacterProfileChanged;
+    }
+
+    #endregion
+
+    #region === Event Handlers ===
+
+    /// <summary>
+    /// Called whenever the player's character profile changes.
+    /// Updates the active face materials accordingly.
+    /// </summary>
+    private void HandleCharacterProfileChanged(CharacterInfoSO newProfile)
+    {
+        foreach (var faceData in characterFaceDataArray)
+        {
+            if (newProfile.characterType == faceData.characterType)
+            {
+                currentEyeMat = faceData.eyeMat;
+                currentMouthMat = faceData.mouthMat;
+                break;
+            }
+        }
+
+        // Reapply current mood after profile change
+        MoodManager.Instance.SetCurrentMoodVisual();
+    }
+
 
     #endregion
 
     #region === Public API ===
 
     /// <summary>
-    /// Set a new mood and update visuals and animation loop.
+    /// Sets a new mood and updates visuals and animation loop.
     /// </summary>
     public void SetMoodVisual(MoodConditionDataSO mood)
     {
@@ -114,7 +150,7 @@ public class MoodVisualizer : MonoBehaviour
 
     #endregion
 
-    #region === Mood Icon and Face Handling ===
+    #region === Mood Icon & Face Handling ===
 
     /// <summary>
     /// Plays popup animation and shows mood icon.
@@ -148,15 +184,15 @@ public class MoodVisualizer : MonoBehaviour
         var set = FindMaterialSet(type);
         if (set == null) return;
 
-        if (eyeMat != null && set.eyeSprite != null)
-            eyeMat.mainTexture = set.eyeSprite.texture;
+        if (currentEyeMat != null && set.eyeSprite != null)
+            currentEyeMat.mainTexture = set.eyeSprite.texture;
 
-        if (mouthMat != null && set.mouthSprite != null)
-            mouthMat.mainTexture = set.mouthSprite.texture;
+        if (currentMouthMat != null && set.mouthSprite != null)
+            currentMouthMat.mainTexture = set.mouthSprite.texture;
     }
 
     /// <summary>
-    /// Finds the appropriate face material set for a mood.
+    /// Finds the appropriate face material set for a mood type.
     /// </summary>
     private FaceMaterialSetSO FindMaterialSet(MoodConditionType type)
     {
@@ -165,7 +201,6 @@ public class MoodVisualizer : MonoBehaviour
             if (set != null && set.conditionType == type)
                 return set;
         }
-
         return null;
     }
 
@@ -210,9 +245,20 @@ public class MoodVisualizer : MonoBehaviour
                 playerControl.interactDetector?.IsInteracting == true)
                 continue;
 
-            playerControl.animationHandler.SetMoodTrigger(currentMood.moodAnimName, currentMood.animatorLayerIndex);
+            playerControl.animationHandler.SetMoodTrigger(
+                currentMood.moodAnimName,
+                currentMood.animatorLayerIndex
+            );
         }
     }
 
     #endregion
+}
+
+[System.Serializable]
+public class CharacterFaceData
+{
+    public CharacterType characterType;
+    public Material eyeMat;
+    public Material mouthMat;
 }

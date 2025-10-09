@@ -21,12 +21,22 @@ public class DebtManager : SingletonMonobehaviour<DebtManager>
 
     #region === Unity Events ===
 
-    public event System.Action<double> OnDebtChanged;
+    public event Action<double> OnDebtChanged;
+
+    private void OnEnable()
+    {
+        GameManager.Instance.OnLevelChanged += RecalculateDebtFromLevel;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.Instance.OnLevelChanged -= RecalculateDebtFromLevel;
+    }
 
     // Recalculate debt on game start based on current level
     private void Start()
     {
-        RecalculateDebtFromLevel();
+        RefreshPayButton();
     }
 
     #endregion
@@ -65,6 +75,7 @@ public class DebtManager : SingletonMonobehaviour<DebtManager>
     public void RecalculateDebtFromLevel()
     {
         int level = GameManager.Instance.CurrentLevel;
+        Debug.Log(level);
         currentDebt = Math.Round(initialDebt * Math.Pow(debtMultiplier, level - 1), 2);
         UpdateDebtUI();
     }

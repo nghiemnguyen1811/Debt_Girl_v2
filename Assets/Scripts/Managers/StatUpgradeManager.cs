@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System;
 
 public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
 {
@@ -8,7 +9,7 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
     private PlayerControl playerControl;
 
     [Header("Data & Prefab")]
-    [SerializeField] private StatDataSO[] statDataList;
+    [SerializeField] private StatDataSO[] statDataArray;
     [SerializeField] private StatContainer statContainerPrefab;
     [SerializeField] private Transform containerParent;
 
@@ -21,6 +22,8 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
 
     private readonly List<StatContainer> spawnedContainers = new();
 
+    public static event Action OnStatManagerReady;
+
     // ─────────────────────────────────────────────────────
     // Mono
     // ─────────────────────────────────────────────────────
@@ -31,6 +34,8 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
 
         InitializeStatUI();
         SetupListeners();
+
+        OnStatManagerReady?.Invoke();
     }
 
     private void SetupListeners()
@@ -47,7 +52,7 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
     {
         spawnedContainers.Clear();
 
-        foreach (StatDataSO statData in statDataList)
+        foreach (StatDataSO statData in statDataArray)
         {
             var container = Instantiate(statContainerPrefab, containerParent);
             container.Configure(statData);
@@ -133,6 +138,7 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
         statPoints++;
         UpdateStatUpgradeUI();
         UpdateStatPointUI();
+        AutoSave();
     }
 
     public bool TrySpendTempPoint()
@@ -160,6 +166,7 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
     {
         statPoints -= tempStatPoints;
         tempStatPoints = 0;
+        AutoSave();
     }
 
     private void ResetTempStatPoints()
@@ -177,7 +184,7 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
 
     public StatDataSO GetStatDataByType(StatType type)
     {
-        foreach (var stat in statDataList)
+        foreach (var stat in statDataArray)
         {
             if (stat.statType == type)
                 return stat;
@@ -194,6 +201,48 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
     public int GetLevelOf(StatType type)
     {
         var container = GetContainerByType(type);
-        return container != null ? container.GetCurrentLevel() : 0;
+        return container != null ? container.GetCurrentLevel() : 1;
     }
+
+    // ─────────────────────────────────────────────────────
+    // Save/Load API
+    // ─────────────────────────────────────────────────────
+
+    public void ImportSaveData(SaveData saveData)
+    {
+        if (saveData == null) return;
+
+        statPoints = saveData.statPoints;
+        tempStatPoints = 0;
+
+        foreach (var s in saveData.statLevels)
+        {
+            var data = Array.Find(statDataArray, d => d.statType == s.statType);
+            if (data != null) data.level = s.level;
+        }
+
+        foreach (var c in spawnedContainers)
+            c.SyncFromData();
+
+        PlayerControl.Instance.stats.UpdateScaledStats();
+    }
+
+    protected void AutoSave()
+    {
+        SaveManager.Data.statPoints = statPoints;
+
+        // Lưu level của tất cả stat
+        SaveManager.Data.statLevels.Clear();
+        foreach (var stat in statDataArray)
+        {
+            SaveManager.Data.statLevels.Add(new StatSaveData
+            {
+                statType = stat.statType,
+                level = stat.level
+            });
+        }
+
+        SaveManager.SaveGame();
+    }
+
 }

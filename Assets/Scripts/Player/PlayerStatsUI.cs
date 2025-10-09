@@ -110,12 +110,12 @@ public class PlayerStatsUI : MonoBehaviour
 
             case StatType.Productivity:
                 if (energySlider != null)
-                    energySlider.maxValue = playerStats.GetScaledStatValue(playerStats.playerStatsSO.maxEnergy);
+                    energySlider.maxValue = playerStats.GetScaledStatValue(playerStats.playerStatsSO.maxEnergy, type);
                 break;
 
             case StatType.Mood:
                 if (moodSlider != null)
-                    moodSlider.maxValue = playerStats.GetScaledStatValue(playerStats.playerStatsSO.maxMood);
+                    moodSlider.maxValue = playerStats.GetScaledStatValue(playerStats.playerStatsSO.maxMood, type);
                 break;
         }
     }

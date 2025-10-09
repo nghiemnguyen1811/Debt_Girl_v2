@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class MoneyManager : SingletonMonobehaviour<MoneyManager>
+public class MoneyManager : SingletonMonobehaviour<MoneyManager>, ILoadable
 {
     #region === Inspector Fields ===
 
@@ -28,7 +28,7 @@ public class MoneyManager : SingletonMonobehaviour<MoneyManager>
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.M))
-            ChangeMoneys(1000);
+            ChangeMoneys(100000);
     }
 
     #endregion
@@ -57,6 +57,8 @@ public class MoneyManager : SingletonMonobehaviour<MoneyManager>
 
         DebtManager.Instance.RefreshPayButton();
         ShopManager.Instance.UpdateAllUI();
+
+        AutoSave();
     }
 
     /// <summary>
@@ -68,6 +70,7 @@ public class MoneyManager : SingletonMonobehaviour<MoneyManager>
         UpdateMoneyUI(immediate: true);
 
         OnMoneyChanged?.Invoke(totalMoneys);
+        AutoSave();
     }
 
     /// <summary>
@@ -99,4 +102,18 @@ public class MoneyManager : SingletonMonobehaviour<MoneyManager>
     }
 
     #endregion
+
+    // ─────────────────────────────────────────────────────
+    // Save/Load API
+    // ─────────────────────────────────────────────────────
+    protected void AutoSave()
+    {
+        SaveManager.Data.playerMoney = totalMoneys;
+        SaveManager.SaveGame();
+    }
+
+    public void ImportSaveData(SaveData saveData)
+    {
+        SetMoneys(saveData.playerMoney);
+    }
 }

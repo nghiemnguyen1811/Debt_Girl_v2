@@ -1,10 +1,10 @@
 ﻿public enum CharacterType
 {
     Danbi,
+    TaeSeon,
     Jiho,
-    ChoHee,
     YoonSeul,
-    TaeSeon
+    ChoHee,
 }
 
 public enum FloorType

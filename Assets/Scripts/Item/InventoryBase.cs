@@ -1,11 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
 /// Base inventory system that manages slots, items, and selection logic.
 /// Derived classes (UI) handle how the inventory is displayed and interacted with.
 /// </summary>
-public abstract class InventoryBase<T> : SingletonMonobehaviour<T> where T : InventoryBase<T>
+public abstract class InventoryBase<T> : SingletonMonobehaviour<T>, IInventoryBase
+    where T : InventoryBase<T>
 {
     [Header("References")]
     protected PlayerControl playerControl;
@@ -20,6 +22,8 @@ public abstract class InventoryBase<T> : SingletonMonobehaviour<T> where T : Inv
     protected int selectedIndex = -1;
     protected int filledSlotCount;
 
+    public static event Action<InventoryBase<T>> OnInventoryReady;
+
     // ─────────────────────────────────────────────────────
     // Unity Lifecycle
     // ─────────────────────────────────────────────────────
@@ -32,6 +36,8 @@ public abstract class InventoryBase<T> : SingletonMonobehaviour<T> where T : Inv
         playerControl = PlayerControl.Instance;
 
         InitializeSlots();
+
+        OnInventoryReady?.Invoke(this);
     }
 
     /// <summary>
@@ -74,6 +80,7 @@ public abstract class InventoryBase<T> : SingletonMonobehaviour<T> where T : Inv
                 {
                     stackSlot.IncreaseQuantity();
                     OnSlotContentChanged(stackSlot);
+                    AutoSave();
                     continue;
                 }
             }
@@ -84,6 +91,7 @@ public abstract class InventoryBase<T> : SingletonMonobehaviour<T> where T : Inv
                 emptySlot.SetItemData(itemData, 1);
                 IncrementFilledSlot();
                 OnSlotContentChanged(emptySlot);
+                AutoSave();
                 continue;
             }
 
@@ -133,6 +141,8 @@ public abstract class InventoryBase<T> : SingletonMonobehaviour<T> where T : Inv
                     DeSelectItem();
                     DecrementFilledSlot();
                 }
+
+                AutoSave();
                 return;
             }
         }
@@ -362,4 +372,56 @@ public abstract class InventoryBase<T> : SingletonMonobehaviour<T> where T : Inv
     /// Called when inventory is requested to close (override in UI).
     /// </summary>
     protected virtual void OnCloseRequested() { }
+
+    // ─────────────────────────────────────────────────────
+    // Save/Load API
+    // ─────────────────────────────────────────────────────
+    public List<InventorySlotData> ExportSaveData()
+    {
+        var result = new List<InventorySlotData>();
+
+        foreach (var slot in slots)
+        {
+            if (!slot.IsEmpty())
+            {
+                result.Add(new InventorySlotData
+                {
+                    ingredientType = slot.ItemData.ingredientType,
+                    quantity = slot.Quantity
+                });
+            }
+        }
+
+        return result;
+    }
+
+    public void ImportSaveData(List<InventorySlotData> savedSlots, Dictionary<IngredientType, ItemDataSO> itemDB)
+    {
+        if (savedSlots == null) return;
+
+        foreach (var slotData in savedSlots)
+        {
+            if (itemDB.TryGetValue(slotData.ingredientType, out var item))
+                AddItem(item, slotData.quantity);
+        }
+    }
+
+    protected void AutoSave()
+    {
+        var export = ExportSaveData();
+
+        if (this is FoodInventoryUI)
+            SaveManager.Data.foodInventory = export;
+
+        else if (this is CakeInventoryUI)
+            SaveManager.Data.cakeInventory = export;
+
+        SaveManager.SaveGame();
+    }
+}
+
+public interface IInventoryBase
+{
+    List<InventorySlotData> ExportSaveData();
+    void ImportSaveData(List<InventorySlotData> savedSlots, Dictionary<IngredientType, ItemDataSO> itemDB);
 }
