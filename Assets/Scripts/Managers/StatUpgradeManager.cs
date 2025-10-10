@@ -5,6 +5,8 @@ using System;
 
 public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
 {
+    public static event Action OnStatManagerReady;
+
     [Header("References")]
     private PlayerControl playerControl;
 
@@ -21,8 +23,6 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
     [SerializeField] private Button applyButton;
 
     private readonly List<StatContainer> spawnedContainers = new();
-
-    public static event Action OnStatManagerReady;
 
     // ─────────────────────────────────────────────────────
     // Mono

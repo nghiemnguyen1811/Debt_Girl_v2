@@ -8,11 +8,11 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class UIManager : SingletonMonobehaviour<UIManager>
 {
-    [Header("Money Texts (0 = HUD, 1 = Coin UI)")]
+    [Header("Texts (0 = HUD, 1 = Bank UI)")]
     [SerializeField] private TextMeshProUGUI[] moneyText;
+    [SerializeField] private TextMeshProUGUI[] debtText;
 
     [Header("Other UI Texts")]
-    [SerializeField] private TextMeshProUGUI debtText;
     [SerializeField] private TextMeshProUGUI statPointText;
     [SerializeField] private TextMeshProUGUI totalPriceText;
     [SerializeField] private TextMeshProUGUI warningText;
@@ -28,6 +28,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     [SerializeField] private GameObject cookingPanel;
     [SerializeField] private GameObject bakingPanel;
     [SerializeField] private GameObject selectRoomPanel;
+    [SerializeField] private GameObject bankingPanel;
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject pausePanel;
@@ -39,7 +40,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     [SerializeField] private float floatingTextFadeDuration = 2f;
 
     private Tween[] moneyTweens = new Tween[2];
-    private Tween debtTween;
+    private Tween[] debtTweens = new Tween[2];
 
     private bool hasInitialized = false;
 
@@ -68,7 +69,11 @@ public class UIManager : SingletonMonobehaviour<UIManager>
 
     public void UpdateDebt(double debtAmount, bool animate = true)
     {
-        UpdateText(debtText, debtAmount, animate, ref debtTween);
+        for (int i = 0; i < debtText.Length; i++)
+        {
+            if (debtText[i] != null)
+                UpdateText(debtText[i], debtAmount, animate, ref debtTweens[i]);
+        }
     }
 
     public void UpdateStatPoints(int total)
@@ -101,6 +106,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
         {
             case PanelType.Phone: panel = phonePanel; break;
             case PanelType.Post: panel = postPanel; break;
+            case PanelType.Banking: panel = bankingPanel; break;
             case PanelType.Dialogue: panel = dialoguePanel; break;
             case PanelType.Exit: panel = exitPanel; break;
 
@@ -159,7 +165,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
 
         if (type == PanelType.CoinTrade || type == PanelType.Upgrade ||
             type == PanelType.Shopping || type == PanelType.SelectRoom ||
-            type == PanelType.Post)
+            type == PanelType.Post || type == PanelType.Banking)
         {
             phonePanel.SetActive(!show);
         }
@@ -187,6 +193,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     public void ToggleBakingPanel(bool show) => TogglePanelByType(PanelType.Baking, show);
     public void ToggleCookingPanel(bool show) => TogglePanelByType(PanelType.Cooking, show);
     public void ToggleSelectRoomPanel(bool show) => TogglePanelByType(PanelType.SelectRoom, show);
+    public void ToggleBankingPanel(bool show) => TogglePanelByType(PanelType.Banking, show);
     public void ToggleDialoguePanel(bool show) => TogglePanelByType(PanelType.Dialogue, show);
     public void ToggleSettingsPanel(bool show) => TogglePanelByType(PanelType.Settings, show);
     public void TogglePausePanelFromButton(bool show) => TogglePanelByType(PanelType.Pause, show);
@@ -206,6 +213,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
         ToggleFoodInventoryPanel(false);
         ToggleCakeInventoryPanel(false);
         ToggleSelectRoomPanel(false);
+        ToggleBankingPanel(false);
         ToggleDialoguePanel(false);
         TogglePhonePanel(false);
     }

@@ -13,6 +13,8 @@ using URandom = UnityEngine.Random;
 /// </summary>
 public class BakingManager : SingletonMonobehaviour<BakingManager>
 {
+    public static event Action OnBakingManagerReady;
+
     // ─────────────────────────────────────────────────────
     // UI REFERENCES
     // ─────────────────────────────────────────────────────
@@ -82,6 +84,8 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
         InitializeUI();
         InitializePlates();
         InitializeCakeSelection();
+
+        OnBakingManagerReady?.Invoke();
     }
 
     private void Update()

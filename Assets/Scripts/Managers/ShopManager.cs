@@ -22,7 +22,7 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
     [SerializeField] private List<CharacterInfoSO> characterTabList;
 
     [Header("Shop Tabs (Food / Decor / Fashion)")]
-    [SerializeField] private List<ShopTab> shopTabs;
+    [SerializeField] private List<Tab> shopTabs;
     [SerializeField] private GameObject characterSelectionPanel;
 
     [SerializeField] private UIColorsConfig uiColorsConfig;
@@ -35,7 +35,7 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
     private readonly List<CharacterTabButton> spawnedCharacterTabs = new();
 
     private CharacterTabButton currentSelectedTab = null;
-    private ShopTab currentActiveTab = null;
+    private Tab currentActiveTab = null;
     private double tempTotalPrice;
 
     // ─────────────────────────────────────────────────────
@@ -183,26 +183,26 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
         {
             tab.button.onClick.AddListener(() => ActivateTab(tab));
             SetTabVisual(tab, false);
-            if (tab.scrollRectGO != null) tab.scrollRectGO.SetActive(false);
+            if (tab.group != null) tab.group.SetActive(false);
         }
     }
 
-    private void ActivateTab(ShopTab tab)
+    private void ActivateTab(Tab tab)
     {
         // Deselect old tab
         if (currentActiveTab != null)
         {
             SetTabVisual(currentActiveTab, false);
-            if (currentActiveTab.scrollRectGO != null)
-                currentActiveTab.scrollRectGO.SetActive(false);
+            if (currentActiveTab.group != null)
+                currentActiveTab.group.SetActive(false);
         }
 
         // Select new tab
         currentActiveTab = tab;
         SetTabVisual(tab, true);
 
-        if (tab.scrollRectGO != null)
-            tab.scrollRectGO.SetActive(true);
+        if (tab.group != null)
+            tab.group.SetActive(true);
 
         // Only for Decoration and Fashion → enable CharacterSelection Panel
         if (tab.tabName == "Decoration" || tab.tabName == "Fashion")
@@ -211,7 +211,7 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
         else characterSelectionPanel.SetActive(false);
     }
 
-    private void SetTabVisual(ShopTab tab, bool isActive)
+    private void SetTabVisual(Tab tab, bool isActive)
     {
         if (tab.labelText != null)
             tab.labelText.color = isActive ?
@@ -355,11 +355,11 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
 }
 
 [System.Serializable]
-public class ShopTab
+public class Tab
 {
     public string tabName;              // "Food" / "Decoration" / "Fashion"
     public Button button;               // Button reference
     public TMP_Text labelText;          // Text label of the tab
     public GameObject outline;          // Outline image of the tab
-    public GameObject scrollRectGO;     // Corresponding ScrollRect
+    public GameObject group;     // Corresponding ScrollRect
 }

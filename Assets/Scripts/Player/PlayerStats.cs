@@ -5,6 +5,8 @@ using System.Collections;
 [RequireComponent(typeof(PlayerControl))]
 public class PlayerStats : MonoBehaviour
 {
+    public static event Action<PlayerStats> OnStatsReadyForLoad;
+
     // ─────────────────────────────────────────────────────
     // References
     // ─────────────────────────────────────────────────────
@@ -22,7 +24,6 @@ public class PlayerStats : MonoBehaviour
     // Events
     // ─────────────────────────────────────────────────────
     public event Action OnStatsInitialized;
-    public static event Action<PlayerStats> OnStatsReadyForLoad;
 
     // ─────────────────────────────────────────────────────
     // Unity Lifecycle
@@ -35,7 +36,6 @@ public class PlayerStats : MonoBehaviour
 
         InitializeStats();
         UpdateStatsUI();
-
         StartCoroutine(DelayedInvoke());
     }
 

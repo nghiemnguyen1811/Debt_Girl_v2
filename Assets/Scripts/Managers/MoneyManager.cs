@@ -16,10 +16,6 @@ public class MoneyManager : SingletonMonobehaviour<MoneyManager>, ILoadable
     #endregion
 
     #region === Unity Events ===
-
-    public event System.Action<double> OnMoneyChanged;
-
-    // Initialize with 0 money at start
     private void Start()
     {
         SetMoneys(0);
@@ -43,8 +39,6 @@ public class MoneyManager : SingletonMonobehaviour<MoneyManager>, ILoadable
         totalMoneys += amount;
         UpdateMoneyUI();
 
-        OnMoneyChanged?.Invoke(totalMoneys);
-
         // Only spawn particle when gaining money and prefab is assigned
         if (moneyParticlePrefab != null && moneyVFXPoint != null)
         {
@@ -55,7 +49,7 @@ public class MoneyManager : SingletonMonobehaviour<MoneyManager>, ILoadable
             moneyParticle.gameObject.SetActive(true);
         }
 
-        DebtManager.Instance.RefreshPayButton();
+        BankManager.Instance.RefreshPayButton();
         ShopManager.Instance.UpdateAllUI();
 
         AutoSave();
@@ -69,7 +63,6 @@ public class MoneyManager : SingletonMonobehaviour<MoneyManager>, ILoadable
         totalMoneys = value;
         UpdateMoneyUI(immediate: true);
 
-        OnMoneyChanged?.Invoke(totalMoneys);
         AutoSave();
     }
 
