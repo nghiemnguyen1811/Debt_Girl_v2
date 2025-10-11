@@ -143,7 +143,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
 
             case PanelType.Cooking:
                 panel = cookingPanel;
-                callback = () => CookingManager.Instance.SelectFirstUnlockedRecipe();
+                callback = () => CookingManager.Instance.SelectCurrentDish();
                 callbackOnShow = true;
                 break;
 

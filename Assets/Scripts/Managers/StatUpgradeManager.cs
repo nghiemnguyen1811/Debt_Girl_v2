@@ -5,8 +5,6 @@ using System;
 
 public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
 {
-    public static event Action OnStatManagerReady;
-
     [Header("References")]
     private PlayerControl playerControl;
 
@@ -34,8 +32,6 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
 
         InitializeStatUI();
         SetupListeners();
-
-        OnStatManagerReady?.Invoke();
     }
 
     private void SetupListeners()

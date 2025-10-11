@@ -1,92 +1,136 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections.Generic;
 
-/// <summary>
-/// Represents a single clickable dish slot in the recipe selection panel.
-/// Includes visual elements, lock overlay, and click handling.
-/// </summary>
+[DisallowMultipleComponent]
 public class DishSlot : MonoBehaviour
 {
     // ─────────────────────────────────────────────────────
-    // Serialized Fields
+    // Inspector Fields
     // ─────────────────────────────────────────────────────
-
-    [Header("UI Components")]
-    [Tooltip("The image icon representing the dish.")]
+    [Header("Main Dish UI")]
+    [SerializeField] private TextMeshProUGUI dishNameText;
     [SerializeField] private Image dishImage;
-
-    [Tooltip("Displays the price of the dish.")]
-    [SerializeField] private TextMeshProUGUI priceText;
-
-    [Tooltip("The button that triggers recipe selection.")]
+    [SerializeField] private Image selectionOutline;
     [SerializeField] private Button selectButton;
+    [SerializeField] private GameObject[] statusGroup;
 
-    [Tooltip("Overlay icon that shows when the dish is locked.")]
-    [SerializeField] private GameObject lockOverlayImage;
+    [Header("Shared UI Color Config")]
+    [SerializeField] private UIColorsConfig colorConfig;
 
     // ─────────────────────────────────────────────────────
-    // Runtime State
+    // Runtime Data
     // ─────────────────────────────────────────────────────
-
-    private ItemDataSO recipeData;
-    private CookingManager manager;
+    private ItemDataSO itemData;
     private bool isLocked;
 
     // ─────────────────────────────────────────────────────
     // Public Accessors
     // ─────────────────────────────────────────────────────
-
-    /// <summary>
-    /// Returns the associated recipe data.
-    /// </summary>
-    public ItemDataSO GetRecipe() => recipeData;
-
-    /// <summary>
-    /// Returns whether the dish is currently locked.
-    /// </summary>
+    public ItemDataSO DishData => itemData;
+    public Button GetButton() => selectButton;
     public bool IsLocked() => isLocked;
+    public ItemDataSO GetItemData() => itemData;
 
     // ─────────────────────────────────────────────────────
-    // Initialization
+    // Public Methods
     // ─────────────────────────────────────────────────────
 
     /// <summary>
-    /// Initializes this slot with a recipe and reference to the CookingManager.
+    /// Initializes the slot UI with given dish data.
     /// </summary>
-    /// <param name="data">The recipe data to display.</param>
-    /// <param name="mgr">Reference to the CookingManager.</param>
-    public void Setup(ItemDataSO data, CookingManager mgr)
+    public void SetupCookingContainer(ItemDataSO newItemData)
     {
-        recipeData = data;
-        manager = mgr;
+        itemData = newItemData;
 
-        dishImage.sprite = data.icon;
-        priceText.text = $"{data.SellPrice}원";
+        dishNameText.text = itemData.itemName;
+        dishImage.sprite = itemData.icon;
 
         EvaluateLockState();
+        SetSelected(false);
+    }
 
-        selectButton.onClick.RemoveAllListeners();
-        selectButton.onClick.AddListener(() => manager.OnRecipeSelected(recipeData));
+    /// <summary>
+    /// Highlights or unhighlights the dish slot when selected.
+    /// </summary>
+    public void SetSelected(bool isSelected)
+    {
+        if (selectionOutline == null) return;
+        selectionOutline.color = isSelected ? Color.red : colorConfig.plateEmptyColor;
+    }
+
+    /// <summary>
+    /// Checks if this dish is locked based on player level.
+    /// </summary>
+    public void EvaluateLockState()
+    {
+        int requiredLevel = itemData.requiredLevel;
+        isLocked = GameManager.Instance.CurrentLevel < requiredLevel;
+        UpdateLockVisuals(isLocked);
     }
 
     // ─────────────────────────────────────────────────────
-    // Lock State Logic
+    // Private Methods
     // ─────────────────────────────────────────────────────
 
     /// <summary>
-    /// Evaluates if this dish should be locked based on player level.
-    /// Updates visual state accordingly.
+    /// Updates UI visuals to reflect locked/unlocked state.
     /// </summary>
-    private void EvaluateLockState()
+    private void UpdateLockVisuals(bool isLocked)
     {
-        int playerLevel = GameManager.Instance.CurrentLevel;
-        isLocked = recipeData.requiredLevel > playerLevel;
+        if (statusGroup == null || statusGroup.Length < 2)
+        {
+            Debug.LogWarning("Lock visual group is not properly configured.");
+            return;
+        }
 
-        // Show or hide the lock overlay
-        lockOverlayImage?.SetActive(isLocked);
+        statusGroup[0].SetActive(!isLocked);
+        statusGroup[1].SetActive(isLocked);
+        selectButton.interactable = !isLocked;
+    }
+}
 
-        // Button remains clickable even if locked (to trigger ShowLocked panel)
-        selectButton.interactable = true;
+[System.Serializable]
+public class IngredientUI
+{
+    [Header("Ingredient UI Elements")]
+    public GameObject ingredientsContainer;
+    public Image ingredientImage;
+    public Image frameQuantity;
+    public TextMeshProUGUI quantityText;
+
+    // ─────────────────────────────────────────────────────
+    // Public Methods
+    // ─────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Sets ingredient visuals and quantity colors based on availability.
+    /// </summary>
+    public void SetData(RequiredIngredient data, UIColorsConfig colorConfig)
+    {
+        ingredientImage.sprite = data.icon;
+
+        int owned = FoodInventoryUI.Instance.GetTotalQuantityOfItem(data.ingredientType);
+        quantityText.text = $"{owned}/{data.amount}";
+
+        bool isEnough = owned >= data.amount;
+
+        // Text color
+        quantityText.color = isEnough ? colorConfig.textEnoughColor : colorConfig.textNotEnoughColor;
+
+        // Frame color
+        if (frameQuantity != null)
+            frameQuantity.color = isEnough ? colorConfig.frameEnoughColor : colorConfig.frameNotEnoughColor;
+
+        ingredientsContainer.SetActive(true);
+    }
+
+    /// <summary>
+    /// Hides the ingredient container from view.
+    /// </summary>
+    public void Hide()
+    {
+        ingredientsContainer.SetActive(false);
     }
 }

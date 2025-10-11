@@ -16,11 +16,6 @@ public class MoneyManager : SingletonMonobehaviour<MoneyManager>, ILoadable
     #endregion
 
     #region === Unity Events ===
-    private void Start()
-    {
-        SetMoneys(0);
-    }
-
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.M))

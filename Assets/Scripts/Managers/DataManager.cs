@@ -1,5 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// DataManager handles building item database and importing saved data 
@@ -26,31 +27,24 @@ public class DataManager : SingletonMonobehaviour<DataManager>
     {
         base.Awake();
         BuildItemDatabase();
+        cachedSaveData = SaveManager.LoadGame();
     }
 
     private void OnEnable()
     {
         // Subscribe to ready events
-        InventoryBase<FoodInventoryUI>.OnInventoryReady += HandleInventoryReady;
-        InventoryBase<CakeInventoryUI>.OnInventoryReady += HandleInventoryReady;
-        StatUpgradeManager.OnStatManagerReady += HandleStatManagerReady;
         PlayerStats.OnStatsReadyForLoad += HandlePlayerStatsReady;
-        BakingManager.OnBakingManagerReady += HandleBakingManagerReady;
     }
 
     private void OnDisable()
     {
         // Unsubscribe to prevent memory leaks
-        InventoryBase<FoodInventoryUI>.OnInventoryReady -= HandleInventoryReady;
-        InventoryBase<CakeInventoryUI>.OnInventoryReady -= HandleInventoryReady;
-        StatUpgradeManager.OnStatManagerReady -= HandleStatManagerReady;
         PlayerStats.OnStatsReadyForLoad -= HandlePlayerStatsReady;
-        BakingManager.OnBakingManagerReady -= HandleBakingManagerReady;
     }
 
     private void Start()
     {
-        ReloadSaveData();
+        StartCoroutine(ReloadSaveData());
     }
 
     // ─────────────────────────────────────────────────────
@@ -60,20 +54,22 @@ public class DataManager : SingletonMonobehaviour<DataManager>
     /// <summary>
     /// Reloads SaveData from SaveManager and re-imports data to managers.
     /// </summary>
-    public void ReloadSaveData()
+    private IEnumerator ReloadSaveData()
     {
-        cachedSaveData = SaveManager.LoadGame();
+        yield return null;
 
-        if (cachedSaveData == null)
-        {
-            Debug.LogWarning("[DataManager] No save data found.");
-            return;
-        }
+        if (cachedSaveData == null) yield break;
 
+        // Load core data
         GameManager.Instance?.ImportSaveData(cachedSaveData);
         MoneyManager.Instance?.ImportSaveData(cachedSaveData);
+        StatUpgradeManager.Instance?.ImportSaveData(cachedSaveData);
+        BakingManager.Instance?.ImportSaveData(cachedSaveData);
+        StatUpgradeManager.Instance.ImportSaveData(cachedSaveData);
+        FoodInventoryUI.Instance?.ImportSaveData(cachedSaveData.foodInventory, itemDatabase);
+        CakeInventoryUI.Instance?.ImportSaveData(cachedSaveData.cakeInventory, itemDatabase);
 
-        Debug.Log("[DataManager] Save data reloaded and applied.");
+        Debug.Log("[DataManager] All game systems imported after delayed reload.");
     }
 
     // ─────────────────────────────────────────────────────
@@ -104,45 +100,11 @@ public class DataManager : SingletonMonobehaviour<DataManager>
     // Event Handlers
     // ─────────────────────────────────────────────────────
 
-    private void HandleInventoryReady(IInventoryBase inv)
-    {
-        if (cachedSaveData == null) return;
-
-        switch (inv)
-        {
-            case FoodInventoryUI foodInv:
-                foodInv.ImportSaveData(cachedSaveData.foodInventory, itemDatabase);
-                break;
-
-            case CakeInventoryUI cakeInv:
-                cakeInv.ImportSaveData(cachedSaveData.cakeInventory, itemDatabase);
-                break;
-        }
-
-        Debug.Log("[DataManager] Inventory loaded.");
-    }
-
-    private void HandleStatManagerReady()
-    {
-        if (cachedSaveData == null) return;
-
-        StatUpgradeManager.Instance.ImportSaveData(cachedSaveData);
-        Debug.Log("[DataManager] Stat points & stat levels loaded.");
-    }
-
     private void HandlePlayerStatsReady(PlayerStats stats)
     {
         if (cachedSaveData == null) return;
 
         stats.ImportSaveData(cachedSaveData);
         Debug.Log("[DataManager] PlayerStats save data imported.");
-    }
-
-    private void HandleBakingManagerReady()
-    {
-        if (cachedSaveData == null) return;
-
-        BakingManager.Instance?.ImportSaveData(cachedSaveData);
-        Debug.Log("[DataManager] BakingManager data imported.");
     }
 }

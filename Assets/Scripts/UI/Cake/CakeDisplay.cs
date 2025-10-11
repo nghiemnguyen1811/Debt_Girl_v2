@@ -75,7 +75,7 @@ public class CakeDisplay : MonoBehaviour
     /// <summary>
     /// Determines if the item is locked based on player level.
     /// </summary>
-    private void EvaluateLockState()
+    public void EvaluateLockState()
     {
         int requiredLevel = itemData.requiredLevel;
         isLocked = GameManager.Instance.CurrentLevel < requiredLevel;

@@ -13,8 +13,6 @@ using URandom = UnityEngine.Random;
 /// </summary>
 public class BakingManager : SingletonMonobehaviour<BakingManager>
 {
-    public static event Action OnBakingManagerReady;
-
     // ─────────────────────────────────────────────────────
     // UI REFERENCES
     // ─────────────────────────────────────────────────────
@@ -79,13 +77,24 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
     // ─────────────────────────────────────────────────────
     // UNITY EVENTS
     // ─────────────────────────────────────────────────────
+
+    private void OnEnable()
+    {
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnLevelChanged += RefreshCakeUnlockStates;
+    }
+
+    private void OnDisable()
+    {
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnLevelChanged -= RefreshCakeUnlockStates;
+    }
+
     private void Start()
     {
         InitializeUI();
         InitializePlates();
-        InitializeCakeSelection();
-
-        OnBakingManagerReady?.Invoke();
+        GenerateCakeSelectionList();
     }
 
     private void Update()
@@ -97,6 +106,26 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
     // ─────────────────────────────────────────────────────
     // INITIALIZATION
     // ─────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Called when player level changes in GameManager.
+    /// Refreshes all cake displays to unlock newly available cakes.
+    /// </summary>
+    public void RefreshCakeUnlockStates()
+    {
+        foreach (var cakeDisplay in spawnedCakeDisplays)
+        {
+            if (cakeDisplay == null) continue;
+            cakeDisplay.EvaluateLockState();
+        }
+
+        if (selectedCake != null && selectedCake.IsLocked())
+        {
+            selectedCake = null;
+            selectedIndex = -1;
+            ResetUIState();
+        }
+    }
 
     /// <summary>
     /// Initializes all UI, listeners, and resets states.
@@ -114,14 +143,6 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
     {
         foreach (var plate in plateSlots)
             plate.Initialize(uiColorsConfig);
-    }
-
-    /// <summary>
-    /// Initializes cake selection list.
-    /// </summary>
-    private void InitializeCakeSelection()
-    {
-        GenerateCakeSelectionList();
     }
 
     /// <summary>
@@ -299,6 +320,7 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
         {
             if (i < cakeData.requiredIngredients.Count)
                 ingredientSlots[i].SetData(cakeData.requiredIngredients[i], uiColorsConfig);
+
             else ingredientSlots[i].Hide();
         }
 

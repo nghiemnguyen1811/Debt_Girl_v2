@@ -9,8 +9,6 @@ using UnityEngine;
 public abstract class InventoryBase<T> : SingletonMonobehaviour<T>, IInventoryBase
     where T : InventoryBase<T>
 {
-    public static event Action<InventoryBase<T>> OnInventoryReady;
-
     [Header("References")]
     protected PlayerControl playerControl;
 
@@ -36,8 +34,6 @@ public abstract class InventoryBase<T> : SingletonMonobehaviour<T>, IInventoryBa
         playerControl = PlayerControl.Instance;
 
         InitializeSlots();
-
-        OnInventoryReady?.Invoke(this);
     }
 
     /// <summary>
