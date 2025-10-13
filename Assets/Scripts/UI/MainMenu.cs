@@ -7,7 +7,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject howtoplayPanel;
     [SerializeField] private GameObject quitPanel;
-
+    [SerializeField] private ScenePreloadDataSO gameplayPreloadDataSO;
     private void Start()
     {
         AudioManager.Instance.PlayMusic(0);
@@ -15,6 +15,7 @@ public class MainMenu : MonoBehaviour
 
     public void StartGame()
     {
+        SceneLoadRequest.DataToPreload = gameplayPreloadDataSO;
         SceneManager.LoadScene(1);
     }
 

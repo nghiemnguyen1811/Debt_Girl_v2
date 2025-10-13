@@ -5,80 +5,88 @@ using UnityEngine.SceneManagement;
 using TMPro;
 
 /// <summary>
-/// Handles loading screen visuals and automatically transitions to the target scene after a delay.
+/// Handles loading flow and optional addressable asset preloading before entering a scene.
+/// Attach this in the Loading Scene.
 /// </summary>
-public class LoadingManager : SingletonMonobehaviour<LoadingManager>
+public class LoadingManager : MonoBehaviour
 {
     #region === UI References ===
 
-    [Header("UI")]
+    [Header("UI Elements")]
     [SerializeField] private Slider loadingBar;
     [SerializeField] private TextMeshProUGUI progressText;
 
     #endregion
 
-    #region === Settings ===
+    #region === Delay Settings ===
 
-    [Header("Settings")]
-    [SerializeField] private int targetSceneIndex = 2;
+    [Header("Delay Settings")]
     [SerializeField] private float initialDelay = 0.5f;
 
     #endregion
 
-    #region === Unity Events ===
+    #region === Unity Lifecycle ===
 
     private void Start()
     {
-        StartCoroutine(AutoLoadScene());
-
-        AudioManager.Instance.StopMusic();
+        //AudioManager.Instance?.StopMusic();
+        StartCoroutine(HandleLoadingFlow());
     }
 
     #endregion
 
-    #region === Scene Loading Logic ===
+    #region === Loading Flow ===
 
     /// <summary>
-    /// Wait for an initial delay then start loading the scene.
+    /// Main coroutine to control preload and scene loading steps.
     /// </summary>
-    private IEnumerator AutoLoadScene()
+    private IEnumerator HandleLoadingFlow()
     {
         yield return new WaitForSeconds(initialDelay);
-        LoadScene(targetSceneIndex);
-    }
 
-    /// <summary>
-    /// Public method to initiate scene loading manually.
-    /// </summary>
-    public void LoadScene(int sceneIndex)
-    {
-        StartCoroutine(LoadLevelAsync(sceneIndex));
-    }
+        // Step 1: Get preload data (if any)
+        ScenePreloadDataSO preloadData = SceneLoadRequest.DataToPreload;
 
-    /// <summary>
-    /// Simulates loading progress before actually loading the scene.
-    /// </summary>
-    private IEnumerator LoadLevelAsync(int sceneIndex)
-    {
-        float duration = 5f;
-        float timer = 0f;
-
-        while (timer < duration)
+        // Step 2: If preload is required, do it
+        if (preloadData != null && preloadData.addressableKeysToPreload != null && preloadData.addressableKeysToPreload.Length > 0)
         {
-            timer += Time.deltaTime;
-            float progress = Mathf.Clamp01(timer / duration);
-            loadingBar.value = progress;
-            progressText.text = (progress * 100f).ToString("F0") + "%";
-            yield return null;
+            yield return StartCoroutine(AddressablePreloadManager.Instance.Preload(preloadData));
         }
 
-        // Ensure bar is full and text is accurate
-        loadingBar.value = 1f;
-        progressText.text = "100%";
+        // Step 3: Load the target scene
+        int targetSceneIndex = preloadData != null ? preloadData.sceneIndex : SceneManager.GetActiveScene().buildIndex + 1;
+        yield return StartCoroutine(LoadSceneAsync(targetSceneIndex));
+    }
 
-        // Load the next scene on the next frame
-        yield return null;
-        SceneManager.LoadScene(sceneIndex);
+    #endregion
+
+    #region === Scene Loading ===
+
+    /// <summary>
+    /// Handles async scene loading with UI progress update.
+    /// </summary>
+    private IEnumerator LoadSceneAsync(int sceneIndex)
+    {
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneIndex);
+        asyncLoad.allowSceneActivation = false;
+
+        while (!asyncLoad.isDone)
+        {
+            float progress = Mathf.Clamp01(asyncLoad.progress / 0.9f);
+            loadingBar.value = progress;
+            progressText.text = $"{progress * 100f:0}%";
+
+            if (asyncLoad.progress >= 0.9f)
+            {
+                loadingBar.value = 1f;
+                progressText.text = "100%";
+
+                yield return new WaitForSeconds(0.3f);
+                asyncLoad.allowSceneActivation = true;
+            }
+
+            yield return null;
+        }
     }
 
     #endregion

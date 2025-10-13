@@ -1,0 +1,73 @@
+<linker>
+  <assembly fullname="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="BakeryCase" preserve="all" />
+    <type fullname="BakingStation" preserve="all" />
+    <type fullname="Bathtub" preserve="all" />
+    <type fullname="Bed" preserve="all" />
+    <type fullname="DecorationItem" preserve="all" />
+    <type fullname="DialogueSequence" preserve="all" />
+    <type fullname="Fridge" preserve="all" />
+    <type fullname="InteractableDataSO" preserve="all" />
+    <type fullname="NPC" preserve="all" />
+    <type fullname="NPCDialogueData" preserve="all" />
+    <type fullname="Room" preserve="all" />
+    <type fullname="ShowerEnclosure" preserve="all" />
+    <type fullname="Sink" preserve="all" />
+    <type fullname="Stove" preserve="all" />
+    <type fullname="WorkDesk" preserve="all" />
+    <type fullname="WorkoutGear" preserve="all" />
+    <type fullname="DialogueLine" preserve="nothing" serialized="true" />
+    <type fullname="NPCDialogueEntry" preserve="nothing" serialized="true" />
+    <type fullname="SpeakerPortraits" preserve="nothing" serialized="true" />
+  </assembly>
+  <assembly fullname="Assembly-CSharp-firstpass, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="EPOOutline.Outlinable" preserve="all" />
+    <type fullname="EPOOutline.TargetStateListener" preserve="all" />
+    <type fullname="EPOOutline.Outlinable/OutlineProperties" preserve="nothing" serialized="true" />
+    <type fullname="EPOOutline.OutlineTarget" preserve="nothing" serialized="true" />
+    <type fullname="EPOOutline.SerializedPass" preserve="nothing" serialized="true" />
+  </assembly>
+  <assembly fullname="Unity.Addressables, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
+    <type fullname="UnityEngine.AddressableAssets.Addressables" preserve="all" />
+  </assembly>
+  <assembly fullname="Unity.Addressables.Android, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.AddressableAssets.Android.PlayAssetDeliveryAssetBundleProvider" preserve="all" />
+    <type fullname="UnityEngine.AddressableAssets.Android.PlayAssetDeliveryInitialization" preserve="all" />
+    <type fullname="UnityEngine.AddressableAssets.Android.PlayAssetDeliveryInitializationData" preserve="all" />
+  </assembly>
+  <assembly fullname="Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.BundledAssetProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.InstanceProvider" preserve="all" />
+    <type fullname="UnityEngine.ResourceManagement.ResourceProviders.SceneProvider" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEditor.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEditor.Audio.AudioMixerSnapshotController" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.AudioModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.Audio.AudioMixer" preserve="all" />
+    <type fullname="UnityEngine.Audio.AudioMixerGroup" preserve="all" />
+    <type fullname="UnityEngine.AudioClip" preserve="all" />
+    <type fullname="UnityEngine.AudioSource" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.GameObject" preserve="all" />
+    <type fullname="UnityEngine.Material" preserve="all" />
+    <type fullname="UnityEngine.Mesh" preserve="all" />
+    <type fullname="UnityEngine.MeshFilter" preserve="all" />
+    <type fullname="UnityEngine.MeshRenderer" preserve="all" />
+    <type fullname="UnityEngine.Object" preserve="all" />
+    <type fullname="UnityEngine.Shader" preserve="all" />
+    <type fullname="UnityEngine.SkinnedMeshRenderer" preserve="all" />
+    <type fullname="UnityEngine.Sprite" preserve="all" />
+    <type fullname="UnityEngine.Texture2D" preserve="all" />
+    <type fullname="UnityEngine.Transform" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.ParticleSystemModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.ParticleSystem" preserve="all" />
+    <type fullname="UnityEngine.ParticleSystemRenderer" preserve="all" />
+  </assembly>
+  <assembly fullname="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
+    <type fullname="UnityEngine.BoxCollider" preserve="all" />
+    <type fullname="UnityEngine.MeshCollider" preserve="all" />
+  </assembly>
+</linker>
