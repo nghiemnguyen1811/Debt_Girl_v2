@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6acbbd15e75140948b9abbe0097c4bec, type: 3}
+  m_Name: Coffee
+  m_EditorClassIdentifier: 
+  icon: {fileID: 21300000, guid: 26f6dcf50f4d35046b694639d9411144, type: 3}
+  itemName: "\uCEE4\uD53C"
+  description: "\uAE4A\uC740 \uD5A5\uACFC \uB9DB\uC744 \uC9C0\uB2CC \uC74C\uB8CC
+    \uC7AC\uB8CC."
+  itemType: 2
+  ingredientType: 10
+  requiredIngredients:
+  - ingredientType: 6
+    icon: {fileID: -145345779, guid: 4e2a8781c4ae171469315681a3eb2fd8, type: 3}
+    amount: 2
+  - ingredientType: 11
+    icon: {fileID: 833449269, guid: 4e2a8781c4ae171469315681a3eb2fd8, type: 3}
+    amount: 1
+  - ingredientType: 7
+    icon: {fileID: -1476512224, guid: 4e2a8781c4ae171469315681a3eb2fd8, type: 3}
+    amount: 2
+  canBeSold: 0
+  sellPrice: 300
+  craftingTime: 130
+  requiredLevel: 0
+  energy: 4
+  mood: 2
+  purchaseCost: 1500
+  canStackItem: 1
+  maxStackAmount: 10

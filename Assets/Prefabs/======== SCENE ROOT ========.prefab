@@ -59796,6 +59796,10 @@ PrefabInstance:
       propertyPath: characterProfile
       value: 
       objectReference: {fileID: 11400000, guid: 60ea19d4233602743aba0b5d28b080a9, type: 2}
+    - target: {fileID: 8829385517769386649, guid: a32f688fb61c0064488bd280c09aab21, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8891931015981987242, guid: a32f688fb61c0064488bd280c09aab21, type: 3}
       propertyPath: m_ConstrainProportionsScale
       value: 0

@@ -95,66 +95,54 @@ public enum IngredientType
 {
     None,
 
-    // ───── Material ─────
-    Almond,
-    BakingPowder,
-    BakingSoda,
-    Banana,
-    Butter,
-    ChocolateBar,
-    ChocolateChips,
-    Chocolate,
-    CoconutMilk,
-    Coffee,
-    CondensedMilk,
-    CreamCheese,
-    Egg,
-    FreshMilk,
-    FriedEgg,
-    Gelatin,
-    GlutinouseRiceFlour,
-    Honey,
-    Ladyfinger,
-    MatchaPowder,
-    Mayonnaise,
-    Milk,
-    PineappleJam,
-    PorkFloss,
-    RedBeanPaste,
-    SaltedEgg,
-    Strawberry,
-    Sugar,
-    VanillaExtract,
-    Walnut,
-    WhippedCream,
-    WhippingCream,
+    #region ───── Material: Desserts ─────
+    Almond, BakingPowder, BakingSoda,
+    Banana, Butter, ChocolateBar,
+    ChocolateChips, Chocolate, CoconutMilk,
+    Coffee, CondensedMilk, CreamCheese,
+    Egg, FreshMilk, FriedEgg,
+    Gelatin, GlutinouseRiceFlour, Honey,
+    Ladyfinger, MatchaPowder, Mayonnaise,
+    Milk, PineappleJam, PorkFloss,
+    RedBeanPaste, SaltedEgg, Strawberry,
+    Sugar, VanillaExtract, Walnut,
+    WhippedCream, WhippingCream,
+    #endregion
 
-    // ───── Consumable ─────
-    Pizza,
-    DrinkCup,
+    #region ───── CraftedFood: Desserts ─────
+    BananaBread, Brownie, ButterCookies,
+    Cheesecake, ChocolateChipCookies, Crepe,
+    Cupcake, Flan, MatchaRollCake,
+    Mochi, RedVelvetCake, SaltedEggSpongeCake,
+    SpongeCake, StrawberryMousseCake, Tiramisu,
+    #endregion
 
-    // ───── CraftedFood Dish ─────
-    NoodleSoup,
-    GrilledMeat,
+    #region ───── Material: Dishes ─────
+    Rice, Cabbage, Chili,
+    Garlic, Carrot, Onion,
+    RiceCake, FishCake, Pork,
+    Tofu, GlassNoodles, Beef,
+    Vegetables, PorkBelly, Lettuce,
+    Seaweed, Seafood, SoySauce,
+    ChiliSauce, Ginseng, Flour,
+    GreenOnion, PorkIntestine, BlackBeanPaste,
+    BeefRibs, Radish, PorkBones,
+    ColdNoodles, Cucumber, Crab,
+    Chicken, Potato,
+    #endregion
 
-    // ───── CraftedFood Desserts ─────
-    BananaBread,
-    Brownie,
-    ButterCookies,
-    Cheesecake,
-    ChocolateChipCookies,
-    Crepe,
-    Cupcake,
-    Flan,
-    MatchaRollCake,
-    Mochi,
-    RedVelvetCake,
-    SaltedEggSpongeCake,
-    SpongeCake,
-    StrawberryMousseCake,
-    Tiramisu,
-
-    Meat
+    #region ───── CraftedFood: Dishes ─────
+    SteamedRice, Kimchi, GyeranMari,
+    Tteokbokki, KimchiJjigae, Japchae,
+    Mandu, Bibimbap, Samgyeopsal,
+    Gimbap, SundubuJjigae, Bulgogi,
+    KimchiFriedRice, Odeng, Yukgaejang,
+    Samgyetang, HaemulPajeon, Soondae,
+    Jajangmyeon, Dakgangjeong, Galbitang,
+    KimchiJeon, EomukBokkeum, Jjajangbap,
+    Bossam, Gamjatang, Haejangguk,
+    BibimNaengmyeon, Galbi, Jjamppong,
+    #endregion
 }
 
 public enum InteractionPropType
