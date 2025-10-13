@@ -10,24 +10,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6acbbd15e75140948b9abbe0097c4bec, type: 3}
-  m_Name: Steamed Rice
+  m_Name: Samgyetang
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: 489eb000d7e8e44439c264f4641c5bc5, type: 3}
-  itemName: "\uBC25"
-  description: "\uD55C\uAD6D \uC2DD\uC0AC\uC758 \uAE30\uBCF8\uC774 \uB418\uB294 \uD558\uC580
-    \uC300\uBC25\uC774\uC5D0\uC694."
+  icon: {fileID: 21300000, guid: eafecc49ec9d7ed459cee58c4af28c72, type: 3}
+  itemName: "\uC0BC\uACC4\uD0D5"
+  description: "\uC778\uC0BC\uACFC \uCC39\uC300\uC774 \uB4E4\uC5B4\uAC04 \uC804\uD1B5
+    \uBCF4\uC591\uC2DD \uB2ED\uC8FD\uC774\uC5D0\uC694."
   itemType: 1
-  ingredientType: 80
+  ingredientType: 95
   requiredIngredients:
+  - ingredientType: 78
+    icon: {fileID: 21300000, guid: 2042f1c555151fe448ba2d1c78ac193d, type: 3}
+    amount: 1
+  - ingredientType: 67
+    icon: {fileID: 21300000, guid: c3d7470cec1a207409ab302d106ac9a7, type: 3}
+    amount: 1
   - ingredientType: 48
     icon: {fileID: 21300000, guid: 03ca1acb61c9ea14695739b29631977c, type: 3}
-    amount: 2
+    amount: 1
   canBeSold: 0
   sellPrice: 0
   craftingTime: 3
-  requiredLevel: 16
-  energy: 6
-  mood: 2
+  requiredLevel: 38
+  energy: 31
+  mood: 16
   purchaseCost: 0
   canStackItem: 0
   maxStackAmount: 1

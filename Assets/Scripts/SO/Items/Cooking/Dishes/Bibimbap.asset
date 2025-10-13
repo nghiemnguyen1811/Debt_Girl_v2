@@ -10,24 +10,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6acbbd15e75140948b9abbe0097c4bec, type: 3}
-  m_Name: Steamed Rice
+  m_Name: Bibimbap
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: 489eb000d7e8e44439c264f4641c5bc5, type: 3}
-  itemName: "\uBC25"
-  description: "\uD55C\uAD6D \uC2DD\uC0AC\uC758 \uAE30\uBCF8\uC774 \uB418\uB294 \uD558\uC580
-    \uC300\uBC25\uC774\uC5D0\uC694."
+  icon: {fileID: 21300000, guid: 17d53f31f4e086342a8f8dca472f4c35, type: 3}
+  itemName: "\uBE44\uBE54\uBC25"
+  description: "\uC18C\uACE0\uAE30\uC640 \uCC44\uC18C\uAC00 \uC5B4\uC6B0\uB7EC\uC9C4
+    \uBE44\uBE54\uBC25\uC774\uC5D0\uC694."
   itemType: 1
-  ingredientType: 80
+  ingredientType: 87
   requiredIngredients:
   - ingredientType: 48
     icon: {fileID: 21300000, guid: 03ca1acb61c9ea14695739b29631977c, type: 3}
     amount: 2
+  - ingredientType: 59
+    icon: {fileID: 21300000, guid: 95a979a702826734eba9fe67715df8a1, type: 3}
+    amount: 1
+  - ingredientType: 60
+    icon: {fileID: 21300000, guid: 7a7f5b21104fd9d4f800ee193d982079, type: 3}
+    amount: 2
   canBeSold: 0
   sellPrice: 0
   craftingTime: 3
-  requiredLevel: 16
-  energy: 6
-  mood: 2
+  requiredLevel: 24
+  energy: 20
+  mood: 11
   purchaseCost: 0
   canStackItem: 0
   maxStackAmount: 1

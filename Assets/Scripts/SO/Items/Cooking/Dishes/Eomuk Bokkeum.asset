@@ -10,29 +10,29 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6acbbd15e75140948b9abbe0097c4bec, type: 3}
-  m_Name: Gyeran Mari
+  m_Name: Eomuk Bokkeum
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: ea6d9efcca49e3a4ea827b80dc37a38f, type: 3}
-  itemName: "\uACC4\uB780\uB9D0\uC774"
-  description: "\uCC44\uC18C\uAC00 \uB4E4\uC5B4\uAC04 \uBD80\uB4DC\uB7EC\uC6B4 \uB2EC\uAC40\uB9D0\uC774\uC5D0\uC694."
+  icon: {fileID: 21300000, guid: 7c22e7489f6215c48b66d6af857e40e5, type: 3}
+  itemName: "\uC5B4\uBB35\uBCF6\uC74C"
+  description: "\uCC44\uC18C\uC640 \uD568\uAED8 \uBCF6\uC740 \uC5B4\uBB35 \uBC18\uCC2C\uC774\uC5D0\uC694."
   itemType: 1
-  ingredientType: 82
+  ingredientType: 102
   requiredIngredients:
-  - ingredientType: 13
-    icon: {fileID: 21300000, guid: a6e756950ecfba442849211f4d44893b, type: 3}
+  - ingredientType: 55
+    icon: {fileID: 21300000, guid: 03af9ddc5cc51be4bae81018c3d3d3f5, type: 3}
     amount: 2
   - ingredientType: 52
     icon: {fileID: 21300000, guid: 4a4d6c8628c4b7547ad0f41d5953bbc0, type: 3}
     amount: 1
-  - ingredientType: 53
-    icon: {fileID: 21300000, guid: fd0b6b1ea2544984aace1261239c68cc, type: 3}
+  - ingredientType: 50
+    icon: {fileID: 21300000, guid: b3eb11a832c69c7499338396597841c2, type: 3}
     amount: 1
   canBeSold: 0
   sellPrice: 0
   craftingTime: 3
-  requiredLevel: 18
-  energy: 11
-  mood: 5
+  requiredLevel: 39
+  energy: 33
+  mood: 17
   purchaseCost: 0
   canStackItem: 0
   maxStackAmount: 1
