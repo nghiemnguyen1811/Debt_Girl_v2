@@ -10,20 +10,23 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6acbbd15e75140948b9abbe0097c4bec, type: 3}
-  m_Name: Water
+  m_Name: Cabbage
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: 1ddd364c80097e943912c5001c463987, type: 3}
-  itemName: "\uBB3C"
-  description: "\uC2E0\uC120\uD558\uACE0 \uAE68\uB057\uD55C \uBB3C."
-  itemType: 2
-  ingredientType: 11
-  requiredIngredients: []
-  canBeSold: 0
+  icon: {fileID: 21300000, guid: b1646479b3b47da4380f70edf3be3779, type: 3}
+  itemName: "\uC591\uBC30\uCD94"
+  description: "\uAE40\uCE58\uC640 \uAD6D\uBB3C \uC694\uB9AC\uC5D0 \uC0AC\uC6A9\uB3FC\uC694."
+  itemType: 0
+  ingredientType: 49
+  requiredIngredients:
+  - ingredientType: 0
+    icon: {fileID: 0}
+    amount: 1
+  canBeSold: 1
   sellPrice: 0
   craftingTime: 3
   requiredLevel: 0
-  energy: 15
-  mood: 2
-  purchaseCost: 2700
+  energy: 0
+  mood: 0
+  purchaseCost: 2140
   canStackItem: 1
-  maxStackAmount: 2
+  maxStackAmount: 99

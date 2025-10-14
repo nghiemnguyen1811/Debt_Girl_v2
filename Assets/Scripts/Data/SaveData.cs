@@ -35,6 +35,8 @@ public class SaveData
     public float energyCurrent;
     public float engagementCurrent;
 
+    public float remainingBedCooldown;
+
     public List<PlateSaveData> plates = new();
     public List<StatSaveData> statLevels = new();
     public List<InventorySlotData> foodInventory = new();

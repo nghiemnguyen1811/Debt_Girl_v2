@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System;
+using URandom = UnityEngine.Random;
 
 /// <summary>
 /// Detects interactable objects around the player and manages interaction logic.
@@ -14,6 +16,7 @@ public class PlayerInteractDetector : MonoBehaviour
     [SerializeField] private float detectionRadius = 2f;
     [SerializeField] private LayerMask interactableLayer;
     [SerializeField] private float fadeSpeed = 3f;
+    [SerializeField] private float earnMoneyMultiplier = 1.3f;
 
     [Header("UI Elements")]
     [SerializeField] private CanvasGroup interactableButton;
@@ -80,13 +83,18 @@ public class PlayerInteractDetector : MonoBehaviour
     {
         if (CurrentInteractable == null || IsInteracting || control.animationHandler.IsPhoneActive) return;
 
-        if (control.stats.energy.current < -CurrentInteractable.GetEnergyAmount())
+        if (CurrentInteractable is ICooldownInteractable cooldown && cooldown.IsOnCooldown(out float remain))
         {
-            string warning = energyWarningMessages[Random.Range(0, energyWarningMessages.Length)];
-            UIManager.Instance.ShowWarningText(warning);
+            cooldown.ShowCooldownWarning(remain);
             return;
         }
 
+        if (control.stats.energy.current < -CurrentInteractable.GetEnergyAmount())
+        {
+            string warning = energyWarningMessages[URandom.Range(0, energyWarningMessages.Length)];
+            UIManager.Instance.ShowWarningText(warning);
+            return;
+        }
 
         IsInteracting = true;
         originalPosition = transform.position;
@@ -198,7 +206,11 @@ public class PlayerInteractDetector : MonoBehaviour
             control.stats.ApplyStatChange(StatType.Productivity, data.energyAmount);
 
             if (data.earnsMoney)
-                MoneyManager.Instance.ChangeMoneys(data.moneyEarned);
+            {
+                int level = StatUpgradeManager.Instance.GetLevelOf(StatType.IncomeRate);
+                double moneyEarned = Math.Round(data.moneyEarned * Math.Pow(earnMoneyMultiplier, level - 1), 2);
+                MoneyManager.Instance.ChangeMoneys(moneyEarned);
+            }
 
             MoodManager.Instance.SetCurrentMoodVisual();
 

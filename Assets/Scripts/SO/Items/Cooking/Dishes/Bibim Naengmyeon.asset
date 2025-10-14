@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6acbbd15e75140948b9abbe0097c4bec, type: 3}
+  m_Name: Bibim Naengmyeon
+  m_EditorClassIdentifier: 
+  icon: {fileID: 21300000, guid: d5e92856586abdd47931e19735b35ac0, type: 3}
+  itemName: "\uBE44\uBE54\uB0C9\uBA74"
+  description: "\uB9E4\uCF64\uD55C \uC591\uB150\uC758 \uCC28\uAC00\uC6B4 \uBA74\uC694\uB9AC\uC608\uC694."
+  itemType: 1
+  ingredientType: 107
+  requiredIngredients:
+  - ingredientType: 75
+    icon: {fileID: 21300000, guid: 4711a730e0815b84ba5b33ad61e4b1a5, type: 3}
+    amount: 2
+  - ingredientType: 66
+    icon: {fileID: 21300000, guid: e3c6085bd5f49b74b9ce6b626a92bb0c, type: 3}
+    amount: 1
+  - ingredientType: 76
+    icon: {fileID: 21300000, guid: 037d5bd50eb1a7348864c9d2e855d482, type: 3}
+    amount: 1
+  canBeSold: 0
+  sellPrice: 0
+  craftingTime: 3
+  requiredLevel: 22
+  energy: 31
+  mood: 16
+  purchaseCost: 0
+  canStackItem: 0
+  maxStackAmount: 1
