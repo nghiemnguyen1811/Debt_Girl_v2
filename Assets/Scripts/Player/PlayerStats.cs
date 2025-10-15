@@ -5,8 +5,6 @@ using System.Collections;
 [RequireComponent(typeof(PlayerControl))]
 public class PlayerStats : MonoBehaviour
 {
-    public static event Action<PlayerStats> OnStatsReadyForLoad;
-
     // ─────────────────────────────────────────────────────
     // References
     // ─────────────────────────────────────────────────────
@@ -43,7 +41,6 @@ public class PlayerStats : MonoBehaviour
     {
         yield return null;
         UpdateScaledStats();
-        OnStatsReadyForLoad?.Invoke(this);
         OnStatsInitialized?.Invoke();
     }
 

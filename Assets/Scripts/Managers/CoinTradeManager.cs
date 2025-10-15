@@ -167,6 +167,8 @@ public class CoinTradeManager : SingletonMonobehaviour<CoinTradeManager>
         ownedCoins += buyAmount;
         buyAmount = 0;
 
+        AutoSave();
+
         buyButton.interactable = false;
         sellButton.interactable = true;
 
@@ -189,6 +191,8 @@ public class CoinTradeManager : SingletonMonobehaviour<CoinTradeManager>
 
         ownedCoins -= sellAmount;
         sellAmount = 0;
+
+        AutoSave();
         MoneyManager.Instance.ChangeMoneys(gain);
 
         if (ownedCoins <= 0)
@@ -326,6 +330,48 @@ public class CoinTradeManager : SingletonMonobehaviour<CoinTradeManager>
             priceDeltaUIs[hideIndex].Hide();
         }
     }
+
+    // ─────────────────────────────────────────────────────
+    // Save / Load API
+    // ─────────────────────────────────────────────────────
+
+    public void AutoSave()
+    {
+        if (SaveManager.Data == null) return;
+
+        SaveManager.Data.ownedCoins = ownedCoins;
+        SaveManager.SaveGame();
+
+        Debug.Log($"[CoinTradeManager] AutoSaved → ownedCoins={ownedCoins}");
+    }
+
+    public void ImportSaveData(SaveData data)
+    {
+        if (data == null) return;
+
+        ownedCoins = data.ownedCoins;
+
+        // Update UI & restore proper button states
+        if (ownedCoins > 0)
+        {
+            buyButton.interactable = false;
+            sellButton.interactable = true;
+
+            if (fluctuationCoroutine != null)
+                StopCoroutine(fluctuationCoroutine);
+
+            fluctuationCoroutine = StartCoroutine(CoinFluctuationLoop());
+        }
+
+        else
+        {
+            buyButton.interactable = true;
+            sellButton.interactable = false;
+        }
+
+        UpdateUI();
+    }
+
 }
 
 // ─────────────────────────────────────────────────────

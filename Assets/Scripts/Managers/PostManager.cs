@@ -24,11 +24,10 @@ public class PostManager : SingletonMonobehaviour<PostManager>
     private PlayerControl playerControl;
 
     [Header("Settings")]
-    [SerializeField] private Vector2 cooldownRange = new Vector2(15f, 25f);
-    [SerializeField] private float decayRate = 0.5f;
+    [SerializeField] private Vector2 cooldownRange = new Vector2(20f, 40f);
+    [SerializeField] private float decayRate = 0.1f;
     [SerializeField] private float rewardOnPost = 10f;
     [SerializeField] private float fxUpdateInterval = 5f;
-    [SerializeField] private double moneyPerPost = 50.0;
     [SerializeField] private double moneyPerInterval = 5.0;
     [SerializeField] private float moneyInterval = 10f;
     [HideInInspector] public bool hasPostedFirstTime;
@@ -99,7 +98,10 @@ public class PostManager : SingletonMonobehaviour<PostManager>
         playerControl.stats.ApplyStatChange(StatType.IncomeRate, rewardOnPost);
 
         if (!hasPostedFirstTime)
+        {
             hasPostedFirstTime = true;
+            AutoSave();
+        }
 
         UpdateFXAndPosts();
         BeginCooldown();
@@ -283,5 +285,31 @@ public class PostManager : SingletonMonobehaviour<PostManager>
         _ => 0
     };
 
+    #endregion
+
+    #region === Save / Load ===
+
+    public void AutoSave()
+    {
+        if (SaveManager.Data == null) return;
+
+        SaveManager.Data.hasPostedFirstTime = hasPostedFirstTime;
+        SaveManager.SaveGame();
+    }
+
+    public void ImportSaveData(SaveData data)
+    {
+        if (data == null) return;
+
+        hasPostedFirstTime = data.hasPostedFirstTime;
+
+        if (hasPostedFirstTime)
+        {
+            BeginCooldown();
+
+            if (moneyRoutine == null)
+                moneyRoutine = StartCoroutine(AutoAddMoney());
+        }
+    }
     #endregion
 }

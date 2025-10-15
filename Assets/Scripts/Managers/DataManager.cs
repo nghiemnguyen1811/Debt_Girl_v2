@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using DA_Assets.SVGMeshUnity;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Overlays;
 using UnityEngine;
 
 /// <summary>
@@ -33,13 +35,13 @@ public class DataManager : SingletonMonobehaviour<DataManager>
     private void OnEnable()
     {
         // Subscribe to ready events
-        PlayerStats.OnStatsReadyForLoad += HandlePlayerStatsReady;
+        ShopManager.Instance.OnDecorDataInitialized += HandleDecorDataInitialized;
     }
 
     private void OnDisable()
     {
         // Unsubscribe to prevent memory leaks
-        PlayerStats.OnStatsReadyForLoad -= HandlePlayerStatsReady;
+        ShopManager.Instance.OnDecorDataInitialized -= HandleDecorDataInitialized;
     }
 
     private void Start()
@@ -56,7 +58,7 @@ public class DataManager : SingletonMonobehaviour<DataManager>
     /// </summary>
     private IEnumerator ReloadSaveData()
     {
-        yield return null;
+        yield return new WaitForEndOfFrame();
 
         if (cachedSaveData == null) yield break;
 
@@ -64,8 +66,12 @@ public class DataManager : SingletonMonobehaviour<DataManager>
         GameManager.Instance?.ImportSaveData(cachedSaveData);
         MoneyManager.Instance?.ImportSaveData(cachedSaveData);
         StatUpgradeManager.Instance?.ImportSaveData(cachedSaveData);
+        PlayerControl.Instance.stats?.ImportSaveData(cachedSaveData);
         BakingManager.Instance?.ImportSaveData(cachedSaveData);
         StatUpgradeManager.Instance.ImportSaveData(cachedSaveData);
+        CoinTradeManager.Instance?.ImportSaveData(cachedSaveData);
+        MoodManager.Instance?.ImportSaveData(cachedSaveData);
+        PostManager.Instance?.ImportSaveData(cachedSaveData);
         FoodInventoryUI.Instance?.ImportSaveData(cachedSaveData.foodInventory, itemDatabase);
         CakeInventoryUI.Instance?.ImportSaveData(cachedSaveData.cakeInventory, itemDatabase);
 
@@ -100,11 +106,11 @@ public class DataManager : SingletonMonobehaviour<DataManager>
     // Event Handlers
     // ─────────────────────────────────────────────────────
 
-    private void HandlePlayerStatsReady(PlayerStats stats)
+    private void HandleDecorDataInitialized()
     {
         if (cachedSaveData == null) return;
 
-        stats.ImportSaveData(cachedSaveData);
+        DecorationManager.Instance?.ImportSaveData(cachedSaveData);
         Debug.Log("[DataManager] PlayerStats save data imported.");
     }
 }

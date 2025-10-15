@@ -14,9 +14,6 @@ public class DecorationItem : MonoBehaviour
         // auto register into manager
         if (DecorationManager.Instance != null)
             DecorationManager.Instance.RegisterDecoration(this);
-
-        // default: hide until purchased
-        gameObject.SetActive(false);
     }
 
     private void OnDestroy()

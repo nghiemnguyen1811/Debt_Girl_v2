@@ -43,6 +43,11 @@ public class MoodManager : SingletonMonobehaviour<MoodManager>
             StartCoroutine(MoodTimerRoutine(mood));
     }
 
+    private void OnApplicationQuit()
+    {
+        AutoSave();
+    }
+
     #endregion
 
     #region === Mood Timer and Decay Logic ===
@@ -71,6 +76,8 @@ public class MoodManager : SingletonMonobehaviour<MoodManager>
 
             if (decayCoroutine == null)
                 decayCoroutine = StartCoroutine(ApplyTotalMoodDecay());
+
+            AutoSave();
         }
     }
 
@@ -172,6 +179,8 @@ public class MoodManager : SingletonMonobehaviour<MoodManager>
             SetMoodVisual(MoodConditionType.Normal);
             Debug.Log("[MoodManager] Stopped mood decay coroutine.");
         }
+
+        AutoSave();
     }
 
     /// <summary>
@@ -193,6 +202,61 @@ public class MoodManager : SingletonMonobehaviour<MoodManager>
     {
         return moodConditions.Find(m => m.conditionType == type);
     }
+
+    #endregion
+
+    #region === Save / Load API === 
+
+    public void AutoSave()
+    {
+        if (SaveManager.Data == null) return;
+
+        // Convert moodQueue to a serializable list
+        SaveManager.Data.moodQueueList = new List<MoodConditionType>(moodQueue);
+        SaveManager.Data.totalDecayRate = totalDecayRate;
+
+        SaveManager.SaveGame();
+        Debug.Log($"[MoodManager] AutoSaved → moods={SaveManager.Data.moodQueueList.Count}, totalDecayRate={totalDecayRate}");
+    }
+
+    public void ImportSaveData(SaveData data)
+    {
+        if (data == null)
+        {
+            Debug.LogWarning("[MoodManager] No save data found — using default mood state.");
+            return;
+        }
+
+        // Restore queue and total decay
+        moodQueue = new Queue<MoodConditionType>(data.moodQueueList ?? new List<MoodConditionType>());
+        totalDecayRate = data.totalDecayRate;
+
+        Debug.Log($"[MoodManager] Imported save data → moods={moodQueue.Count}, totalDecayRate={totalDecayRate}");
+
+        // Restart decay coroutine if needed
+        if (totalDecayRate > 0f && decayCoroutine == null)
+            decayCoroutine = StartCoroutine(ApplyTotalMoodDecay());
+
+        // Restore visual to match first mood
+        RestoreMoodVisual();
+    }
+
+    private void RestoreMoodVisual()
+    {
+        var currentMoodType = GetCurrentMoodInQueue();
+
+        if (currentMoodType.HasValue)
+        {
+            var moodData = GetMoodData(currentMoodType.Value);
+
+            if (moodData != null)
+            {
+                playerControl.visualizer.SetMoodVisual(moodData);
+                Debug.Log($"[MoodManager] Restored mood visual: {moodData.name}");
+            }
+        }
+    }
+
 
     #endregion
 }

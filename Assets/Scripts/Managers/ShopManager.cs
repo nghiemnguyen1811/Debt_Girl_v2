@@ -1,11 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
 public class ShopManager : SingletonMonobehaviour<ShopManager>
 {
+    public event Action OnDecorDataInitialized;
+
     [Header("Food References")]
     [SerializeField] private Transform foodContainerParent;
     [SerializeField] private List<ItemDataSO> foodItemList;
@@ -41,6 +44,8 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
     // ─────────────────────────────────────────────────────
     private void Start()
     {
+        OnDecorDataInitialized?.Invoke();
+
         InitializeFoodUI();
         InitializeDecorUI();
         InitializeCharacterTabs();

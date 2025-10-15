@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
 
 public class DecorationItemContainer : MonoBehaviour
 {
@@ -42,6 +43,8 @@ public class DecorationItemContainer : MonoBehaviour
 
         currentQuantity = 0;
         isOwned = false;
+
+        UpdateOwnershipState();
         UpdateUI();
     }
 
@@ -68,6 +71,23 @@ public class DecorationItemContainer : MonoBehaviour
         AudioManager.Instance.PlayInteractSound(8);
     }
 
+    // ─────────────────────────────────────────────────────
+    // Ownership & UI
+    // ─────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Checks if this decoration is already owned using (itemID, owner).
+    /// </summary>
+    private void UpdateOwnershipState()
+    {
+        if (itemData == null || DecorationManager.Instance == null)
+        {
+            isOwned = false;
+            return;
+        }
+
+        isOwned = DecorationManager.Instance.IsOwned(itemData.itemID, itemData.owner);
+    }
 
     private void ToggleUI(bool owned)
     {
@@ -92,15 +112,12 @@ public class DecorationItemContainer : MonoBehaviour
 
     public void ConfirmPurchase()
     {
-        if (currentQuantity <= 0) return;
+        if (currentQuantity <= 0 || itemData == null) return;
 
         isOwned = true;
         currentQuantity = 0;
 
-        // Notify DecorationManager to unlock item in scene
-        if (itemData != null)
-            DecorationManager.Instance.UnlockDecoration(itemData.itemID, itemData.owner);
-
+        DecorationManager.Instance.UnlockDecoration(itemData.itemID, itemData.owner);
         UpdateUI();
     }
 

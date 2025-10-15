@@ -48497,12 +48497,11 @@ MonoBehaviour:
   postCountText: {fileID: 168194276276182503}
   postLevelText: {fileID: 6370171035514113016}
   postButton: {fileID: 2035932569779594240}
-  cooldownRange: {x: 2, y: 3}
-  decayRate: 0.5
+  cooldownRange: {x: 20, y: 40}
+  decayRate: 0.2
   rewardOnPost: 10
   fxUpdateInterval: 5
-  moneyPerPost: 50
-  moneyPerInterval: 5
+  moneyPerInterval: 30
   moneyInterval: 10
   hasPostedFirstTime: 0
   canPost: 0

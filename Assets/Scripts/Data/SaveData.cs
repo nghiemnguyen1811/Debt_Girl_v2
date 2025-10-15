@@ -23,6 +23,13 @@ public class PlateSaveData
     public long lastBakeTimestamp;
 }
 
+[System.Serializable]
+public class OwnedDecorationEntry
+{
+    public int id;
+    public CharacterType owner;
+}
+
 [Serializable]
 public class SaveData
 {
@@ -37,6 +44,14 @@ public class SaveData
 
     public float remainingBedCooldown;
 
+    public int ownedCoins;
+
+    public float totalDecayRate;
+    public List<MoodConditionType> moodQueueList = new();
+
+    public bool hasPostedFirstTime;
+
+    public List<OwnedDecorationEntry> ownedDecorations = new();
     public List<PlateSaveData> plates = new();
     public List<StatSaveData> statLevels = new();
     public List<InventorySlotData> foodInventory = new();
