@@ -31,8 +31,9 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
     [SerializeField] private UIColorsConfig uiColorsConfig;
 
     [Header("Buttons")]
-    [SerializeField] private Button purchaseButton;
-
+    [SerializeField] private Button purchaseButtonEnabled;
+    [SerializeField] private Button purchaseButtonDisabled;
+    
     private readonly List<FoodItemContainer> spawnedFoodContainers = new();
     private readonly List<DecorationItemContainer> spawnedDecorContainers = new();
     private readonly List<CharacterTabButton> spawnedCharacterTabs = new();
@@ -59,8 +60,8 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
 
     private void SetupListeners()
     {
-        if (purchaseButton != null)
-            purchaseButton.onClick.AddListener(ApplyPurchase);
+        if (purchaseButtonEnabled != null)
+            purchaseButtonEnabled.onClick.AddListener(ApplyPurchase);
 
         CharacterTabButton.OnTabSelected += HandleTabSelected;
     }
@@ -244,7 +245,7 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
 
     private void UpdatePurchaseButtonState()
     {
-        if (purchaseButton == null) return;
+        if (purchaseButtonEnabled == null || purchaseButtonDisabled == null) return;
 
         bool hasItemToBuy = false;
 
@@ -269,7 +270,8 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
             }
         }
 
-        purchaseButton.interactable = hasItemToBuy;
+        purchaseButtonEnabled.gameObject.SetActive(hasItemToBuy);
+        purchaseButtonDisabled.gameObject.SetActive(!hasItemToBuy);
     }
 
     private void UpdateTotalPriceUI()

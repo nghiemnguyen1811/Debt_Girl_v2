@@ -32,6 +32,9 @@ public abstract class InteractableBase : MonoBehaviour
     [BoxGroup("Core"), LabelText("Interaction Point")]
     [SerializeField] protected Transform interactPoint;
 
+    [BoxGroup("Core"), LabelText("Allowed Character")]
+    [SerializeField] protected CharacterType allowedCharacter = CharacterType.All;
+
     [BoxGroup("Core"), LabelText("Interaction Mode")]
     [SerializeField] protected InteractionPlayMode interactionMode;
 
@@ -63,63 +66,32 @@ public abstract class InteractableBase : MonoBehaviour
     // Properties
     // ─────────────────────────────────────────────────────
 
-    /// <summary>
-    /// Cached reference to Outlinable component (used for highlighting).
-    /// </summary>
     public Outlinable Outlinable => GetComponent<Outlinable>();
 
-    /// <summary>
-    /// The InteractableData scriptable object assigned to this object.
-    /// </summary>
     public virtual InteractableDataSO Data => data;
 
-    /// <summary>
-    /// Returns energy value from the data asset.
-    /// </summary>
     public virtual float GetEnergyAmount() => data != null ? data.energyAmount : 0f;
 
-    /// <summary>
-    /// Transform point where the player should align to interact.
-    /// </summary>
     public virtual Transform GetInteractPoint() => interactPoint;
 
-    /// <summary>
-    /// World offset used for UI mood icon placement.
-    /// </summary>
     public virtual Vector3 MoodIconOffset => moodIconOffset;
 
-    /// <summary>
-    /// Particle system played when interaction happens.
-    /// </summary>
     public virtual GameObject InteractParticle => interactParticle;
 
-    /// <summary>
-    /// ID used to fetch sound from AudioManager.
-    /// </summary>
+    public virtual CharacterType AllowedCharacter => allowedCharacter;
+
     public virtual int SoundId => soundId;
 
     // ─────────────────────────────────────────────────────
     // Interaction Info (for UI or animation systems)
     // ─────────────────────────────────────────────────────
 
-    /// <summary>
-    /// Name of this object, for UI display or debug.
-    /// </summary>
     public virtual string GetObjectName() => data != null ? data.objectName : "Unknown";
 
-    /// <summary>
-    /// Animation name (if any) to be played during interaction.
-    /// </summary>
     public virtual string GetAnimationName() => data != null ? data.animationName : string.Empty;
 
-    /// <summary>
-    /// Time duration of the interaction in seconds.
-    /// </summary>
     public virtual float GetDuration() => data != null ? data.interactionDuration : 0f;
 
-    /// <summary>
-    /// Gets how this object should handle interaction (instant, confirm, sound only).
-    /// </summary>
     public virtual InteractionPlayMode GetInteractionMode() => interactionMode;
 
     // ─────────────────────────────────────────────────────

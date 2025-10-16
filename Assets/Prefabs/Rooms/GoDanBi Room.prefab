@@ -795,7 +795,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemID: 5
-  owner: 0
+  owner: 1
 --- !u!1 &1233594681462497676
 GameObject:
   m_ObjectHideFlags: 0
@@ -1118,7 +1118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemID: 0
-  owner: 0
+  owner: 1
 --- !u!1 &1769710961788893118
 GameObject:
   m_ObjectHideFlags: 0
@@ -1583,6 +1583,13 @@ MonoBehaviour:
   interactParticle: {fileID: 6122410316915211034}
   interactionProp: 0
   soundId: 2
+  interactCooldown: 110
+  cooldownWarningMessages:
+  - "\uC544\uC9C1\uC740 \uC274 \uB54C\uAC00 \uC544\uB2C8\uC5D0\uC694."
+  - "\uC870\uAE08\uB9CC \uAE30\uB2E4\uB838\uB2E4\uAC00 \uB2E4\uC2DC \uC26C\uC5B4\uC694."
+  - "\uB108\uBB34 \uBE68\uB77C\uC694, \uC7A0\uC2DC \uD6C4\uC5D0 \uB2E4\uC2DC \uC2DC\uB3C4\uD574\uC694."
+  - "\uC870\uAE08 \uB354 \uC26C\uC5C8\uB2E4\uAC00 \uB2E4\uC2DC \uB204\uC6CC\uC694."
+  - "\uC544\uC9C1 \uC900\uBE44 \uC911\uC774\uC5D0\uC694. \uC7A0\uAE50\uB9CC\uC694!"
 --- !u!114 &1144591488790440289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2789,7 +2796,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemID: 3
-  owner: 0
+  owner: 1
 --- !u!1 &3851223046625866361
 GameObject:
   m_ObjectHideFlags: 0
@@ -2949,7 +2956,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemID: 4
-  owner: 0
+  owner: 1
 --- !u!1 &4325000131209177607
 GameObject:
   m_ObjectHideFlags: 0
@@ -3019,7 +3026,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2727057034435119912
 Transform:
   m_ObjectHideFlags: 0
@@ -3028,7 +3035,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4488284450296795155}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -12, y: 0, z: 6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -4248,7 +4255,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemID: 6
-  owner: 0
+  owner: 1
 --- !u!1 &6857866854649831753
 GameObject:
   m_ObjectHideFlags: 0
@@ -5669,7 +5676,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemID: 2
-  owner: 0
+  owner: 1
 --- !u!1 &8656595724773728497
 GameObject:
   m_ObjectHideFlags: 0

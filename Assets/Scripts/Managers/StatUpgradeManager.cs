@@ -18,7 +18,8 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
     private int tempStatPoints;
 
     [Header("Buttons")]
-    [SerializeField] private Button applyButton;
+    [SerializeField] private Button applyButtonEnabled;
+    [SerializeField] private Button applyButtonDisabled;
 
     private readonly List<StatContainer> spawnedContainers = new();
 
@@ -36,8 +37,8 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
 
     private void SetupListeners()
     {
-        if (applyButton != null)
-            applyButton.onClick.AddListener(ApplyAll);
+        if (applyButtonEnabled != null)
+            applyButtonEnabled.onClick.AddListener(ApplyAll);
     }
 
     // ─────────────────────────────────────────────────────
@@ -81,7 +82,7 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
 
     private void UpdateApplyButtonState()
     {
-        if (applyButton == null) return;
+        if (applyButtonEnabled == null || applyButtonDisabled == null) return;
 
         bool hasPendingUpgrade = false;
 
@@ -94,7 +95,8 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
             }
         }
 
-        applyButton.interactable = hasPendingUpgrade;
+        applyButtonEnabled.gameObject.SetActive(hasPendingUpgrade);
+        applyButtonDisabled.gameObject.SetActive(!hasPendingUpgrade);
     }
 
     // ─────────────────────────────────────────────────────

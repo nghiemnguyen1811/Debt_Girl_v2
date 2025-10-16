@@ -14,6 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   npcName: Yoon Seul
   dialogues:
-  - characterType: 0
+  - characterType: 1
     dialogueSequence: {fileID: 11400000, guid: f5c08fb1555761a42b406d3938b8b179, type: 2}
-    npcPortrait: {fileID: 21300000, guid: f65c799e4c47d4b499e819571839ca32, type: 3}

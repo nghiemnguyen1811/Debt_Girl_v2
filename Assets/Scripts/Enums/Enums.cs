@@ -1,5 +1,6 @@
 ﻿public enum CharacterType
 {
+    All,
     Danbi,
     TaeSeon,
     Jiho,

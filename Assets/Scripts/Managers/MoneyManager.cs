@@ -103,5 +103,6 @@ public class MoneyManager : SingletonMonobehaviour<MoneyManager>, ILoadable
     public void ImportSaveData(SaveData saveData)
     {
         SetMoneys(saveData.playerMoney);
+        BankManager.Instance.RefreshPayButton();
     }
 }

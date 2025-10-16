@@ -18,8 +18,8 @@ public class BankManager : SingletonMonobehaviour<BankManager>
     [SerializeField] private float debtMultiplier = 1.5f;
 
     [Header("Pay Debt Buttons")]
-    [SerializeField] private GameObject payDebtButtonEnabled;
-    [SerializeField] private GameObject payDebtButtonDisabled;
+    [SerializeField] private Button payDebtButtonEnabled;
+    [SerializeField] private Button payDebtButtonDisabled;
 
     [Header("Shop Tabs (Balance / Debt)")]
     [SerializeField] private List<Tab> bankTabs;
@@ -39,6 +39,7 @@ public class BankManager : SingletonMonobehaviour<BankManager>
     private void Start()
     {
         SetupBankTabs();
+        SetupListeners();
 
         // Default: activate Balance tab
         if (bankTabs.Count > 0)
@@ -52,6 +53,12 @@ public class BankManager : SingletonMonobehaviour<BankManager>
     {
         if (GameManager.Instance != null)
             GameManager.Instance.OnLevelChanged -= RecalculateDebtFromLevel;
+    }
+
+    private void SetupListeners()
+    {
+        if (payDebtButtonEnabled != null)
+            payDebtButtonEnabled.onClick.AddListener(TryPayDebt);
     }
 
     // ─────────────────────────────────────────────────────
@@ -89,8 +96,8 @@ public class BankManager : SingletonMonobehaviour<BankManager>
     {
         if (payDebtButtonEnabled != null && payDebtButtonDisabled != null)
         {
-            payDebtButtonEnabled.SetActive(canPay);
-            payDebtButtonDisabled.SetActive(!canPay);
+            payDebtButtonEnabled.gameObject.SetActive(canPay);
+            payDebtButtonDisabled.gameObject.SetActive(!canPay);
         }
     }
 

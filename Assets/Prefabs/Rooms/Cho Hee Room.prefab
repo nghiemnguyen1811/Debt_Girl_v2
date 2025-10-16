@@ -687,7 +687,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemID: 6
-  owner: 2
+  owner: 5
 --- !u!1 &358734568314963129
 GameObject:
   m_ObjectHideFlags: 0
@@ -2460,7 +2460,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemID: 4
-  owner: 2
+  owner: 5
 --- !u!1 &2248502565960163378
 GameObject:
   m_ObjectHideFlags: 0
@@ -2615,7 +2615,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemID: 1
-  owner: 2
+  owner: 5
 --- !u!1 &2407841538186924552
 GameObject:
   m_ObjectHideFlags: 0
@@ -4131,7 +4131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemID: 0
-  owner: 2
+  owner: 5
 --- !u!1 &3910161600112688256
 GameObject:
   m_ObjectHideFlags: 0
@@ -4244,7 +4244,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3941460947805413722}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -18, y: 0, z: 6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -4996,7 +4996,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemID: 5
-  owner: 2
+  owner: 5
 --- !u!1 &4674531909336417308
 GameObject:
   m_ObjectHideFlags: 0
@@ -7170,7 +7170,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemID: 3
-  owner: 2
+  owner: 5
 --- !u!1 &7150941994859984448
 GameObject:
   m_ObjectHideFlags: 0
@@ -7942,7 +7942,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   itemID: 2
-  owner: 2
+  owner: 5
 --- !u!1 &8478113136884652723
 GameObject:
   m_ObjectHideFlags: 0

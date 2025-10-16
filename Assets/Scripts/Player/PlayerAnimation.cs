@@ -63,8 +63,7 @@ public class PlayerAnimation : MonoBehaviour
         // Convert enum to int index
         int index = (int)newProfile.characterType;
 
-        if (index >= 0 && index < models.childCount)
-            models.GetChild(index).gameObject.SetActive(true);
+        if (index >= 0) models.GetChild(index - 1).gameObject.SetActive(true);
 
         else Debug.LogWarning($"[PlayerAnimation] Invalid characterType index: {index}");
     }

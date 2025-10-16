@@ -83,6 +83,11 @@ public class PlayerInteractDetector : MonoBehaviour
     {
         if (CurrentInteractable == null || IsInteracting || control.animationHandler.IsPhoneActive) return;
 
+        // Only restrict when interactable has specific character (not All)
+        if (CurrentInteractable.AllowedCharacter != CharacterType.All &&
+            control.CharacterProfile.characterType != CurrentInteractable.AllowedCharacter)
+            return;
+
         if (CurrentInteractable is ICooldownInteractable cooldown && cooldown.IsOnCooldown(out float remain))
         {
             cooldown.ShowCooldownWarning(remain);
@@ -106,7 +111,6 @@ public class PlayerInteractDetector : MonoBehaviour
         Transform point = CurrentInteractable.GetInteractPoint();
         if (point != null)
             transform.SetPositionAndRotation(point.position, point.rotation);
-
 
         if (CurrentInteractable.MoodIconOffset != Vector3.zero)
             control.visualizer?.OffsetMoodIcon(CurrentInteractable.MoodIconOffset);

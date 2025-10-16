@@ -13,25 +13,25 @@ MonoBehaviour:
   m_Name: DLG_Danbi_YoonSeul
   m_EditorClassIdentifier: 
   lines:
-  - speakerType: 0
+  - speakerType: 1
     portraits:
       playerPortrait: {fileID: 21300000, guid: 935478cff8b704f49a3a97c11c9f0952, type: 3}
       npcPortrait: {fileID: 21300000, guid: f65c799e4c47d4b499e819571839ca32, type: 3}
     dialogueText: "\uC548\uB155, \uC724\uC2AC\uC544! \uC774\uBC88 \uC8FC\uB9D0\uC5D0
       \uAC19\uC774 \uC601\uD654 \uBCF4\uB7EC \uAC08\uB798?"
-  - speakerType: 3
+  - speakerType: 4
     portraits:
       playerPortrait: {fileID: 21300000, guid: 935478cff8b704f49a3a97c11c9f0952, type: 3}
       npcPortrait: {fileID: 21300000, guid: f65c799e4c47d4b499e819571839ca32, type: 3}
     dialogueText: "\uBBF8\uC548, \uB2E8\uBE44\uC57C. \uC774\uBC88 \uC8FC\uB9D0\uC5D0\uB294
       \uAC00\uC871\uC774\uB791 \uC57D\uC18D\uC774 \uC788\uC5B4."
-  - speakerType: 0
+  - speakerType: 1
     portraits:
       playerPortrait: {fileID: 21300000, guid: 935478cff8b704f49a3a97c11c9f0952, type: 3}
       npcPortrait: {fileID: 21300000, guid: f65c799e4c47d4b499e819571839ca32, type: 3}
     dialogueText: "\uC544, \uADF8\uB807\uAD6C\uB098. \uB2E4\uC74C\uC5D0 \uC2DC\uAC04
       \uB418\uBA74 \uAC19\uC774 \uAC00\uC790!"
-  - speakerType: 3
+  - speakerType: 4
     portraits:
       playerPortrait: {fileID: 21300000, guid: 935478cff8b704f49a3a97c11c9f0952, type: 3}
       npcPortrait: {fileID: 21300000, guid: f65c799e4c47d4b499e819571839ca32, type: 3}
