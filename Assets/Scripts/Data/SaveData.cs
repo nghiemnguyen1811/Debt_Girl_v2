@@ -51,6 +51,10 @@ public class SaveData
 
     public bool hasPostedFirstTime;
 
+    public string lastQuestDate;
+    public bool hasClaimedDailyBonus;
+    public List<DailyQuestData> dailyQuests = new();
+
     public List<OwnedDecorationEntry> ownedDecorations = new();
     public List<PlateSaveData> plates = new();
     public List<StatSaveData> statLevels = new();

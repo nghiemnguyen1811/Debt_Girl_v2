@@ -29,7 +29,7 @@ public class LoadingManager : MonoBehaviour
 
     private void Start()
     {
-        //AudioManager.Instance?.StopMusic();
+        AudioManager.Instance?.StopMusic();
         StartCoroutine(HandleLoadingFlow());
     }
 

@@ -35,12 +35,14 @@ public class DataManager : SingletonMonobehaviour<DataManager>
     {
         // Subscribe to ready events
         ShopManager.Instance.OnDecorDataInitialized += HandleDecorDataInitialized;
+        DailyQuestManager.Instance.OnDailyQuestInitialized += HandleDailyQuestInitialized;
     }
 
     private void OnDisable()
     {
         // Unsubscribe to prevent memory leaks
         ShopManager.Instance.OnDecorDataInitialized -= HandleDecorDataInitialized;
+        DailyQuestManager.Instance.OnDailyQuestInitialized -= HandleDailyQuestInitialized;
     }
 
     private void Start()
@@ -110,6 +112,14 @@ public class DataManager : SingletonMonobehaviour<DataManager>
         if (cachedSaveData == null) return;
 
         DecorationManager.Instance?.ImportSaveData(cachedSaveData);
+        Debug.Log("[DataManager] PlayerStats save data imported.");
+    }
+
+    private void HandleDailyQuestInitialized()
+    {
+        if (cachedSaveData == null) return;
+
+        DailyQuestManager.Instance?.ImportSaveData(cachedSaveData);
         Debug.Log("[DataManager] PlayerStats save data imported.");
     }
 }

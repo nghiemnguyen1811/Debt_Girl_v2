@@ -62,10 +62,8 @@ public class AddressablePreloadManager : MonoBehaviour
                 loadedHandles[key] = handle;
                 Debug.Log("Preloaded asset: " + key);
             }
-            else
-            {
-                Debug.LogWarning("Failed to preload: " + key);
-            }
+
+            else Debug.LogWarning("Failed to preload: " + key);
         }
     }
 

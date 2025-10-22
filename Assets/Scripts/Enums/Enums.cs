@@ -183,3 +183,26 @@ public enum AppType
     Cooking,
     TradingCoin
 }
+
+public enum DailyQuestType
+{
+    Interact,
+    BakeCake,
+    Cooking,
+    PayDebt,
+    BuyCoin,
+    LevelUp,
+    CreatePosts,
+    BuyFromShop
+}
+
+public enum DailyActivity
+{
+    None,
+    Sleep,       
+    CleanHouse,
+    Exercise,
+    Shower,
+    BrushTeeth,
+    Work
+}
