@@ -1,2 +1,30 @@
-*.unity filter=lfs diff=lfs merge=lfs -text
+# ─────────────────────────────
+# UNITY YAML SMART MERGE
+# ─────────────────────────────
+*.unity      merge=unityyamlmerge eol=lf
+*.prefab     merge=unityyamlmerge eol=lf
+*.mat        merge=unityyamlmerge eol=lf
+*.asset      merge=unityyamlmerge eol=lf
+*.anim       merge=unityyamlmerge eol=lf
+*.controller merge=unityyamlmerge eol=lf
+
+# ─────────────────────────────
+# GIT LFS TRACKING (Large Files)
+# ─────────────────────────────
+# Keep LFS for large binary assets only (models, textures, audio)
 *.fbx filter=lfs diff=lfs merge=lfs -text
+*.png filter=lfs diff=lfs merge=lfs -text
+*.jpg filter=lfs diff=lfs merge=lfs -text
+*.tga filter=lfs diff=lfs merge=lfs -text
+*.wav filter=lfs diff=lfs merge=lfs -text
+*.mp3 filter=lfs diff=lfs merge=lfs -text
+*.mp4 filter=lfs diff=lfs merge=lfs -text
+*.mov filter=lfs diff=lfs merge=lfs -text
+*.psd filter=lfs diff=lfs merge=lfs -text
+*.blend filter=lfs diff=lfs merge=lfs -text
+*.exr filter=lfs diff=lfs merge=lfs -text
+
+# ─────────────────────────────
+# PLATFORM TEXT FORMAT
+# ─────────────────────────────
+* text=auto eol=lf

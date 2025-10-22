@@ -570,6 +570,9 @@ PlayerSettings:
   - serializedVersion: 3
     m_BuildTarget: Android
     m_Formats: 03000000
+  - serializedVersion: 3
+    m_BuildTarget: iOS
+    m_Formats: 03000000
   playModeTestRunnerEnabled: 0
   runPlayModeTestAsEditModeTest: 0
   actionOnDotNetUnhandledException: 1
@@ -852,7 +855,7 @@ PlayerSettings:
     WebGL: URP_OUTLINE;DOTWEEN
     Windows Store Apps: URP_OUTLINE;DOTWEEN
     XboxOne: URP_OUTLINE;DOTWEEN
-    iPhone: URP_OUTLINE;DOTWEEN
+    iPhone: URP_OUTLINE;DOTWEEN;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ODIN_INSPECTOR_3_2;ODIN_INSPECTOR_3_3;FCU_EXISTS;JSONNET_EXISTS;TextMeshPro;UITK_EXISTS;U2D_SPRITE_EXISTS
     tvOS: URP_OUTLINE;DOTWEEN
   additionalCompilerArguments: {}
   platformArchitecture: {}
