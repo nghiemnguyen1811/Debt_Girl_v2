@@ -4244,7 +4244,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3320650627616584256}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.72, y: 0, z: -1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -4268,9 +4268,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f769ad041773f44f949bf13c5f5eee6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomType: 1
+  roomType: 3
   playerSpawnPoint: {fileID: 5975865860555666665}
-  cameraSpawn: {x: -4.28, y: 4.11, z: 3.21}
+  cameraSpawn: {x: -16.9, y: 4.08, z: 3.12}
   roomBounds: {fileID: 4541730283991875464}
 --- !u!1 &3427305840476037076
 GameObject:
@@ -8296,6 +8296,7 @@ MonoBehaviour:
   useProp: 0
   useSound: 0
   interactPoint: {fileID: 0}
+  allowedCharacter: 0
   interactionMode: 1
   data: {fileID: 11400000, guid: 7de211da543a5c848ac8d870d8d4c51a, type: 2}
   moodIconOffset: {x: 0, y: 0, z: 0}
@@ -11160,6 +11161,7 @@ MonoBehaviour:
   useProp: 0
   useSound: 0
   interactPoint: {fileID: 0}
+  allowedCharacter: 0
   interactionMode: 2
   data: {fileID: 11400000, guid: 3ecec82c2ba1de1409118063d9d30d1c, type: 2}
   moodIconOffset: {x: 0, y: 0, z: 0}

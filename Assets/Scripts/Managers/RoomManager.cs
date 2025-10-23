@@ -159,13 +159,13 @@ public class RoomManager : SingletonMonobehaviour<RoomManager>
     // ─────────────────────────────────────────────────────
     // Quick Button Methods
     // ─────────────────────────────────────────────────────
-    public void GoToWareHouse()
+    public void GoToBakeryRoom()
     {
-        SetActiveRoom(RoomType.WareHouse);
+        SetActiveRoom(RoomType.BakeryRoom);
     }
 
-    public void GoToExcitedRoom()
+    public void GoToKitchenRoom()
     {
-        SetActiveRoom(RoomType.ExcitedRoom);
+        SetActiveRoom(RoomType.KitchenRoom);
     }
 }

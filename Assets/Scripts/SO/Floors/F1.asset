@@ -13,19 +13,19 @@ MonoBehaviour:
   m_Name: F1
   m_EditorClassIdentifier: 
   floorName: "1\uCE35"
-  floorType: 2
-  floorDescription: "1\uCE35 \uBC29\uC5D0 \uB300\uD55C \uC124\uBA85\uC774\uC5D0\uC694.\r\n\uD55C\uC18C\uD76C\uC758
-    \uBC29, \uAC70\uC2E4, \uBD80\uC5CC, \uD604\uAD00"
+  floorType: 1
+  floorDescription: "1\uCE35 \uBC29\uC5D0 \uB300\uD55C \uC124\uBA85\uC774\uC5D0\uC694.\n\uC8FC\uBC29,
+    \uAC70\uC2E4, \uBCA0\uC774\uCEE4\uB9AC\uB8F8, \uC695\uC2E4\uC774\uC5D0\uC694."
   rooms:
+  - roomType: 2
+    markerIcon: {fileID: 21300000, guid: f4b5381339fa4c64bac156578183e92a, type: 3}
+    level: 5
   - roomType: 1
-    markerIcon: {fileID: 21300000, guid: b138b7c81fae7b64fae03ecd56fb539b, type: 3}
-    level: 16
-  - roomType: 3
     markerIcon: {fileID: 21300000, guid: 2db48f05e2e74b54b836ad925b15c448, type: 3}
     level: 1
-  - roomType: 2
-    markerIcon: {fileID: 21300000, guid: 97714c6a08adb2442a9114aa32447145, type: 3}
-    level: 1
+  - roomType: 3
+    markerIcon: {fileID: 21300000, guid: b138b7c81fae7b64fae03ecd56fb539b, type: 3}
+    level: 16
   - roomType: 4
     markerIcon: {fileID: 21300000, guid: a5781aac7a8e61d4db0e9bf5e2f1af8b, type: 3}
     level: 3

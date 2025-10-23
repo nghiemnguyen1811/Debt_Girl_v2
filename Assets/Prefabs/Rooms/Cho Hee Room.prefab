@@ -4268,9 +4268,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f769ad041773f44f949bf13c5f5eee6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomType: 8
+  roomType: 6
   playerSpawnPoint: {fileID: 6150467196170514162}
-  cameraSpawn: {x: -21.48, y: 3.85, z: 8.88}
+  cameraSpawn: {x: -16.34, y: 3.52, z: 8.64}
   roomBounds: {fileID: 3229295904063772492}
 --- !u!1 &3953766837365397576
 GameObject:

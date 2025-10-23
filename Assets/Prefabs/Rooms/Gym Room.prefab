@@ -794,9 +794,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f769ad041773f44f949bf13c5f5eee6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  roomType: 9
+  roomType: 11
   playerSpawnPoint: {fileID: 3725730678745101410}
-  cameraSpawn: {x: -9.3, y: 3.75, z: 14.75}
+  cameraSpawn: {x: -16.4, y: 3.56, z: 14.7}
   roomBounds: {fileID: 1201576116627601815}
 --- !u!1 &1020130191818439103
 GameObject:
@@ -2351,6 +2351,7 @@ MonoBehaviour:
   useProp: 1
   useSound: 1
   interactPoint: {fileID: 8622813069096168283}
+  allowedCharacter: 0
   interactionMode: 0
   data: {fileID: 11400000, guid: eb263c75b50d5034ea5565db7971270b, type: 2}
   moodIconOffset: {x: -0.2, y: 0.7, z: 0.3}
@@ -3719,6 +3720,7 @@ MonoBehaviour:
   useProp: 1
   useSound: 0
   interactPoint: {fileID: 1483118423474303803}
+  allowedCharacter: 0
   interactionMode: 0
   data: {fileID: 11400000, guid: dcb6f2d3f36b45749b0175d84b694b1e, type: 2}
   moodIconOffset: {x: 0, y: 0, z: 0}

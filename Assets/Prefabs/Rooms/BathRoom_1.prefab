@@ -16671,6 +16671,7 @@ MonoBehaviour:
   useProp: 1
   useSound: 1
   interactPoint: {fileID: 4425005050574630251}
+  allowedCharacter: 0
   interactionMode: 0
   data: {fileID: 11400000, guid: da72a31ce22d13840acecc21e7fee3f0, type: 2}
   moodIconOffset: {x: -0.15, y: 0.72, z: -0.18}
@@ -17535,7 +17536,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4445158925367095528}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -16, y: 0, z: -1.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -17561,7 +17562,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomType: 4
   playerSpawnPoint: {fileID: 553680539372678719}
-  cameraSpawn: {x: -20.48, y: 2.75, z: 2}
+  cameraSpawn: {x: -22.34, y: 2.7, z: 1.88}
   roomBounds: {fileID: 3674170817401737152}
 --- !u!1 &4535912683167375969
 GameObject:
@@ -20105,6 +20106,7 @@ MonoBehaviour:
   useProp: 0
   useSound: 1
   interactPoint: {fileID: 2805716386115751367}
+  allowedCharacter: 0
   interactionMode: 0
   data: {fileID: 11400000, guid: 6ed7f26a20af57c49acdfb31a48a4c27, type: 2}
   moodIconOffset: {x: 0, y: 0, z: 0}

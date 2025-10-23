@@ -11,28 +11,27 @@
 public enum FloorType
 {
     None,
-    Yard,
     F1,
     F2,
     F3,
+    F4,
 }
 
 public enum RoomType
 {
     None,
-    WareHouse,
-    HongYeoSa,
     LivingRoom,
-    WC_F1,
-    Jiho,
-    Danbi,
-    WC_F2,
-    ChoHee,
-    SonsRoom,
-    TaeSeon,
-    ExcitedRoom,
-    YoonSeul,
-    Rooftop
+    KitchenRoom,
+    BakeryRoom,
+    Bathroom_1,
+    JihoRoom,
+    ChoHeeRoom,
+    GoDanBiRoom,
+    Bathroom_2,
+    TaeSeonRoom,
+    YoonSeulRoom,
+    GymRoom,
+    Rooftop,
 }
 
 public enum StatType

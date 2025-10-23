@@ -35,14 +35,14 @@ public class DataManager : SingletonMonobehaviour<DataManager>
     {
         // Subscribe to ready events
         ShopManager.Instance.OnDecorDataInitialized += HandleDecorDataInitialized;
-        DailyQuestManager.Instance.OnDailyQuestInitialized += HandleDailyQuestInitialized;
+        //DailyQuestManager.Instance.OnDailyQuestInitialized += HandleDailyQuestInitialized;
     }
 
     private void OnDisable()
     {
         // Unsubscribe to prevent memory leaks
         ShopManager.Instance.OnDecorDataInitialized -= HandleDecorDataInitialized;
-        DailyQuestManager.Instance.OnDailyQuestInitialized -= HandleDailyQuestInitialized;
+        //DailyQuestManager.Instance.OnDailyQuestInitialized -= HandleDailyQuestInitialized;
     }
 
     private void Start()

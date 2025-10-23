@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using Unity.VisualScripting;
 
 [System.Serializable]
 public class DailyQuestData
@@ -21,45 +22,55 @@ public class DailyQuestData
     // ─────────────────────────────────────────────────────
     // Description Property
     // ─────────────────────────────────────────────────────
-    // Returns the quest description formatted with target count (and activity if Interact).
+    /// <summary>
+    /// Returns the quest description formatted with target count (and activity description if Interact).
+    /// </summary>
     public string Description
     {
         get
         {
-            if (questTemplate == null) return "???";
+            if (questTemplate == null)
+                return "???";
 
             string baseDesc = questTemplate.description;
 
-            // Interact quest → has {1} placeholder for activity name
-            if (questTemplate.questType == DailyQuestType.Interact)
+            // 🟩 Interact Quest: use specific activity description
+            if (questTemplate.questType == DailyQuestType.Interact && selectedActivity.HasValue)
             {
-                string activityName = selectedActivity.HasValue
-                    ? selectedActivity.Value.ToString()
-                    : "Activity";
+                foreach (var req in questTemplate.activityRequirements)
+                {
+                    if (req.activity == selectedActivity.Value)
+                    {
+                        baseDesc = string.IsNullOrEmpty(req.description)
+                            ? questTemplate.description
+                            : req.description;
 
-                return string.Format(baseDesc, targetCount, activityName);
+                        return baseDesc.Contains("{0}")
+                            ? string.Format(baseDesc, targetCount)
+                            : $"{baseDesc} ({targetCount} times)";
+                    }
+                }
             }
 
-            // Non-interact quest with {0}
-            if (baseDesc.Contains("{0}"))
-                return string.Format(baseDesc, targetCount);
-
-            // Default fallback
-            return $"{baseDesc} ({targetCount} times)";
+            // 🟩 Non-Interact Quest
+            return baseDesc.Contains("{0}")
+                ? string.Format(baseDesc, targetCount)
+                : $"{baseDesc} ({targetCount} times)";
         }
     }
 
     // ─────────────────────────────────────────────────────
     // Quest Logic
     // ─────────────────────────────────────────────────────
+    /// <summary>Returns true if quest progress reached target.</summary>
     public bool CheckCompleted() => currentCount >= targetCount;
 
+    /// <summary>Adds progress by one and marks as completed if done.</summary>
     public void AddProgress()
     {
         if (isCompleted) return;
 
         currentCount++;
-
         if (currentCount >= targetCount)
             isCompleted = true;
     }

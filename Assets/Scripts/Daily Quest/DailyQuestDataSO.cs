@@ -11,6 +11,7 @@ public class DailyQuestDataSO : ScriptableObject
     public DailyQuestType questType;
 
     [TextArea(2, 4)]
+    [ShowIf("@questType != DailyQuestType.Interact")]
     public string description;
 
     // ─────────────────────────────────────────────────────
@@ -42,6 +43,10 @@ public class DailyActivityRequirement
 {
     [LabelText("Daily Activity Type")]
     public DailyActivity activity;
+
+    [LabelText("Description")]
+    [TextArea(1, 3)]
+    public string description;
 
     [LabelText("Required Level")]
     [MinValue(1)]
