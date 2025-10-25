@@ -1,71 +1,80 @@
 ﻿using UnityEngine;
-using Unity.VisualScripting;
+using System;
 
+/// <summary>
+/// Stores runtime and progress data for a single daily quest.
+/// </summary>
 [System.Serializable]
 public class DailyQuestData
 {
-    // ─────────────────────────────────────────────────────
-    // Quest Template Reference
-    // ─────────────────────────────────────────────────────
+    // ==================================================
+    // ▶ QUEST REFERENCE
+    // ==================================================
+    public string questID;
     public DailyQuestDataSO questTemplate;
 
-    // ─────────────────────────────────────────────────────
-    // Quest Progress Data
-    // ─────────────────────────────────────────────────────
+    // ==================================================
+    // ▶ QUEST PROGRESS DATA
+    // ==================================================
     public int targetCount;
     public int currentCount;
     public bool isCompleted;
 
-    // 🔹 Selected activity (only used when questType == Interact)
-    public DailyActivity? selectedActivity;
+    // ==================================================
+    // ▶ INTERACT QUEST DATA
+    // ==================================================
+    public DailyActivity selectedActivity = DailyActivity.None;
+    public int savedActivityInt;
 
-    // ─────────────────────────────────────────────────────
-    // Description Property
-    // ─────────────────────────────────────────────────────
+    // ==================================================
+    // ▶ DESCRIPTION PROPERTY
+    // ==================================================
     /// <summary>
-    /// Returns the quest description formatted with target count (and activity description if Interact).
+    /// Returns the formatted quest description based on its type and activity.
     /// </summary>
     public string Description
     {
         get
         {
+            // 🧩 Safety check
             if (questTemplate == null)
                 return "???";
 
             string baseDesc = questTemplate.description;
 
-            // 🟩 Interact Quest: use specific activity description
-            if (questTemplate.questType == DailyQuestType.Interact && selectedActivity.HasValue)
+            // 🟩 Interact Quest → Use activity-specific description
+            if (questTemplate.questType == DailyQuestType.Interact)
             {
                 foreach (var req in questTemplate.activityRequirements)
                 {
-                    if (req.activity == selectedActivity.Value)
+                    if (req.activity == selectedActivity)
                     {
-                        baseDesc = string.IsNullOrEmpty(req.description)
-                            ? questTemplate.description
+                        string desc = string.IsNullOrEmpty(req.description)
+                            ? baseDesc
                             : req.description;
 
-                        return baseDesc.Contains("{0}")
-                            ? string.Format(baseDesc, targetCount)
-                            : $"{baseDesc} ({targetCount} times)";
+                        // Replace {0} placeholder with target count
+                        return desc.Contains("{0}")
+                            ? string.Format(desc, targetCount)
+                            : desc;
                     }
                 }
+
+                // Fallback: Replace {0} manually if not matched
+                return baseDesc.Replace("{0}", targetCount.ToString());
             }
 
-            // 🟩 Non-Interact Quest
+            // 🟩 Normal Quest → Use template description
             return baseDesc.Contains("{0}")
                 ? string.Format(baseDesc, targetCount)
-                : $"{baseDesc} ({targetCount} times)";
+                : baseDesc;
         }
     }
 
-    // ─────────────────────────────────────────────────────
-    // Quest Logic
-    // ─────────────────────────────────────────────────────
-    /// <summary>Returns true if quest progress reached target.</summary>
-    public bool CheckCompleted() => currentCount >= targetCount;
-
-    /// <summary>Adds progress by one and marks as completed if done.</summary>
+    // ==================================================
+    // ▶ QUEST LOGIC
+    // ==================================================
+    /// <summary>Increases quest progress by one and marks as complete if target reached.</summary>
     public void AddProgress()
     {
         if (isCompleted) return;

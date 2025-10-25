@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 248a2880fe015c7469d23bfaefd9b65e, type: 3}
-  m_Name: Interact
+  m_Name: BuyCoin
   m_EditorClassIdentifier: 
-  questType: 0
-  description: 
+  questType: 4
+  description: Buy {0} coins in the app.
   minTarget: 1
   maxTarget: 3
   rewardDiamond: 1
-  requiredLevel: 1
+  requiredLevel: 12
   activityRequirements:
   - activity: 1
     description: Go to sleep {0} time.
@@ -28,7 +28,7 @@ MonoBehaviour:
   - activity: 6
     description: Work {0} times.
     requiredLevel: 1
-  - activity: 5
+  - activity: 0
     description: Brush teeth {0} times.
     requiredLevel: 3
   - activity: 4
@@ -37,6 +37,3 @@ MonoBehaviour:
   - activity: 3
     description: Work out {0} times.
     requiredLevel: 18
-  - activity: 7
-    description: Talk to {0} people in the house.
-    requiredLevel: 1

@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,8 @@ using UnityEngine.UI;
 /// </summary>
 public class CookingManager : SingletonMonobehaviour<CookingManager>
 {
+    public event Action OnDishCooked;
+
     // ─────────────────────────────────────────────────────
     #region Serialized Fields
     // ─────────────────────────────────────────────────────
@@ -330,6 +333,8 @@ public class CookingManager : SingletonMonobehaviour<CookingManager>
         FoodInventoryUI.Instance.AddItem(SelectedDishData, 1);
         UIManager.Instance.ToggleCookingPanel(false);
         AudioManager.Instance.PlayInteractSound(8);
+
+        OnDishCooked?.Invoke();
     }
 
     #endregion

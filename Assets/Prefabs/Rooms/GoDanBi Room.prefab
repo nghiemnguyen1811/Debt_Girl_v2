@@ -1579,6 +1579,7 @@ MonoBehaviour:
   interactPoint: {fileID: 5144643685286279190}
   allowedCharacter: 1
   interactionMode: 0
+  dailyActivity: 1
   data: {fileID: 11400000, guid: c34683a5baf63404c8b0d79f653faa54, type: 2}
   moodIconOffset: {x: 0.185, y: 0.485, z: -0.4}
   interactParticle: {fileID: 6122410316915211034}
@@ -3063,7 +3064,7 @@ MonoBehaviour:
   roomType: 7
   playerSpawnPoint: {fileID: 5786532371414416602}
   cameraSpawn: {x: -9.08, y: 3.44, z: 8.78}
-  roomBounds: {fileID: 0}
+  roomBounds: {fileID: 2045242954279433408}
 --- !u!1 &5130967304401879627
 GameObject:
   m_ObjectHideFlags: 0
@@ -5128,6 +5129,7 @@ MonoBehaviour:
   interactPoint: {fileID: 8726054601112679811}
   allowedCharacter: 1
   interactionMode: 0
+  dailyActivity: 6
   data: {fileID: 11400000, guid: 258cfdffccd675546bb5e167028a1f9a, type: 2}
   moodIconOffset: {x: -0.2, y: 0.72, z: 0.15}
   interactParticle: {fileID: 1932411054324666033}

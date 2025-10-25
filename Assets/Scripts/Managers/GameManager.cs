@@ -5,7 +5,7 @@ using System;
 /// GameManager is the global controller for player progress and core game state.
 /// It manages player level, triggers level change events, and starts background music.
 /// </summary>
-public class GameManager : SingletonMonobehaviour<GameManager>, ILoadable
+public class GameManager : SingletonMonobehaviour<GameManager>
 {
     // ─────────────────────────────────────────────────────
     // Events

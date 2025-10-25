@@ -35,6 +35,7 @@ public class SaveData
 {
     public int playerLevel = 1;
     public double playerMoney = 0;
+    public double playerDiamond = 0;
     public int statPoints = 0;
 
     public bool hasStats;

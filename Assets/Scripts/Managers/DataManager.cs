@@ -33,16 +33,13 @@ public class DataManager : SingletonMonobehaviour<DataManager>
 
     private void OnEnable()
     {
-        // Subscribe to ready events
         ShopManager.Instance.OnDecorDataInitialized += HandleDecorDataInitialized;
-        //DailyQuestManager.Instance.OnDailyQuestInitialized += HandleDailyQuestInitialized;
     }
 
     private void OnDisable()
     {
         // Unsubscribe to prevent memory leaks
         ShopManager.Instance.OnDecorDataInitialized -= HandleDecorDataInitialized;
-        //DailyQuestManager.Instance.OnDailyQuestInitialized -= HandleDailyQuestInitialized;
     }
 
     private void Start()
@@ -73,6 +70,7 @@ public class DataManager : SingletonMonobehaviour<DataManager>
         CoinTradeManager.Instance?.ImportSaveData(cachedSaveData);
         MoodManager.Instance?.ImportSaveData(cachedSaveData);
         PostManager.Instance?.ImportSaveData(cachedSaveData);
+        DailyQuestManager.Instance?.ImportSaveData(cachedSaveData);
         FoodInventoryUI.Instance?.ImportSaveData(cachedSaveData.foodInventory, itemDatabase);
         CakeInventoryUI.Instance?.ImportSaveData(cachedSaveData.cakeInventory, itemDatabase);
 
@@ -112,14 +110,6 @@ public class DataManager : SingletonMonobehaviour<DataManager>
         if (cachedSaveData == null) return;
 
         DecorationManager.Instance?.ImportSaveData(cachedSaveData);
-        Debug.Log("[DataManager] PlayerStats save data imported.");
-    }
-
-    private void HandleDailyQuestInitialized()
-    {
-        if (cachedSaveData == null) return;
-
-        DailyQuestManager.Instance?.ImportSaveData(cachedSaveData);
         Debug.Log("[DataManager] PlayerStats save data imported.");
     }
 }

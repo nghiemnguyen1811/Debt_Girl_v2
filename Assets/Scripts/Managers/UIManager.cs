@@ -11,6 +11,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     [Header("Texts (0 = HUD, 1 = Bank UI)")]
     [SerializeField] private TextMeshProUGUI[] moneyText;
     [SerializeField] private TextMeshProUGUI[] debtText;
+    [SerializeField] private TextMeshProUGUI[] diamondText;
 
     [Header("Other UI Texts")]
     [SerializeField] private TextMeshProUGUI statPointText;
@@ -30,6 +31,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     [SerializeField] private GameObject selectRoomPanel;
     [SerializeField] private GameObject bankingPanel;
     [SerializeField] private GameObject dialoguePanel;
+    [SerializeField] private GameObject dailyquestPanel;
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject exitPanel;
@@ -41,6 +43,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
 
     private Tween[] moneyTweens = new Tween[2];
     private Tween[] debtTweens = new Tween[2];
+    private Tween[] diamondTweens = new Tween[2];
 
     private bool hasInitialized = false;
 
@@ -76,6 +79,15 @@ public class UIManager : SingletonMonobehaviour<UIManager>
         }
     }
 
+    public void UpdateDiamond(double diamondAmount, bool animate = true)
+    {
+        for (int i = 0; i < debtText.Length; i++)
+        {
+            if (diamondText[i] != null)
+                UpdateText(diamondText[i], diamondAmount, animate, ref diamondTweens[i]);
+        }
+    }
+
     public void UpdateStatPoints(int total)
     {
         if (statPointText != null)
@@ -108,6 +120,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
             case PanelType.Post: panel = postPanel; break;
             case PanelType.Banking: panel = bankingPanel; break;
             case PanelType.Dialogue: panel = dialoguePanel; break;
+            case PanelType.DailyQuest: panel = dailyquestPanel; break;
             case PanelType.Exit: panel = exitPanel; break;
 
             case PanelType.Upgrade:
@@ -195,6 +208,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     public void ToggleSelectRoomPanel(bool show) => TogglePanelByType(PanelType.SelectRoom, show);
     public void ToggleBankingPanel(bool show) => TogglePanelByType(PanelType.Banking, show);
     public void ToggleDialoguePanel(bool show) => TogglePanelByType(PanelType.Dialogue, show);
+    public void ToggleDailyQuestPanel(bool show) => TogglePanelByType(PanelType.DailyQuest, show);
     public void ToggleSettingsPanel(bool show) => TogglePanelByType(PanelType.Settings, show);
     public void TogglePausePanelFromButton(bool show) => TogglePanelByType(PanelType.Pause, show);
 
@@ -215,6 +229,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
         ToggleSelectRoomPanel(false);
         ToggleBankingPanel(false);
         ToggleDialoguePanel(false);
+        ToggleDailyQuestPanel(false);
         TogglePhonePanel(false);
     }
 

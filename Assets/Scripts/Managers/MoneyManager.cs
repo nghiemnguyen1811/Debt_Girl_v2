@@ -1,33 +1,39 @@
 ﻿using UnityEngine;
 
-public class MoneyManager : SingletonMonobehaviour<MoneyManager>, ILoadable
+/// <summary>
+/// Handles player money and diamond balance, UI updates, and saving.
+/// </summary>
+public class MoneyManager : SingletonMonobehaviour<MoneyManager>
 {
-    #region === Inspector Fields ===
-
+    // ==================================================
+    // ▶ INSPECTOR FIELDS
+    // ==================================================
     [Header("Spawn Particle")]
     [SerializeField] private Transform moneyVFXPoint;
-
-    [Header("Coin Settings")]
-    private double totalMoneys = 0;
 
     [Header("Particle Effect")]
     [SerializeField] private GameObject moneyParticlePrefab;
 
-    #endregion
+    [Header("Coin Settings")]
+    private double totalMoneys = 0;
+    private double totalDiamonds = 0;
 
-    #region === Unity Events ===
+    // ==================================================
+    // ▶ UNITY EVENTS
+    // ==================================================
     private void Update()
     {
+        // Debug key for adding money quickly
         if (Input.GetKeyDown(KeyCode.M))
             ChangeMoneys(100000);
     }
 
-    #endregion
 
-    #region === Public Methods ===
-
+    // ==================================================
+    // ▶ PUBLIC MONEY METHODS
+    // ==================================================
     /// <summary>
-    /// Add or subtract money and spawn particle if applicable
+    /// Adds or subtracts money and spawns a visual particle if applicable.
     /// </summary>
     public void ChangeMoneys(double amount)
     {
@@ -51,58 +57,80 @@ public class MoneyManager : SingletonMonobehaviour<MoneyManager>, ILoadable
     }
 
     /// <summary>
-    /// Set money to a specific value
+    /// Sets money to a specific value and updates UI immediately.
     /// </summary>
     public void SetMoneys(double value)
     {
         totalMoneys = value;
         UpdateMoneyUI(immediate: true);
-
         AutoSave();
     }
 
-    /// <summary>
-    /// Get current total money
-    /// </summary>
-    public double GetMoneys()
+    /// <summary>Returns the current total money.</summary>
+    public double GetMoneys() => totalMoneys;
+
+    /// <summary>Returns true if the player has enough money.</summary>
+    public bool HasEnoughMoney(double amount) => totalMoneys >= amount;
+
+
+    // ==================================================
+    // ▶ PUBLIC DIAMOND METHODS
+    // ==================================================
+    /// <summary>Adds or subtracts diamonds and updates UI.</summary>
+    public void ChangeDiamonds(double amount)
     {
-        return totalMoneys;
+        totalDiamonds += amount;
+        UpdateDiamondUI();
+        AutoSave();
     }
 
-    /// <summary>
-    /// Check if the player has enough money
-    /// </summary>
-    public bool HasEnoughMoney(double amount)
+    /// <summary>Sets diamond to a specific value and updates UI immediately.</summary>
+    public void SetDiamonds(double value)
     {
-        return totalMoneys >= amount;
+        totalDiamonds = value;
+        UpdateDiamondUI(immediate: true);
+        AutoSave();
     }
 
-    #endregion
+    /// <summary>Returns the current total diamonds.</summary>
+    public double GetDiamonds() => totalDiamonds;
 
-    #region === Private Methods ===
+    /// <summary>Returns true if the player has enough diamonds.</summary>
+    public bool HasEnoughDiamond(double amount) => totalDiamonds >= amount;
 
-    /// <summary>
-    /// Update the UI money display
-    /// </summary>
+
+    // ==================================================
+    // ▶ PRIVATE UI HELPERS
+    // ==================================================
+    /// <summary>Updates the money display in UI.</summary>
     private void UpdateMoneyUI(bool immediate = false)
     {
         UIManager.Instance?.UpdateMoney(totalMoneys, !immediate);
     }
 
-    #endregion
+    /// <summary>Updates the diamond display in UI.</summary>
+    private void UpdateDiamondUI(bool immediate = false)
+    {
+        UIManager.Instance?.UpdateDiamond(totalDiamonds, !immediate);
+    }
 
-    // ─────────────────────────────────────────────────────
-    // Save/Load API
-    // ─────────────────────────────────────────────────────
+
+    // ==================================================
+    // ▶ SAVE / LOAD API
+    // ==================================================
+    /// <summary>Automatically saves current money and diamond data.</summary>
     protected void AutoSave()
     {
         SaveManager.Data.playerMoney = totalMoneys;
+        SaveManager.Data.playerDiamond = totalDiamonds;
         SaveManager.SaveGame();
     }
 
+    /// <summary>Loads money and diamond data from save.</summary>
     public void ImportSaveData(SaveData saveData)
     {
         SetMoneys(saveData.playerMoney);
+        SetDiamonds(saveData.playerDiamond);
         BankManager.Instance.RefreshPayButton();
     }
 }

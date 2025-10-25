@@ -2583,6 +2583,7 @@ MonoBehaviour:
   interactPoint: {fileID: 2108832854249403324}
   allowedCharacter: 0
   interactionMode: 0
+  dailyActivity: 5
   data: {fileID: 11400000, guid: da72a31ce22d13840acecc21e7fee3f0, type: 2}
   moodIconOffset: {x: -0.08, y: 0.6, z: 0.35}
   interactParticle: {fileID: 7360936142736307381}
@@ -6494,6 +6495,7 @@ MonoBehaviour:
   interactPoint: {fileID: 185166544384250149}
   allowedCharacter: 0
   interactionMode: 0
+  dailyActivity: 4
   data: {fileID: 11400000, guid: 26a3b66bf8caa1442a7657fb81094a94, type: 2}
   moodIconOffset: {x: -0.535, y: 0.5, z: 0.08}
   interactParticle: {fileID: 8605018897152404167}

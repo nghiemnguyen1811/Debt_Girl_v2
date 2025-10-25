@@ -2,6 +2,8 @@
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using System;
+using URandom = UnityEngine.Random;
 
 /// <summary>
 /// Manages coin trading with delayed hidden price fluctuation logic.
@@ -10,6 +12,9 @@ using System.Collections;
 /// </summary>
 public class CoinTradeManager : SingletonMonobehaviour<CoinTradeManager>
 {
+    public event Action OnCoinBought;
+    public event Action OnCoinSell;
+
     // ─────────────────────────────────────────────────────
     // Inspector Fields
     // ─────────────────────────────────────────────────────
@@ -286,7 +291,7 @@ public class CoinTradeManager : SingletonMonobehaviour<CoinTradeManager>
         while (true)
         {
             // Random wait time for next fluctuation
-            float waitTime = Random.Range(fluctuationInterval.x, fluctuationInterval.y);
+            float waitTime = URandom.Range(fluctuationInterval.x, fluctuationInterval.y);
             float remaining = waitTime;
 
             // Countdown until fluctuation
@@ -298,8 +303,8 @@ public class CoinTradeManager : SingletonMonobehaviour<CoinTradeManager>
             }
 
             // Apply price fluctuation when countdown ends
-            float random = Random.value;
-            float fluctuation = Random.Range(fluctuationPercentRange.x, fluctuationPercentRange.y);
+            float random = URandom.value;
+            float fluctuation = URandom.Range(fluctuationPercentRange.x, fluctuationPercentRange.y);
 
             if (random < 0.8f)
             {

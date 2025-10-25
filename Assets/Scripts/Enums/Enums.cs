@@ -172,7 +172,8 @@ public enum PanelType
     Dialogue,
     Settings,
     Pause,
-    Banking
+    Banking,
+    DailyQuest,
 }
 
 public enum AppType
@@ -190,7 +191,7 @@ public enum DailyQuestType
     Cooking,
     PayDebt,
     BuyCoin,
-    LevelUp,
+    SellCoin,
     CreatePosts,
     BuyFromShop
 }
@@ -203,5 +204,6 @@ public enum DailyActivity
     Exercise,
     Shower,
     BrushTeeth,
-    Work
+    Work,
+    Talking
 }

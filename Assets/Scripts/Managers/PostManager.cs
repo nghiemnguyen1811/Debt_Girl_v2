@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
+using URandom = UnityEngine.Random;
 
 /// <summary>
 /// Manages the posting system: creating posts, handling cooldown,
@@ -10,6 +12,8 @@ using TMPro;
 /// </summary>
 public class PostManager : SingletonMonobehaviour<PostManager>
 {
+    public event Action OnPostCreated;
+
     #region === Inspector Fields ===
 
     [Header("References")]
@@ -114,7 +118,7 @@ public class PostManager : SingletonMonobehaviour<PostManager>
     /// </summary>
     private void CreatePost()
     {
-        var data = postDataArray[Random.Range(0, postDataArray.Length)];
+        var data = postDataArray[URandom.Range(0, postDataArray.Length)];
         var post = Instantiate(postPrefab, postParent);
         var level = GetEngagementLevel(playerControl.stats.engagement.current);
 
@@ -152,7 +156,7 @@ public class PostManager : SingletonMonobehaviour<PostManager>
     /// </summary>
     private IEnumerator CooldownTimer()
     {
-        yield return new WaitForSeconds(Random.Range(cooldownRange.x, cooldownRange.y));
+        yield return new WaitForSeconds(URandom.Range(cooldownRange.x, cooldownRange.y));
         canPost = true;
         postButton.interactable = true;
     }

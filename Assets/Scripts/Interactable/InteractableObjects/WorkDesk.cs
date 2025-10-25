@@ -45,9 +45,8 @@ public class WorkDesk : InteractableBase
     // Triggered when player stops interacting
     public override void OnStopInteract()
     {
-        SetOutline(true);
+        base.OnStopInteract();
         SetParticle(true);
-        HandleSound(play: false);
     }
 
     #endregion

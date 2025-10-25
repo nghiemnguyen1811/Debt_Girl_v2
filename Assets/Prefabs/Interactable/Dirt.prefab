@@ -75,7 +75,9 @@ MonoBehaviour:
   useProp: 1
   useSound: 1
   interactPoint: {fileID: 0}
+  allowedCharacter: 0
   interactionMode: 0
+  dailyActivity: 2
   data: {fileID: 11400000, guid: 5aaf81490e061f944ac5630e503da964, type: 2}
   moodIconOffset: {x: 0, y: 0, z: 0}
   interactParticle: {fileID: 0}
@@ -98,7 +100,7 @@ MonoBehaviour:
   drawingMode: 1
   outlineLayer: 5
   outlineTargets:
-  - IsVisible: 1
+  - IsVisible: 0
     CutoutMask: 8
     edgeDilateAmount: 5
     frontEdgeDilateAmount: 5
@@ -114,7 +116,7 @@ MonoBehaviour:
     cutoutTextureName: 
     DilateRenderingMode: 0
     cutoutTextureIndex: 0
-  - IsVisible: 1
+  - IsVisible: 0
     CutoutMask: 8
     edgeDilateAmount: 5
     frontEdgeDilateAmount: 5
@@ -130,7 +132,7 @@ MonoBehaviour:
     cutoutTextureName: 
     DilateRenderingMode: 0
     cutoutTextureIndex: 0
-  - IsVisible: 1
+  - IsVisible: 0
     CutoutMask: 8
     edgeDilateAmount: 5
     frontEdgeDilateAmount: 5

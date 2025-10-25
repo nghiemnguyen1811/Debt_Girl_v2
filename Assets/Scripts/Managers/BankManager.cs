@@ -10,6 +10,8 @@ using UnityEngine.UI;
 /// </summary>
 public class BankManager : SingletonMonobehaviour<BankManager>
 {
+    public event Action OnDebtPaid;
+
     // ─────────────────────────────────────────────────────
     // Configurable Settings
     // ─────────────────────────────────────────────────────
@@ -76,6 +78,8 @@ public class BankManager : SingletonMonobehaviour<BankManager>
             StatUpgradeManager.Instance.AddStatPoint();
             IncreaseDebt();
             AudioManager.Instance.PlayInteractSound(1);
+
+            OnDebtPaid?.Invoke();
         }
 
         else Debug.Log("Not enough coins to pay the debt!");

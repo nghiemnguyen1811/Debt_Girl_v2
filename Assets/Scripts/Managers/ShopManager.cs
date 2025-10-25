@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class ShopManager : SingletonMonobehaviour<ShopManager>
 {
     public event Action OnDecorDataInitialized;
+    public event Action OnItemPurchased;
 
     [Header("Food References")]
     [SerializeField] private Transform foodContainerParent;
@@ -24,7 +25,7 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
     [SerializeField] private CharacterTabButton characterTabPrefab;
     [SerializeField] private List<CharacterInfoSO> characterTabList;
 
-    [Header("Shop Tabs (Food / Decor / Fashion)")]
+    [Header("Shop Tabs (Food / Decor)")]
     [SerializeField] private List<Tab> shopTabs;
     [SerializeField] private GameObject characterSelectionPanel;
 
@@ -33,7 +34,7 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
     [Header("Buttons")]
     [SerializeField] private Button purchaseButtonEnabled;
     [SerializeField] private Button purchaseButtonDisabled;
-    
+
     private readonly List<FoodItemContainer> spawnedFoodContainers = new();
     private readonly List<DecorationItemContainer> spawnedDecorContainers = new();
     private readonly List<CharacterTabButton> spawnedCharacterTabs = new();
@@ -305,6 +306,8 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
 
         DeductTotalPrice();
         UpdateAllUI();
+
+        OnItemPurchased?.Invoke();
     }
 
     public void ResetAllSelections()
