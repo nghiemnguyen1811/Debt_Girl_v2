@@ -21,7 +21,8 @@ public class CookingManager : SingletonMonobehaviour<CookingManager>
     [Header("UI References")]
     [SerializeField] private Transform dishSlotParent;
     [SerializeField] private ScrollRect scrollRect;
-    [SerializeField] private Button cookButton;
+    [SerializeField] private Button cookButtonEnabled;
+    [SerializeField] private Button cookButtonDisabled;
 
     [Header("Ingredient Display")]
     [SerializeField] private List<IngredientUI> ingredientSlots = new();
@@ -117,7 +118,7 @@ public class CookingManager : SingletonMonobehaviour<CookingManager>
     /// </summary>
     private void SetupListeners()
     {
-        cookButton?.onClick.AddListener(TryCookSelectedDish);
+        cookButtonEnabled?.onClick.AddListener(TryCookSelectedDish);
 
         prevButton?.onClick.AddListener(() =>
         {
@@ -142,8 +143,11 @@ public class CookingManager : SingletonMonobehaviour<CookingManager>
         ingredientSlots.ForEach(slot => slot.Hide());
         plusSignsBetweenIngredients.ForEach(plus => plus.SetActive(false));
 
-        if (cookButton != null)
-            cookButton.interactable = false;
+        if (cookButtonEnabled != null && cookButtonDisabled != null)
+        {
+            cookButtonEnabled.gameObject.SetActive(false);
+            cookButtonDisabled.gameObject.SetActive(true);
+        }
     }
 
     #endregion
@@ -280,14 +284,16 @@ public class CookingManager : SingletonMonobehaviour<CookingManager>
     /// </summary>
     private void UpdateDishButtonState()
     {
-        if (SelectedDishData == null)
+        bool canCook = false;
+
+        if (SelectedDishData != null)
         {
-            cookButton.interactable = false;
-            return;
+            canCook = SelectedDishData.requiredIngredients
+                .All(ingredient => FoodInventoryUI.Instance.HasItems(ingredient));
         }
 
-        cookButton.interactable = SelectedDishData.requiredIngredients
-            .All(ingredient => FoodInventoryUI.Instance.HasItems(ingredient));
+        cookButtonEnabled.gameObject.SetActive(canCook);
+        cookButtonDisabled.gameObject.SetActive(!canCook);
     }
 
     /// <summary>

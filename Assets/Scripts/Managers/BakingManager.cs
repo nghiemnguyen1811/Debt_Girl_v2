@@ -21,10 +21,11 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
     [Header("UI References")]
     [SerializeField] private Transform cakeListContainer;
     [SerializeField] private ScrollRect scrollRect;
-    [SerializeField] private Button bakeButton;
     [SerializeField] private TextMeshProUGUI selectedCakeName;
     [SerializeField] private TextMeshProUGUI bakeTimeText;
     [SerializeField] private TextMeshProUGUI warningText;
+    [SerializeField] private Button bakeButtonEnabled;
+    [SerializeField] private Button bakeButtonDisabled;
 
     [Header("Ingredient Display")]
     [SerializeField] private List<IngredientUI> ingredientSlots = new();
@@ -152,7 +153,7 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
     /// </summary>
     private void SetupListeners()
     {
-        bakeButton?.onClick.AddListener(TryBakeSelectedCake);
+        bakeButtonEnabled?.onClick.AddListener(TryBakeSelectedCake);
 
         prevButton?.onClick.AddListener(() =>
         {
@@ -186,7 +187,11 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
         ingredientSlots.ForEach(slot => slot.Hide());
         plusSignsBetweenIngredients.ForEach(plus => plus.SetActive(false));
 
-        if (bakeButton != null) bakeButton.interactable = false;
+        if (bakeButtonEnabled != null && bakeButtonDisabled != null)
+        {
+            bakeButtonEnabled.gameObject.SetActive(false);
+            bakeButtonDisabled.gameObject.SetActive(true);
+        }
     }
 
     /// <summary>
@@ -347,18 +352,21 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
     }
 
     /// <summary>
-    /// Enables/disables bake button based on ingredient availability.
+    /// Enables or disables the bake button depending on ingredient availability.
     /// </summary>
     private void UpdateBakeButtonState()
     {
-        if (SelectedCakeData == null)
+        bool canBake = false;
+
+        if (SelectedCakeData != null)
         {
-            bakeButton.interactable = false;
-            return;
+            canBake = SelectedCakeData.requiredIngredients
+                .All(ingredient => FoodInventoryUI.Instance.HasItems(ingredient));
         }
 
-        bakeButton.interactable = SelectedCakeData.requiredIngredients
-            .All(ingredient => FoodInventoryUI.Instance.HasItems(ingredient));
+        // Set UI visibility in one place
+        bakeButtonEnabled.gameObject.SetActive(canBake);
+        bakeButtonDisabled.gameObject.SetActive(!canBake);
     }
 
     // ─────────────────────────────────────────────────────

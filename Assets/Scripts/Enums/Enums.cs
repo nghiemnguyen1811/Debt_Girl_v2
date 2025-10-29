@@ -199,11 +199,16 @@ public enum DailyQuestType
 public enum DailyActivity
 {
     None,
-    Sleep,       
+    Sleep,
     CleanHouse,
     Exercise,
     Shower,
     BrushTeeth,
     Work,
     Talking
+}
+
+public enum OutfitType
+{
+    Hat, Top, Shoes
 }

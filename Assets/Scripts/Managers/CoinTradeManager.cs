@@ -125,11 +125,9 @@ public class CoinTradeManager : SingletonMonobehaviour<CoinTradeManager>
             coinValue = baseValue + (level - 1) * growthFactor;
             pendingCoinValue = coinValue;
         }
-        else
-        {
-            // Store next level value until player sells all coins
-            nextLevelCoinValue = baseValue + (level - 1) * growthFactor;
-        }
+
+        // Store next level value until player sells all coins
+        else nextLevelCoinValue = baseValue + (level - 1) * growthFactor;
 
         UpdateUI();
     }
@@ -376,7 +374,6 @@ public class CoinTradeManager : SingletonMonobehaviour<CoinTradeManager>
 
         UpdateUI();
     }
-
 }
 
 // ─────────────────────────────────────────────────────

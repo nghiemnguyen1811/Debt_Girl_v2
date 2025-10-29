@@ -367,7 +367,7 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
 [System.Serializable]
 public class Tab
 {
-    public string tabName;              // "Food" / "Decoration" / "Fashion"
+    public string tabName;              // "Food" / "Decoration"
     public Button button;               // Button reference
     public TMP_Text labelText;          // Text label of the tab
     public GameObject outline;          // Outline image of the tab

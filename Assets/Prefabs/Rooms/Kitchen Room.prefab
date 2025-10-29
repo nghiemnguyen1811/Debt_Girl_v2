@@ -3469,7 +3469,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomType: 2
   playerSpawnPoint: {fileID: 905853622546121534}
-  cameraSpawn: {x: -10.2, y: 3.4, z: 8.74}
+  cameraSpawn: {x: -2.9, y: 3.15, z: 2.3}
   roomBounds: {fileID: 2323453599775987216}
 --- !u!1 &2497226467308168613
 GameObject:
@@ -5207,6 +5207,7 @@ MonoBehaviour:
   interactPoint: {fileID: 3481345817976249751}
   allowedCharacter: 0
   interactionMode: 1
+  dailyActivity: 0
   data: {fileID: 11400000, guid: 07cbbf6f196873e4e8c6c29e3824efbe, type: 2}
   moodIconOffset: {x: -0.165, y: 0.72, z: -0.116}
   interactParticle: {fileID: 1044936506661821911}
@@ -12453,6 +12454,7 @@ MonoBehaviour:
   interactPoint: {fileID: 0}
   allowedCharacter: 0
   interactionMode: 2
+  dailyActivity: 0
   data: {fileID: 11400000, guid: 2479eb6512628284a86420877ff371cb, type: 2}
   moodIconOffset: {x: 0, y: 0, z: 0}
   interactParticle: {fileID: 0}

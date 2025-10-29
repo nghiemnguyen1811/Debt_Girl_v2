@@ -25,7 +25,10 @@ public class MoneyManager : SingletonMonobehaviour<MoneyManager>
     {
         // Debug key for adding money quickly
         if (Input.GetKeyDown(KeyCode.M))
+        {
             ChangeMoneys(100000);
+            ChangeDiamonds(10);
+        }
     }
 
 
@@ -81,6 +84,9 @@ public class MoneyManager : SingletonMonobehaviour<MoneyManager>
     {
         totalDiamonds += amount;
         UpdateDiamondUI();
+
+        OutfitManager.Instance.RefreshUnlockButtons();
+
         AutoSave();
     }
 
