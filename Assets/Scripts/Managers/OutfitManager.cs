@@ -3,11 +3,14 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Manages all outfit logic: skin ownership, equipping, UI display, and saving.
+/// </summary>
 public class OutfitManager : SingletonMonobehaviour<OutfitManager>
 {
-    // ─────────────────────────────────────────────────────
-    // 🧩 Inspector Fields
-    // ─────────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════
+    // 🔧 Inspector Fields
+    // ══════════════════════════════════════════════════════
     [Header("Skin Slot References")]
     [SerializeField] private Transform hatParent;
     [SerializeField] private Transform topParent;
@@ -23,15 +26,20 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
     [SerializeField] private List<CharacterInfoSO> characterTabList;
 
     [Header("Outfit Tabs")]
-    [SerializeField] private List<Tab> outfitTabs; // 3 tabs: Hat / Top / Shoes
+    [SerializeField] private List<Tab> outfitTabs; // Hat / Top / Shoes tabs
 
     [Header("Equip Button")]
     [SerializeField] private Button equipButtonEnabled;
     [SerializeField] private Button equipButtonDisabled;
 
-    // ─────────────────────────────────────────────────────
+    [Header("Equipped Preview Images")]
+    [SerializeField] private Image equippedHatImage;
+    [SerializeField] private Image equippedTopImage;
+    [SerializeField] private Image equippedShoesImage;
+
+    // ══════════════════════════════════════════════════════
     // 🧠 Runtime Data
-    // ─────────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════
     private readonly List<CharacterTabButton> spawnedCharacterTabs = new();
     private readonly List<SkinSlot> spawnedHatSlots = new();
     private readonly List<SkinSlot> spawnedTopSlots = new();
@@ -43,17 +51,34 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
     private CharacterType currentCharacter;
     private SkinSlot currentSelectedSlot;
 
-    // ─────────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════
     // 💾 Save Data Cache
-    // ─────────────────────────────────────────────────────
-    private List<string> ownedSkins = new();
+    // ══════════════════════════════════════════════════════
+    private List<string> unlockedSkins = new();
     private List<EquippedOutfitEntry> equippedOutfits = new();
 
-    // ─────────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════
     // 🏁 Unity Lifecycle
-    // ─────────────────────────────────────────────────────
-    private void OnEnable()
+    // ══════════════════════════════════════════════════════
+
+    private void Start()
     {
+        InitializeCharacterTabs();
+        InitializeOutfitUI();
+        SetupTabs();
+        InitializeEvents();
+        InitializeCharacterState();
+
+        UpdateEquipButtonState(false);
+    }
+
+    /// <summary>
+    /// Registers all necessary event listeners.
+    /// </summary>
+    private void InitializeEvents()
+    {
+        CharacterTabButton.OnTabSelected += HandleCharacterTabSelected;
+
         if (PlayerControl.Instance != null)
             PlayerControl.Instance.OnCharacterProfileChanged += HandleCharacterChanged;
 
@@ -61,8 +86,13 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
             equipButtonEnabled.onClick.AddListener(OnEquipButtonClicked);
     }
 
-    private void OnDisable()
+    /// <summary>
+    /// Clean up events to prevent leaks when the object is destroyed.
+    /// </summary>
+    private void OnDestroy()
     {
+        CharacterTabButton.OnTabSelected -= HandleCharacterTabSelected;
+
         if (PlayerControl.Instance != null)
             PlayerControl.Instance.OnCharacterProfileChanged -= HandleCharacterChanged;
 
@@ -70,32 +100,25 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
             equipButtonEnabled.onClick.RemoveListener(OnEquipButtonClicked);
     }
 
-    private void Start()
+    /// <summary>
+    /// Initializes the active tab and sets the current character.
+    /// </summary>
+    private void InitializeCharacterState()
     {
-        InitializeCharacterTabs();
-        InitializeOutfitUI();
-        SetupTabs();
-
-        CharacterTabButton.OnTabSelected += HandleCharacterTabSelected;
-
         if (outfitTabs.Count > 0)
             ActivateTab(outfitTabs[1]);
 
         if (PlayerControl.Instance != null && PlayerControl.Instance.CharacterProfile != null)
             currentCharacter = PlayerControl.Instance.CharacterProfile.characterType;
-
-        RefreshEquippedVisuals();
-        UpdateEquipButtonState(false);
     }
 
-    private void OnDestroy()
-    {
-        CharacterTabButton.OnTabSelected -= HandleCharacterTabSelected;
-    }
+    // ══════════════════════════════════════════════════════
+    // 👤 Character Tabs
+    // ══════════════════════════════════════════════════════
 
-    // ─────────────────────────────────────────────────────
-    // 👤 Character Tabs (Switching Characters)
-    // ─────────────────────────────────────────────────────
+    /// <summary>
+    /// Creates all character tab buttons in the UI.
+    /// </summary>
     private void InitializeCharacterTabs()
     {
         foreach (var tabData in characterTabList)
@@ -107,8 +130,12 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
         }
     }
 
+    /// <summary>
+    /// Handles when a character tab is clicked.
+    /// </summary>
     private void HandleCharacterTabSelected(CharacterType selectedType)
     {
+        // If same tab clicked again → deselect and show all outfits
         if (currentSelectedTab != null && currentSelectedTab.CharacterType == selectedType)
         {
             currentSelectedTab.SetSelected(false);
@@ -117,31 +144,30 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
             return;
         }
 
-        if (currentSelectedTab != null)
-            currentSelectedTab.SetSelected(false);
+        // Deselect previous tab if exists
+        currentSelectedTab?.SetSelected(false);
 
+        // Find and select new tab
         currentSelectedTab = spawnedCharacterTabs.Find(t => t.CharacterType == selectedType);
+        if (currentSelectedTab == null)
+            return;
 
-        if (currentSelectedTab != null)
-        {
-            currentSelectedTab.SetSelected(true);
-            SetCurrentCharacter(selectedType);
-        }
+        currentSelectedTab.SetSelected(true);
+        SetCurrentCharacter(selectedType);
     }
 
+
+    /// <summary>
+    /// Called when the player's active character changes.
+    /// </summary>
     private void HandleCharacterChanged(CharacterInfoSO newProfile)
     {
         if (newProfile == null)
             return;
 
-        // Update current character
         currentCharacter = newProfile.characterType;
-
-        // Refresh UI for new character
-        FilterByCharacter(currentCharacter);
         RefreshEquippedVisuals();
 
-        // Check if current selected slot matches new character
         bool canEquip = false;
 
         if (currentSelectedSlot != null)
@@ -154,25 +180,31 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
             else canEquip = currentSelectedSlot.IsUnlocked;
         }
 
-        // Update Equip button state
         UpdateEquipButtonState(canEquip);
-
         Debug.Log($"👤 Character switched to: {currentCharacter}. Refreshed equipped outfits.");
     }
 
+    /// <summary>
+    /// Shows all outfit slots (for all characters).
+    /// </summary>
     private void ShowAllOutfits()
     {
         foreach (var slot in allSkinSlots)
             slot.gameObject.SetActive(true);
     }
 
+    /// <summary>
+    /// Sets the current character and refreshes outfit visibility.
+    /// </summary>
     private void SetCurrentCharacter(CharacterType character)
     {
         currentCharacter = character;
         FilterByCharacter(character);
-        RefreshEquippedVisuals();
     }
 
+    /// <summary>
+    /// Hides outfits that don't belong to the active character.
+    /// </summary>
     private void FilterByCharacter(CharacterType type)
     {
         void FilterList(List<SkinSlot> list)
@@ -186,9 +218,13 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
         FilterList(spawnedShoesSlots);
     }
 
-    // ─────────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════
     // 🎨 Outfit UI Setup
-    // ─────────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Creates outfit slot UI for each outfit type.
+    /// </summary>
     private void InitializeOutfitUI()
     {
         var hatList = allSkins.Where(s => s.skinType == OutfitType.Hat).ToList();
@@ -200,6 +236,9 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
         SpawnSlots(shoesList, shoesParent, spawnedShoesSlots);
     }
 
+    /// <summary>
+    /// Spawns individual skin slots inside a parent container.
+    /// </summary>
     private void SpawnSlots(List<SkinDataSO> dataList, Transform parent, List<SkinSlot> spawnedList)
     {
         foreach (Transform child in parent)
@@ -210,16 +249,21 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
         foreach (var data in dataList)
         {
             var slot = Instantiate(skinSlotPrefab, parent);
-            bool unlocked = ownedSkins.Contains(data.name);
+            bool unlocked = unlockedSkins.Contains(data.name) ||
+                data.isDefaultSkin;
             slot.Setup(data, unlocked);
             spawnedList.Add(slot);
             allSkinSlots.Add(slot);
         }
     }
 
-    // ─────────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════
     // 🧥 Outfit Tabs
-    // ─────────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Sets up the Hat/Top/Shoes tabs in the UI.
+    /// </summary>
     private void SetupTabs()
     {
         foreach (var tab in outfitTabs)
@@ -231,6 +275,9 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
         }
     }
 
+    /// <summary>
+    /// Switches between tabs.
+    /// </summary>
     private void ActivateTab(Tab tab)
     {
         if (currentActiveTab != null)
@@ -246,40 +293,52 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
             tab.group.SetActive(true);
     }
 
+    /// <summary>
+    /// Updates tab highlight visuals.
+    /// </summary>
     private void SetTabVisual(Tab tab, bool isActive)
     {
         if (tab.outline != null)
             tab.outline.SetActive(isActive);
     }
 
-    // ─────────────────────────────────────────────────────
-    // 🧩 Outfit Selection & Equip Button
-    // ─────────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════
+    // 🎯 Skin Selection & Equip Button
+    // ══════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Called when a skin is selected in the UI.
+    /// </summary>
     public void OnSkinSelected(SkinSlot selectedSkin)
     {
         foreach (var slot in allSkinSlots)
-        {
             if (!slot.IsEquipped)
                 slot.SetSelected(false);
-        }
 
         currentSelectedSlot = selectedSkin;
 
-        bool canEquip = false;
-        if (currentSelectedSlot != null && currentSelectedSlot.IsUnlocked)
-            canEquip = selectedSkin.SkinData.owner == currentCharacter;
+        bool canEquip = currentSelectedSlot != null &&
+                        currentSelectedSlot.IsUnlocked &&
+                        selectedSkin.SkinData.owner == currentCharacter;
 
         UpdateEquipButtonState(canEquip);
     }
 
+    /// <summary>
+    /// Enables or disables the equip button.
+    /// </summary>
     private void UpdateEquipButtonState(bool active)
     {
-        if (equipButtonEnabled == null || equipButtonDisabled == null) return;
+        if (equipButtonEnabled == null || equipButtonDisabled == null)
+            return;
 
         equipButtonEnabled.gameObject.SetActive(active);
         equipButtonDisabled.gameObject.SetActive(!active);
     }
 
+    /// <summary>
+    /// Called when the equip button is clicked.
+    /// </summary>
     private void OnEquipButtonClicked()
     {
         if (currentSelectedSlot == null || !currentSelectedSlot.IsUnlocked)
@@ -291,9 +350,13 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
         EquipSkin(currentSelectedSlot.SkinData);
     }
 
-    // ─────────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════
     // 👕 Equip / Unequip Logic
-    // ─────────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Equips a new skin and saves it to the character's data.
+    /// </summary>
     public void EquipSkin(SkinDataSO newSkin)
     {
         if (currentCharacter == CharacterType.All)
@@ -318,9 +381,13 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
         });
 
         AutoSave();
+        UpdateEquippedPreviewImages();
         Debug.Log($"[{currentCharacter}] equipped {newSkin.skinType}: {newSkin.name}");
     }
 
+    /// <summary>
+    /// Returns the correct slot list by outfit type.
+    /// </summary>
     private List<SkinSlot> GetSlotList(OutfitType type)
     {
         return type switch
@@ -332,9 +399,53 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
         };
     }
 
-    // ─────────────────────────────────────────────────────
-    // 💎 Unlock Refresh
-    // ─────────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════
+    // 🎭 Equipped Previews
+    // ══════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Updates the preview images for equipped hat, top, and shoes.
+    /// </summary>
+    private void UpdateEquippedPreviewImages()
+    {
+        if (currentCharacter == CharacterType.All)
+            return;
+
+        if (equippedOutfits == null || equippedOutfits.Count == 0)
+            return;
+
+        var equippedHat = equippedOutfits.FirstOrDefault(e => e.owner == currentCharacter && e.outfitType == OutfitType.Hat);
+        var equippedTop = equippedOutfits.FirstOrDefault(e => e.owner == currentCharacter && e.outfitType == OutfitType.Top);
+        var equippedShoes = equippedOutfits.FirstOrDefault(e => e.owner == currentCharacter && e.outfitType == OutfitType.Shoes);
+
+        Sprite hatIcon = GetSkinIconByID(equippedHat.skinID);
+        Sprite topIcon = GetSkinIconByID(equippedTop.skinID);
+        Sprite shoesIcon = GetSkinIconByID(equippedShoes.skinID);
+
+        if (equippedHatImage != null) equippedHatImage.sprite = hatIcon;
+        if (equippedTopImage != null) equippedTopImage.sprite = topIcon;
+        if (equippedShoesImage != null) equippedShoesImage.sprite = shoesIcon;
+    }
+
+    /// <summary>
+    /// Finds and returns the sprite icon for a skin by its name.
+    /// </summary>
+    private Sprite GetSkinIconByID(string skinID)
+    {
+        if (string.IsNullOrEmpty(skinID))
+            return null;
+
+        var skin = allSkins.FirstOrDefault(s => s.name == skinID);
+        return skin != null ? skin.icon : null;
+    }
+
+    // ══════════════════════════════════════════════════════
+    // 💎 Unlock Management
+    // ══════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Refreshes the state of all unlock buttons.
+    /// </summary>
     public void RefreshUnlockButtons()
     {
         UpdateList(spawnedHatSlots);
@@ -348,9 +459,13 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
             slot.RefreshUnlockState();
     }
 
-    // ─────────────────────────────────────────────────────
-    // 🧩 Refresh Equipped Visuals
-    // ─────────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════
+    // 🔄 Visual Updates
+    // ══════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Updates the equipped state visuals for all outfit slots.
+    /// </summary>
     private void RefreshEquippedVisuals()
     {
         if (currentCharacter == CharacterType.All)
@@ -365,6 +480,8 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
                 case OutfitType.Shoes: ApplyEquippedVisual(spawnedShoesSlots, entry.skinID); break;
             }
         }
+
+        UpdateEquippedPreviewImages();
     }
 
     private void ApplyEquippedVisual(List<SkinSlot> slots, string skinID)
@@ -373,12 +490,16 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
             slot.SetEquipped(slot.SkinData.name == skinID);
     }
 
-    // ─────────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════
     // 💾 Save / Load System
-    // ─────────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Imports saved data for owned and equipped skins.
+    /// </summary>
     public void ImportSaveData(SaveData data)
     {
-        ownedSkins = data.ownedSkins ?? new List<string>();
+        unlockedSkins = data.unlockedSkins ?? new List<string>();
         equippedOutfits = data.equippedOutfits ?? new List<EquippedOutfitEntry>();
 
         if (equippedOutfits.Count == 0)
@@ -386,22 +507,27 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
 
         foreach (var slot in allSkinSlots)
         {
-            bool isUnlocked = ownedSkins.Contains(slot.SkinData.name);
-            slot.UpdateLockState(!isUnlocked);
+            bool isUnlocked = unlockedSkins.Contains(slot.SkinData.name) ||
+                slot.SkinData.isDefaultSkin;
+
+            slot.SetUnlock(isUnlocked);
         }
 
         RefreshEquippedVisuals();
         Debug.Log("[OutfitManager] Save data imported. Skins and equips refreshed.");
     }
 
+    /// <summary>
+    /// Saves current owned and equipped skins to SaveManager.
+    /// </summary>
     private void AutoSave()
     {
-        SaveManager.Data.ownedSkins = new List<string>(ownedSkins);
+        SaveManager.Data.unlockedSkins = new List<string>(unlockedSkins);
         SaveManager.Data.equippedOutfits = new List<EquippedOutfitEntry>(equippedOutfits);
     }
 
     /// <summary>
-    /// Automatically equips default/free skins when no save data exists.
+    /// Automatically equips all default/free skins on first load.
     /// </summary>
     private void AutoEquipDefaultFreeSkins()
     {
@@ -411,8 +537,8 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
 
         foreach (var skin in defaultOrFreeSkins)
         {
-            if (!ownedSkins.Contains(skin.name))
-                ownedSkins.Add(skin.name);
+            if (!unlockedSkins.Contains(skin.name))
+                unlockedSkins.Add(skin.name);
 
             bool alreadyEquipped = equippedOutfits.Any(e =>
                 e.owner == skin.owner && e.outfitType == skin.skinType);
@@ -433,19 +559,26 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
         AutoSave();
     }
 
-    // ─────────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════
     // 🔓 Unlock System
-    // ─────────────────────────────────────────────────────
+    // ══════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Unlocks a new skin and saves it.
+    /// </summary>
     public void UnlockSkin(SkinDataSO skin)
     {
-        if (!ownedSkins.Contains(skin.name))
-            ownedSkins.Add(skin.name);
+        if (!unlockedSkins.Contains(skin.name))
+            unlockedSkins.Add(skin.name);
 
         AutoSave();
     }
 
+    /// <summary>
+    /// Checks if a skin has already been unlocked.
+    /// </summary>
     public bool IsSkinUnlocked(SkinDataSO skin)
     {
-        return ownedSkins.Contains(skin.name);
+        return unlockedSkins.Contains(skin.name);
     }
 }

@@ -1103,7 +1103,7 @@ GameObject:
   - component: {fileID: 1303610573500520430}
   - component: {fileID: 4992301118508412793}
   m_Layer: 5
-  m_Name: SelectedTop
+  m_Name: EquippedTop
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2381,7 +2381,7 @@ GameObject:
   - component: {fileID: 809093777998417778}
   - component: {fileID: 1038177124179879600}
   m_Layer: 5
-  m_Name: SelectedShoes
+  m_Name: EquippedShoes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8859,6 +8859,9 @@ MonoBehaviour:
     group: {fileID: 8677970789965353520}
   equipButtonEnabled: {fileID: 2434839053749514768}
   equipButtonDisabled: {fileID: 2422030053343917035}
+  equippedHatImage: {fileID: 7193886306845367163}
+  equippedTopImage: {fileID: 2935514263058830741}
+  equippedShoesImage: {fileID: 4250087089163157768}
 --- !u!1 &1210216039676268868
 GameObject:
   m_ObjectHideFlags: 0
@@ -44865,7 +44868,7 @@ GameObject:
   - component: {fileID: 4961914250157874241}
   - component: {fileID: 7590168791879773508}
   m_Layer: 5
-  m_Name: SelectedHat
+  m_Name: EquippedHat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46343,7 +46346,7 @@ GameObject:
   - component: {fileID: 5289197273543447647}
   - component: {fileID: 4313756472937828021}
   m_Layer: 5
-  m_Name: SelectedOutfitGroup
+  m_Name: EquippedOutfitGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

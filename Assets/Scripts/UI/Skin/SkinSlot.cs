@@ -6,7 +6,7 @@ using Sirenix.OdinInspector;
 public class SkinSlot : MonoBehaviour
 {
     // ─────────────────────────────────────────────────────
-    // 🔗 UI References
+    // 🔗 UI REFERENCES (Inspector)
     // ─────────────────────────────────────────────────────
     [Title("UI References", bold: true)]
     [SerializeField] private Image iconImage;
@@ -17,7 +17,7 @@ public class SkinSlot : MonoBehaviour
     [SerializeField] private GameObject lockedOverlay;
 
     // ─────────────────────────────────────────────────────
-    // 🎨 Highlight Sprites
+    // 🎨 HIGHLIGHT SPRITES (Inspector)
     // ─────────────────────────────────────────────────────
     [Title("Highlight Sprites", bold: true)]
     [SerializeField] private Sprite normalSprite;
@@ -25,15 +25,18 @@ public class SkinSlot : MonoBehaviour
     [SerializeField] private Sprite equippedSprite;
 
     // ─────────────────────────────────────────────────────
-    // 📦 Data
+    // 📦 RUNTIME DATA
     // ─────────────────────────────────────────────────────
     private SkinDataSO skinData;
-    private bool isUnlocked = false;
-    private bool isEquipped = false;
+    private bool isUnlocked;
+    private bool isEquipped;
 
     // ─────────────────────────────────────────────────────
-    // 🚀 Initialization
+    // 🚀 INITIALIZATION
     // ─────────────────────────────────────────────────────
+    /// <summary>
+    /// Initialize this slot with skin data and initial unlocked/equipped states.
+    /// </summary>
     public void Setup(SkinDataSO data, bool unlocked = false, bool equipped = false)
     {
         skinData = data;
@@ -56,13 +59,16 @@ public class SkinSlot : MonoBehaviour
         selectButton.onClick.AddListener(OnSelected);
         unlockButtonEnabled.onClick.AddListener(OnUnlockClicked);
 
-        // 🔹 Initial unlock check
+        // Initial unlock check based on current diamond amount
         RefreshUnlockState();
     }
 
     // ─────────────────────────────────────────────────────
-    // 💎 Unlock State Handling
+    // 💎 UNLOCK STATE HANDLING
     // ─────────────────────────────────────────────────────
+    /// <summary>
+    /// Refresh the state of unlock buttons based on player's diamonds.
+    /// </summary>
     public void RefreshUnlockState()
     {
         if (unlockButtonEnabled == null || isUnlocked || skinData == null)
@@ -75,9 +81,22 @@ public class SkinSlot : MonoBehaviour
         unlockButtonDisabled.gameObject.SetActive(!canAfford);
     }
 
+    /// <summary>
+    /// Set unlocked flag from external systems (e.g., after loading save).
+    /// </summary>
+    public void SetUnlock(bool unlocked)
+    {
+        isUnlocked = unlocked;
+        UpdateLockState(!isUnlocked);
+        UpdateVisualState();
+    }
+
     // ─────────────────────────────────────────────────────
-    // 🧩 Interaction
+    // 🧩 INTERACTION
     // ─────────────────────────────────────────────────────
+    /// <summary>
+    /// Called when the slot is selected; notifies OutfitManager if valid.
+    /// </summary>
     private void OnSelected()
     {
         if (!isUnlocked || isEquipped) return;
@@ -86,6 +105,9 @@ public class SkinSlot : MonoBehaviour
         SetSelected(true);
     }
 
+    /// <summary>
+    /// Try to unlock this skin by spending diamonds.
+    /// </summary>
     private void OnUnlockClicked()
     {
         if (isUnlocked || skinData == null)
@@ -109,8 +131,11 @@ public class SkinSlot : MonoBehaviour
     }
 
     // ─────────────────────────────────────────────────────
-    // 🎨 Visual State
+    // 🎨 VISUAL STATE
     // ─────────────────────────────────────────────────────
+    /// <summary>
+    /// Visualize selected state (ignored if currently equipped).
+    /// </summary>
     public void SetSelected(bool isSelected)
     {
         if (selectButton == null || selectButton.image == null)
@@ -120,24 +145,33 @@ public class SkinSlot : MonoBehaviour
         else selectButton.image.sprite = isSelected ? selectedSprite : normalSprite;
     }
 
+    /// <summary>
+    /// Apply equipped flag and refresh visuals.
+    /// </summary>
     public void SetEquipped(bool equipped)
     {
         isEquipped = equipped;
         UpdateVisualState();
     }
 
+    /// <summary>
+    /// Update button sprite and interactable depending on equipped/unlocked.
+    /// </summary>
     private void UpdateVisualState()
     {
         if (selectButton == null || selectButton.image == null)
             return;
 
-        // 🔹 Update button sprite
+        // Update button sprite
         selectButton.image.sprite = isEquipped ? equippedSprite : normalSprite;
 
-        // 🔹 Disable interaction if equipped or locked
+        // Disable interaction if equipped or locked
         selectButton.interactable = !isEquipped && isUnlocked;
     }
 
+    /// <summary>
+    /// Toggle locked overlay and clickability.
+    /// </summary>
     public void UpdateLockState(bool isLocked)
     {
         if (lockedOverlay != null)
@@ -148,7 +182,7 @@ public class SkinSlot : MonoBehaviour
     }
 
     // ─────────────────────────────────────────────────────
-    // 🧾 Accessors
+    // 🧾 ACCESSORS
     // ─────────────────────────────────────────────────────
     public SkinDataSO SkinData => skinData;
     public bool IsUnlocked => isUnlocked;

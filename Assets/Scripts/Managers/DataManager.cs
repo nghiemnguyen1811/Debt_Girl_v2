@@ -62,7 +62,6 @@ public class DataManager : SingletonMonobehaviour<DataManager>
 
         // Load core data
         GameManager.Instance?.ImportSaveData(cachedSaveData);
-        MoneyManager.Instance?.ImportSaveData(cachedSaveData);
         StatUpgradeManager.Instance?.ImportSaveData(cachedSaveData);
         PlayerControl.Instance.stats?.ImportSaveData(cachedSaveData);
         BakingManager.Instance?.ImportSaveData(cachedSaveData);
@@ -71,6 +70,7 @@ public class DataManager : SingletonMonobehaviour<DataManager>
         MoodManager.Instance?.ImportSaveData(cachedSaveData);
         PostManager.Instance?.ImportSaveData(cachedSaveData);
         //OutfitManager.Instance?.ImportSaveData(cachedSaveData);
+        MoneyManager.Instance?.ImportSaveData(cachedSaveData);
         DailyQuestManager.Instance?.ImportSaveData(cachedSaveData);
         FoodInventoryUI.Instance?.ImportSaveData(cachedSaveData.foodInventory, itemDatabase);
         CakeInventoryUI.Instance?.ImportSaveData(cachedSaveData.cakeInventory, itemDatabase);

@@ -81,7 +81,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
 
     public void UpdateDiamond(double diamondAmount, bool animate = true)
     {
-        for (int i = 0; i < debtText.Length; i++)
+        for (int i = 0; i < diamondText.Length; i++)
         {
             if (diamondText[i] != null)
                 UpdateText(diamondText[i], diamondAmount, animate, ref diamondTweens[i]);

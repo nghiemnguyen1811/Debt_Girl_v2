@@ -88,6 +88,6 @@ public class SaveData
     // ─────────────────────────────────────────────────────
     // 👗 Outfit / Skin System
     // ─────────────────────────────────────────────────────
-    public List<string> ownedSkins = new();
+    public List<string> unlockedSkins = new();
     public List<EquippedOutfitEntry> equippedOutfits = new();
 }
