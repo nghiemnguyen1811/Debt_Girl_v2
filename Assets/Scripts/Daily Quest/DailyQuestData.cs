@@ -19,6 +19,7 @@ public class DailyQuestData
     public int targetCount;
     public int currentCount;
     public bool isCompleted;
+    public bool hasClaimedReward;
 
     // ==================================================
     // ▶ INTERACT QUEST DATA

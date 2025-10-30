@@ -19,6 +19,11 @@ public class QuestUIGroup
     public TextMeshProUGUI progressText;
     public TextMeshProUGUI rewardText;
     public GameObject completedMark;
+
+    [Header("Reward Buttons")]
+    public Button rewardButtonEnable;
+    public Button rewardButtonDisable;
+    public Button claimedButton;
 }
 
 // ==================================================
@@ -260,7 +265,6 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
             int before = quest.currentCount;
             quest.AddProgress();
 
-            if (quest.isCompleted) MoneyManager.Instance.ChangeDiamonds(quest.questTemplate.rewardDiamond);
             if (quest.currentCount != before) changed = true;
         }
 
@@ -298,6 +302,7 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
         }
 
         int questCount = activeQuests.Count;
+
         for (int i = 0; i < questUIGroups.Length; i++)
         {
             var ui = questUIGroups[i];
@@ -311,12 +316,49 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
             ui.rewardText.text = $"x {quest.questTemplate.rewardDiamond}";
             ui.progressBar.value = (float)quest.currentCount / quest.targetCount;
             ui.completedMark.SetActive(quest.isCompleted);
+
+            // ✅ Update reward button visibility
+            bool canClaim = quest.isCompleted && !quest.hasClaimedReward;
+            bool alreadyClaimed = quest.isCompleted && quest.hasClaimedReward;
+
+            ui.rewardButtonEnable.gameObject.SetActive(canClaim);
+            ui.rewardButtonDisable.gameObject.SetActive(!quest.isCompleted);
+            ui.claimedButton.gameObject.SetActive(alreadyClaimed);
+
+            // ✅ Set listener for claim button
+            ui.rewardButtonEnable.onClick.RemoveAllListeners();
+            int index = i;
+            ui.rewardButtonEnable.onClick.AddListener(() => ClaimQuestReward(index));
         }
 
         for (int i = 0; i < separatorLines.Length; i++)
             separatorLines[i]?.SetActive(i < questCount - 1);
 
         UpdateCompletionRewardUI();
+    }
+
+    /// <summary>
+    /// Called when player clicks reward button to claim quest reward.
+    /// </summary>
+    public void ClaimQuestReward(int questIndex)
+    {
+        if (questIndex < 0 || questIndex >= activeQuests.Count) return;
+        var quest = activeQuests[questIndex];
+
+        if (!quest.isCompleted || quest.hasClaimedReward)
+            return;
+
+        quest.hasClaimedReward = true;
+        MoneyManager.Instance.ChangeDiamonds(quest.questTemplate.rewardDiamond);
+        AudioManager.Instance.PlayInteractSound(14);
+
+        // ✅ Update UI state
+        var ui = questUIGroups[questIndex];
+        ui.rewardButtonEnable.gameObject.SetActive(false);
+        ui.rewardButtonDisable.gameObject.SetActive(false);
+        ui.claimedButton.gameObject.SetActive(true);
+
+        AutoSave();
     }
 
     /// <summary>Updates the bonus claim buttons based on completion state.</summary>
@@ -358,6 +400,7 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
             GenerateNewDailyQuests();
             AutoSave(true);
         }
+
         else Debug.Log($"[DailyQuestManager] Same day ({today}) → keeping previous quests.");
 
         foreach (var quest in activeQuests)

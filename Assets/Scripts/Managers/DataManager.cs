@@ -69,7 +69,7 @@ public class DataManager : SingletonMonobehaviour<DataManager>
         CoinTradeManager.Instance?.ImportSaveData(cachedSaveData);
         MoodManager.Instance?.ImportSaveData(cachedSaveData);
         PostManager.Instance?.ImportSaveData(cachedSaveData);
-        //OutfitManager.Instance?.ImportSaveData(cachedSaveData);
+        OutfitManager.Instance?.ImportSaveData(cachedSaveData);
         MoneyManager.Instance?.ImportSaveData(cachedSaveData);
         DailyQuestManager.Instance?.ImportSaveData(cachedSaveData);
         FoodInventoryUI.Instance?.ImportSaveData(cachedSaveData.foodInventory, itemDatabase);
