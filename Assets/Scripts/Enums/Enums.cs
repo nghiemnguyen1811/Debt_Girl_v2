@@ -210,5 +210,5 @@ public enum DailyActivity
 
 public enum OutfitType
 {
-    Hat, Top, Shoes
+    Shirt, Pant, Shoes
 }

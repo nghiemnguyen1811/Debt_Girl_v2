@@ -1176,6 +1176,7 @@ GameObject:
   - component: {fileID: 3136368542311687863}
   - component: {fileID: 1834487506637025809}
   - component: {fileID: 6756549062664710102}
+  - component: {fileID: 4857038825634036475}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1284,6 +1285,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   fadeSpeed: 6
+  earnMoneyMultiplier: 1.3
   interactableButton: {fileID: 0}
   durationSlider: {fileID: 0}
   energyWarningMessages:
@@ -1397,6 +1399,19 @@ MonoBehaviour:
   - {fileID: 6254938787493742503}
   - {fileID: 1992483317297484989}
   - {fileID: 2500167187682206687}
+--- !u!114 &4857038825634036475
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2030151053844013113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f23a78273e9d861429fbbe585f753ba9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visualSets: []
 --- !u!1 &2088305076898471208
 GameObject:
   m_ObjectHideFlags: 0
@@ -4292,7 +4307,7 @@ Camera:
   field of view: 60
   orthographic: 1
   orthographic size: 0.25
-  m_Depth: -1
+  m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 1024

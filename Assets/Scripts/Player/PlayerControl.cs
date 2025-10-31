@@ -11,6 +11,7 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerStatsUI))]
 [RequireComponent(typeof(MoodVisualizer))]
 [RequireComponent(typeof(HeldPropSwitcher))]
+[RequireComponent(typeof(PlayerOutfitVisualizer))]
 public class PlayerControl : SingletonMonobehaviour<PlayerControl>
 {
     #region === Subsystem References ===
@@ -23,6 +24,7 @@ public class PlayerControl : SingletonMonobehaviour<PlayerControl>
     public PlayerStatsUI statsUI { get; private set; }
     public MoodVisualizer visualizer { get; private set; }
     public HeldPropSwitcher propSwitcher { get; private set; }
+    public PlayerOutfitVisualizer outfitVisualizer { get; private set; }
 
     #endregion
 
@@ -58,6 +60,7 @@ public class PlayerControl : SingletonMonobehaviour<PlayerControl>
         statsUI = GetComponent<PlayerStatsUI>();
         visualizer = GetComponent<MoodVisualizer>();
         propSwitcher = GetComponent<HeldPropSwitcher>();
+        outfitVisualizer = GetComponent<PlayerOutfitVisualizer>();
 
         // Link private 'playerStats' field in PlayerStatsUI via reflection
         if (statsUI != null && stats != null)

@@ -10,6 +10,7 @@ public class SkinSlot : MonoBehaviour
     // ─────────────────────────────────────────────────────
     [Title("UI References", bold: true)]
     [SerializeField] private Image iconImage;
+    [SerializeField] private Image characterIcon;
     [SerializeField] private TMP_Text[] priceTexts;
     [SerializeField] private Button selectButton;
     [SerializeField] private Button unlockButtonEnabled;
@@ -23,6 +24,12 @@ public class SkinSlot : MonoBehaviour
     [SerializeField] private Sprite normalSprite;
     [SerializeField] private Sprite selectedSprite;
     [SerializeField] private Sprite equippedSprite;
+
+    //─────────────────────────────────────────────
+    // 🎨 CHARACTER ICONS ===
+    //─────────────────────────────────────────────
+    [Title("Character Icons", bold: true)]
+    [SerializeField] private Sprite[] characterIcons;
 
     // ─────────────────────────────────────────────────────
     // 📦 RUNTIME DATA
@@ -43,8 +50,8 @@ public class SkinSlot : MonoBehaviour
         isUnlocked = unlocked;
         isEquipped = equipped;
 
-        if (iconImage != null)
-            iconImage.sprite = data.icon;
+        if (iconImage) iconImage.sprite = data.icon;
+        if (characterIcon) characterIcon.sprite = GetCharacterIcon(data.owner);
 
         foreach (var text in priceTexts)
             if (text != null)
@@ -124,6 +131,7 @@ public class SkinSlot : MonoBehaviour
             UpdateLockState(false);
             UpdateVisualState();
 
+            AudioManager.Instance.PlayInteractSound(15);
             Debug.Log($"✅ Unlocked skin: {skinData.name} for {price}💎");
         }
 
@@ -181,10 +189,27 @@ public class SkinSlot : MonoBehaviour
             selectButton.interactable = !isLocked && !isEquipped;
     }
 
+    //─────────────────────────────────────────────
+    // 🧩 Helper
+    //─────────────────────────────────────────────
+    /// <summary>
+    /// Returns the matching icon for a given character type.
+    /// </summary>
+    private Sprite GetCharacterIcon(CharacterType type)
+    {
+        int index = (int)type;
+
+        if (characterIcons == null || index < 0 || index >= characterIcons.Length)
+            return null;
+        return characterIcons[index - 1];
+    }
+
     // ─────────────────────────────────────────────────────
     // 🧾 ACCESSORS
     // ─────────────────────────────────────────────────────
     public SkinDataSO SkinData => skinData;
     public bool IsUnlocked => isUnlocked;
     public bool IsEquipped => isEquipped;
+
+
 }

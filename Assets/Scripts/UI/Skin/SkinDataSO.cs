@@ -23,6 +23,14 @@ public class SkinDataSO : ScriptableObject
     [PreviewField(ObjectFieldAlignment.Left)]
     public Mesh outfitMesh;
 
+    // ─────────────────────────────────────────────────────
+    // 🎨 Visual Appearance
+    // ─────────────────────────────────────────────────────
+    [Title("Visual Materials", bold: true)]
+    [LabelText("Outfit Materials")]
+    [AssetsOnly, InlineEditor(InlineEditorModes.SmallPreview)]
+    public Material[] outfitMaterials;
+
     [LabelText("Character Owner")]
     public CharacterType owner;
 

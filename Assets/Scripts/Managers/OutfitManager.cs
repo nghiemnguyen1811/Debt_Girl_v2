@@ -12,8 +12,8 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
     // 🔧 Inspector Fields
     // ══════════════════════════════════════════════════════
     [Header("Skin Slot References")]
-    [SerializeField] private Transform hatParent;
-    [SerializeField] private Transform topParent;
+    [SerializeField] private Transform shirtParent;
+    [SerializeField] private Transform pantParent;
     [SerializeField] private Transform shoesParent;
     [SerializeField] private SkinSlot skinSlotPrefab;
 
@@ -33,16 +33,16 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
     [SerializeField] private Button equipButtonDisabled;
 
     [Header("Equipped Preview Images")]
-    [SerializeField] private Image equippedHatImage;
-    [SerializeField] private Image equippedTopImage;
+    [SerializeField] private Image equippedShirtImage;
+    [SerializeField] private Image equippedPantImage;
     [SerializeField] private Image equippedShoesImage;
 
     // ══════════════════════════════════════════════════════
     // 🧠 Runtime Data
     // ══════════════════════════════════════════════════════
     private readonly List<CharacterTabButton> spawnedCharacterTabs = new();
-    private readonly List<SkinSlot> spawnedHatSlots = new();
-    private readonly List<SkinSlot> spawnedTopSlots = new();
+    private readonly List<SkinSlot> spawnedShirtSlots = new();
+    private readonly List<SkinSlot> spawnedPantSlots = new();
     private readonly List<SkinSlot> spawnedShoesSlots = new();
     private readonly List<SkinSlot> allSkinSlots = new();
 
@@ -213,8 +213,8 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
                 slot.gameObject.SetActive(slot.SkinData.owner == type);
         }
 
-        FilterList(spawnedHatSlots);
-        FilterList(spawnedTopSlots);
+        FilterList(spawnedShirtSlots);
+        FilterList(spawnedPantSlots);
         FilterList(spawnedShoesSlots);
     }
 
@@ -227,12 +227,12 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
     /// </summary>
     private void InitializeOutfitUI()
     {
-        var hatList = allSkins.Where(s => s.skinType == OutfitType.Hat).ToList();
-        var topList = allSkins.Where(s => s.skinType == OutfitType.Top).ToList();
+        var shirtList = allSkins.Where(s => s.skinType == OutfitType.Shirt).ToList();
+        var pantList = allSkins.Where(s => s.skinType == OutfitType.Pant).ToList();
         var shoesList = allSkins.Where(s => s.skinType == OutfitType.Shoes).ToList();
 
-        SpawnSlots(hatList, hatParent, spawnedHatSlots);
-        SpawnSlots(topList, topParent, spawnedTopSlots);
+        SpawnSlots(shirtList, shirtParent, spawnedShirtSlots);
+        SpawnSlots(pantList, pantParent, spawnedPantSlots);
         SpawnSlots(shoesList, shoesParent, spawnedShoesSlots);
     }
 
@@ -382,6 +382,7 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
 
         AutoSave();
         UpdateEquippedPreviewImages();
+        ApplyCurrentOutfitsToPlayer();
         Debug.Log($"[{currentCharacter}] equipped {newSkin.skinType}: {newSkin.name}");
     }
 
@@ -392,8 +393,8 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
     {
         return type switch
         {
-            OutfitType.Hat => spawnedHatSlots,
-            OutfitType.Top => spawnedTopSlots,
+            OutfitType.Shirt => spawnedShirtSlots,
+            OutfitType.Pant => spawnedPantSlots,
             OutfitType.Shoes => spawnedShoesSlots,
             _ => null
         };
@@ -414,16 +415,16 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
         if (equippedOutfits == null || equippedOutfits.Count == 0)
             return;
 
-        var equippedHat = equippedOutfits.FirstOrDefault(e => e.owner == currentCharacter && e.outfitType == OutfitType.Hat);
-        var equippedTop = equippedOutfits.FirstOrDefault(e => e.owner == currentCharacter && e.outfitType == OutfitType.Top);
+        var equippedShirt = equippedOutfits.FirstOrDefault(e => e.owner == currentCharacter && e.outfitType == OutfitType.Shirt);
+        var equippedPant = equippedOutfits.FirstOrDefault(e => e.owner == currentCharacter && e.outfitType == OutfitType.Pant);
         var equippedShoes = equippedOutfits.FirstOrDefault(e => e.owner == currentCharacter && e.outfitType == OutfitType.Shoes);
 
-        Sprite hatIcon = GetSkinIconByID(equippedHat.skinID);
-        Sprite topIcon = GetSkinIconByID(equippedTop.skinID);
+        Sprite shirtIcon = GetSkinIconByID(equippedShirt.skinID);
+        Sprite pantIcon = GetSkinIconByID(equippedPant.skinID);
         Sprite shoesIcon = GetSkinIconByID(equippedShoes.skinID);
 
-        if (equippedHatImage != null) equippedHatImage.sprite = hatIcon;
-        if (equippedTopImage != null) equippedTopImage.sprite = topIcon;
+        if (equippedShirtImage != null) equippedShirtImage.sprite = shirtIcon;
+        if (equippedPantImage != null) equippedPantImage.sprite = pantIcon;
         if (equippedShoesImage != null) equippedShoesImage.sprite = shoesIcon;
     }
 
@@ -448,8 +449,8 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
     /// </summary>
     public void RefreshUnlockButtons()
     {
-        UpdateList(spawnedHatSlots);
-        UpdateList(spawnedTopSlots);
+        UpdateList(spawnedShirtSlots);
+        UpdateList(spawnedPantSlots);
         UpdateList(spawnedShoesSlots);
     }
 
@@ -475,13 +476,14 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
         {
             switch (entry.outfitType)
             {
-                case OutfitType.Hat: ApplyEquippedVisual(spawnedHatSlots, entry.skinID); break;
-                case OutfitType.Top: ApplyEquippedVisual(spawnedTopSlots, entry.skinID); break;
+                case OutfitType.Shirt: ApplyEquippedVisual(spawnedShirtSlots, entry.skinID); break;
+                case OutfitType.Pant: ApplyEquippedVisual(spawnedPantSlots, entry.skinID); break;
                 case OutfitType.Shoes: ApplyEquippedVisual(spawnedShoesSlots, entry.skinID); break;
             }
         }
 
         UpdateEquippedPreviewImages();
+        ApplyCurrentOutfitsToPlayer();
     }
 
     private void ApplyEquippedVisual(List<SkinSlot> slots, string skinID)
@@ -580,5 +582,27 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
     public bool IsSkinUnlocked(SkinDataSO skin)
     {
         return unlockedSkins.Contains(skin.name);
+    }
+
+    // ══════════════════════════════════════════════════════
+    // 🧩 Helper
+    // ══════════════════════════════════════════════════════
+    private void ApplyCurrentOutfitsToPlayer()
+    {
+        if (PlayerControl.Instance == null || PlayerControl.Instance.outfitVisualizer == null)
+            return;
+
+        PlayerControl.Instance.outfitVisualizer.ApplyOutfits(currentCharacter, equippedOutfits);
+    }
+
+    // ══════════════════════════════════════════════════════
+    // 🔍 Utility
+    // ══════════════════════════════════════════════════════
+    public SkinDataSO GetSkinDataByID(string skinID)
+    {
+        if (string.IsNullOrEmpty(skinID))
+            return null;
+
+        return allSkins.FirstOrDefault(s => s.name == skinID);
     }
 }
