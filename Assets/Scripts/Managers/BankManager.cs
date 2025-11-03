@@ -1,20 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 /// <summary>
-/// Manages the player's debt system: tracking, increasing, and allowing payment based on current funds,
-/// and also handles related Bank UI.
+/// Handles player's debt logic, payment, and animated bank UI feedback.
 /// </summary>
 public class BankManager : SingletonMonobehaviour<BankManager>
 {
+    //─────────────────────────────────────────────
+    // === 🔔 Events ===
+    //─────────────────────────────────────────────
     public event Action OnDebtPaid;
 
-    // ─────────────────────────────────────────────────────
-    // Configurable Settings
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────
+    // === ⚙️ Inspector Settings ===
+    //─────────────────────────────────────────────
     [Header("Debt Settings")]
     [SerializeField] private double initialDebt = 100;
     [SerializeField] private float debtMultiplier = 1.5f;
@@ -23,55 +26,94 @@ public class BankManager : SingletonMonobehaviour<BankManager>
     [SerializeField] private Button payDebtButtonEnabled;
     [SerializeField] private Button payDebtButtonDisabled;
 
-    [Header("Shop Tabs (Balance / Debt)")]
-    [SerializeField] private List<Tab> bankTabs;
+    [Header("UI Animation Elements")]
+    [SerializeField] private CanvasGroup needToPayGroup;
+    [SerializeField] private CanvasGroup congratsGroup;
+    [SerializeField] private Image fillBar;
+    [SerializeField] private Transform[] piggyTransforms;
+    [SerializeField] private TextMeshProUGUI levelText;
 
-    [Header("UI Colors")]
-    [SerializeField] private UIColorsConfig uiColorsConfig;
+    [Header("Animation Timings")]
+    [SerializeField] private float fillDuration = 2f;
+    [SerializeField] private float holdDuration = 1.5f;
 
-    // ─────────────────────────────────────────────────────
-    // Runtime Data
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────
+    // === 💾 Runtime Data ===
+    //─────────────────────────────────────────────
     private double currentDebt;
-    private Tab currentActiveTab = null;
+    private bool isAnimating = false;
 
-    // ─────────────────────────────────────────────────────
-    // Unity Lifecycle
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────
+    // === 🌿 Unity Lifecycle ===
+    //─────────────────────────────────────────────
     private void Start()
     {
-        SetupBankTabs();
         SetupListeners();
-
-        // Default: activate Balance tab
-        if (bankTabs.Count > 0)
-            ActivateTab(bankTabs[0]);
-
-        if (GameManager.Instance != null)
-            GameManager.Instance.OnLevelChanged += RecalculateDebtFromLevel;
+        SubscribeToGameManagerEvents();
+        InitializeCanvasGroups();
+        RefreshAllUI();
     }
 
     private void OnDisable()
     {
         if (GameManager.Instance != null)
+        {
             GameManager.Instance.OnLevelChanged -= RecalculateDebtFromLevel;
+            GameManager.Instance.OnLevelChanged -= UpdateLevelUI;
+        }
     }
 
+    //─────────────────────────────────────────────
+    // === 🧩 Initialization Helpers ===
+    //─────────────────────────────────────────────
+    /// <summary>Subscribe to GameManager events.</summary>
+    private void SubscribeToGameManagerEvents()
+    {
+        if (GameManager.Instance == null) return;
+
+        GameManager.Instance.OnLevelChanged += RecalculateDebtFromLevel;
+        GameManager.Instance.OnLevelChanged += UpdateLevelUI;
+    }
+
+    /// <summary>Initialize CanvasGroup visibility on start.</summary>
+    private void InitializeCanvasGroups()
+    {
+        if (needToPayGroup != null)
+        {
+            needToPayGroup.gameObject.SetActive(true);
+            needToPayGroup.alpha = 1f;
+        }
+
+        if (congratsGroup != null)
+        {
+            congratsGroup.gameObject.SetActive(false);
+            congratsGroup.alpha = 0f;
+        }
+    }
+
+    /// <summary>Force initial UI refresh (debt + level).</summary>
+    private void RefreshAllUI()
+    {
+        RecalculateDebtFromLevel();
+        UpdateLevelUI();
+    }
+
+    /// <summary>Bind listener for the Pay Debt button.</summary>
     private void SetupListeners()
     {
         if (payDebtButtonEnabled != null)
             payDebtButtonEnabled.onClick.AddListener(TryPayDebt);
     }
 
-    // ─────────────────────────────────────────────────────
-    // Public Methods
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────
+    // === 🌍 Public Methods ===
+    //─────────────────────────────────────────────
 
-    /// <summary>
-    /// Attempt to pay the current debt if the player has enough money.
-    /// </summary>
+    /// <summary>Attempt to pay debt if enough money is available.</summary>
     public void TryPayDebt()
     {
+        if (isAnimating) return;
+
         if (MoneyManager.Instance.HasEnoughMoney(currentDebt))
         {
             MoneyManager.Instance.ChangeMoneys(-currentDebt);
@@ -79,23 +121,21 @@ public class BankManager : SingletonMonobehaviour<BankManager>
             IncreaseDebt();
             AudioManager.Instance.PlayInteractSound(1);
 
+            StopAllCoroutines();
+            StartCoroutine(PlayPayAnimation());
+
             OnDebtPaid?.Invoke();
         }
-
         else Debug.Log("Not enough coins to pay the debt!");
     }
 
-    /// <summary>
-    /// Refresh the Pay Debt button state based on available money.
-    /// </summary>
+    /// <summary>Refresh button states based on player's money.</summary>
     public void RefreshPayButton()
     {
         TogglePayDebtButton(MoneyManager.Instance.HasEnoughMoney(currentDebt));
     }
 
-    /// <summary>
-    /// Toggle the Pay Debt button (enabled/disabled) depending on condition.
-    /// </summary>
+    /// <summary>Toggle between active/inactive pay buttons.</summary>
     public void TogglePayDebtButton(bool canPay)
     {
         if (payDebtButtonEnabled != null && payDebtButtonDisabled != null)
@@ -105,9 +145,7 @@ public class BankManager : SingletonMonobehaviour<BankManager>
         }
     }
 
-    /// <summary>
-    /// Recalculate debt amount based on current level progression.
-    /// </summary>
+    /// <summary>Recalculate debt according to player level.</summary>
     public void RecalculateDebtFromLevel()
     {
         int level = GameManager.Instance.CurrentLevel;
@@ -115,71 +153,105 @@ public class BankManager : SingletonMonobehaviour<BankManager>
         UpdateDebtUI();
     }
 
-    // ─────────────────────────────────────────────────────
-    // Private Methods
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────
+    // === 🔒 Private Methods ===
+    //─────────────────────────────────────────────
 
-    /// <summary>
-    /// Setup all bank tabs with listeners and default visuals.
-    /// </summary>
-    private void SetupBankTabs()
-    {
-        foreach (var tab in bankTabs)
-        {
-            tab.button.onClick.AddListener(() => ActivateTab(tab));
-            SetTabVisual(tab, false);
-            if (tab.group != null) tab.group.SetActive(false);
-        }
-    }
-
-    /// <summary>
-    /// Activate a selected bank tab and deactivate the previous one.
-    /// </summary>
-    private void ActivateTab(Tab tab)
-    {
-        // Deselect old tab
-        if (currentActiveTab != null)
-        {
-            SetTabVisual(currentActiveTab, false);
-            if (currentActiveTab.group != null)
-                currentActiveTab.group.SetActive(false);
-        }
-
-        // Select new tab
-        currentActiveTab = tab;
-        SetTabVisual(tab, true);
-
-        if (tab.group != null)
-            tab.group.SetActive(true);
-    }
-
-    /// <summary>
-    /// Update the tab visual state (active/inactive).
-    /// </summary>
-    private void SetTabVisual(Tab tab, bool isActive)
-    {
-        if (tab.labelText != null)
-            tab.labelText.color = isActive ? uiColorsConfig.tabOn : uiColorsConfig.tabOff;
-
-        if (tab.outline != null)
-            tab.outline.SetActive(isActive);
-    }
-
-    /// <summary>
-    /// Increase the player's level and update the debt UI.
-    /// </summary>
+    /// <summary>Increase player level and trigger debt update.</summary>
     private void IncreaseDebt()
     {
         GameManager.Instance.IncreaseLevel();
-        UpdateDebtUI();
     }
 
-    /// <summary>
-    /// Update the debt UI elements and refresh pay button state.
-    /// </summary>
+    /// <summary>Update UI text & buttons to reflect current debt.</summary>
     private void UpdateDebtUI()
     {
         UIManager.Instance?.UpdateDebt(currentDebt);
         RefreshPayButton();
+    }
+
+    /// <summary>Refresh level text and play pop animation.</summary>
+    private void UpdateLevelUI()
+    {
+        if (levelText == null) return;
+
+        int level = GameManager.Instance.CurrentLevel;
+        levelText.text = $"{level}";
+
+        levelText.transform.DOKill(true);
+        levelText.transform.localScale = Vector3.one;
+        levelText.transform.DOScale(1.3f, 0.25f).SetLoops(2, LoopType.Yoyo);
+        levelText.DOFade(0.3f, 0.15f).From(1f).SetLoops(2, LoopType.Yoyo);
+    }
+
+    //─────────────────────────────────────────────
+    // === 🧭 CanvasGroup Helpers ===
+    //─────────────────────────────────────────────
+
+    /// <summary>Fade in and activate a CanvasGroup.</summary>
+    private void ShowGroup(CanvasGroup group, float duration)
+    {
+        if (group == null) return;
+
+        group.DOKill();
+        group.gameObject.SetActive(true);
+        group.alpha = 0f;
+        group.DOFade(1f, duration);
+    }
+
+    /// <summary>Fade out and deactivate a CanvasGroup.</summary>
+    private void HideGroup(CanvasGroup group, float duration)
+    {
+        if (group == null) return;
+
+        group.DOKill();
+        group.DOFade(0f, duration).OnComplete(() =>
+        {
+            group.gameObject.SetActive(false);
+        });
+    }
+
+    //─────────────────────────────────────────────
+    // === 💫 Animation Sequence ===
+    //─────────────────────────────────────────────
+
+    /// <summary>Play the full debt payment visual sequence.</summary>
+    private IEnumerator PlayPayAnimation()
+    {
+        isAnimating = true;
+        TogglePayDebtButton(false);
+
+        // Step 1: hide “You need to pay”
+        HideGroup(needToPayGroup, 0f);
+
+        // Step 2: fill the yellow bar
+        fillBar.fillAmount = 0;
+        fillBar.DOFillAmount(1f, fillDuration).SetEase(Ease.InOutCubic);
+        yield return new WaitForSeconds(fillDuration);
+
+        // Step 3: piggy bounce animation
+        foreach (var piggy in piggyTransforms)
+        {
+            if (piggy != null)
+                piggy.DOScale(1.1f, 0.3f).SetLoops(2, LoopType.Yoyo);
+        }
+
+        yield return new WaitForSeconds(0.3f);
+
+        // Step 4: show congratulations
+        ShowGroup(congratsGroup, 0.8f);
+        yield return new WaitForSeconds(holdDuration);
+
+        // Step 5: reset UI
+        fillBar.fillAmount = 0;
+        HideGroup(congratsGroup, 0.3f);
+        yield return new WaitForSeconds(0.3f);
+        ShowGroup(needToPayGroup, 0.5f);
+
+        // Step 6: refresh UI after animation
+        yield return new WaitForSeconds(0.5f);
+        UpdateDebtUI();
+
+        isAnimating = false;
     }
 }
