@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Localization-Assets-Shared
+  m_EditorClassIdentifier: 
+  m_GroupName: Localization-Assets-Shared
+  m_GUID: ea1605bd94316cd4f9266c21fdf49ffe
+  m_SerializeEntries:
+  - m_GUID: 07c73306f54e7104697a03e1f5f89e13
+    m_Address: Assets/Locales/Menu Labels Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0e1aef3f05394e341b0d91ab689081bb
+    m_Address: Assets/Locales/GameplayLocales/Phone Labels Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 32cf94af596cd60448295d821559372f
+    m_Address: Assets/Locales/GameplayLocales/Gameplay Labels Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cfb74710c46e9824fa2224c4f520fd6f
+    m_Address: Assets/Locales/Setting Labels Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d16c836481ae892489c5f1052d5b380c
+    m_Address: Assets/Locales/LoadingLocales/Loading Labels Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d713f45cacc2ed64c84daed1a58f62c2
+    m_Address: Assets/Locales/GameplayLocales/Pause Labels Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e54efefbccf7c9548a4ced94ede6eae5
+    m_Address: Assets/Locales/Quit Labels Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 1
+  m_Settings: {fileID: 11400000, guid: c57502a728ac11c488549df1949557c5, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: f4b84b5128870e44e962494af50f2d50, type: 2}
+    - {fileID: 11400000, guid: 3978c0acd4630da488205fc2d4afd3df, type: 2}

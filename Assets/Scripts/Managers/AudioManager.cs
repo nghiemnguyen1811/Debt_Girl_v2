@@ -94,7 +94,10 @@ public class AudioManager : SingletonMonobehaviour<AudioManager>
         if (!audioGroups.TryGetValue(group, out var sources)) return;
 
         foreach (var source in sources)
+        {
+            if (source == null) continue;
             source?.Stop();
+        }
     }
 
     #endregion

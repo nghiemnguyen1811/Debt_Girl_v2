@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Phone Labels_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 0e1aef3f05394e341b0d91ab689081bb, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 418932670464
+    m_Localized: Smartphone
+    m_Metadata:
+      m_Items: []
+  - m_Id: 421050793984
+    m_Localized: Map
+    m_Metadata:
+      m_Items: []
+  - m_Id: 422715932672
+    m_Localized: Shop
+    m_Metadata:
+      m_Items: []
+  - m_Id: 424439791616
+    m_Localized: Skills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 426310451200
+    m_Localized: SNS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 428055281664
+    m_Localized: Baking
+    m_Metadata:
+      m_Items: []
+  - m_Id: 429892386816
+    m_Localized: Cooking
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1670395543552
+    m_Localized: Bank
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1804336447488
+    m_Localized: Visitors
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1711671689216
+    m_Localized: Outfit
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5810202951680
+    m_Localized: Invest
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []
