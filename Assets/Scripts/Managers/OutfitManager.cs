@@ -37,6 +37,12 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
     [SerializeField] private Image equippedPantImage;
     [SerializeField] private Image equippedShoesImage;
 
+    [Header("Preview & Reset Buttons")]
+    [SerializeField] private Button resetRotationButton;
+    [SerializeField] private Button resetDefaultSkinButton;
+    [SerializeField] private PreviewRotator previewRotator;
+
+
     // ══════════════════════════════════════════════════════
     // 🧠 Runtime Data
     // ══════════════════════════════════════════════════════
@@ -84,6 +90,12 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
 
         if (equipButtonEnabled != null)
             equipButtonEnabled.onClick.AddListener(OnEquipButtonClicked);
+
+        if (resetRotationButton != null)
+            resetRotationButton.onClick.AddListener(ResetModelRotation);
+
+        if (resetDefaultSkinButton != null)
+            resetDefaultSkinButton.onClick.AddListener(ResetToDefaultSkins);
     }
 
     /// <summary>
@@ -98,6 +110,12 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
 
         if (equipButtonEnabled != null)
             equipButtonEnabled.onClick.RemoveListener(OnEquipButtonClicked);
+
+        if (resetRotationButton != null)
+            resetRotationButton.onClick.RemoveListener(ResetModelRotation);
+
+        if (resetDefaultSkinButton != null)
+            resetDefaultSkinButton.onClick.RemoveListener(ResetToDefaultSkins);
     }
 
     /// <summary>
@@ -321,6 +339,7 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
                         currentSelectedSlot.IsUnlocked &&
                         selectedSkin.SkinData.owner == currentCharacter;
 
+
         UpdateEquipButtonState(canEquip);
     }
 
@@ -382,6 +401,7 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
 
         AutoSave();
         UpdateEquippedPreviewImages();
+        UpdateEquipButtonState(false);
         ApplyCurrentOutfitsToPlayer();
         Debug.Log($"[{currentCharacter}] equipped {newSkin.skinType}: {newSkin.name}");
     }
@@ -564,7 +584,6 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
     // ══════════════════════════════════════════════════════
     // 🔓 Unlock System
     // ══════════════════════════════════════════════════════
-
     /// <summary>
     /// Unlocks a new skin and saves it.
     /// </summary>
@@ -604,5 +623,74 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
             return null;
 
         return allSkins.FirstOrDefault(s => s.name == skinID);
+    }
+
+    // ══════════════════════════════════════════════════════
+    // 🌀 Preview Rotation Control
+    // ══════════════════════════════════════════════════════
+    /// <summary>
+    /// Called by Reset button to restore model to its original rotation.
+    /// </summary>
+    private void ResetModelRotation()
+    {
+        if (previewRotator != null)
+            previewRotator.ResetRotation();
+
+        else Debug.LogWarning("[OutfitManager] No CharacterPreviewRotator assigned!");
+
+        AudioManager.Instance.PlayInteractSound(8);
+    }
+
+    // ══════════════════════════════════════════════════════
+    // 🧥 Default Skin Reset
+    // ══════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Resets all equipped outfits of the current character to their default skins.
+    /// </summary>
+    private void ResetToDefaultSkins()
+    {
+        if (currentCharacter == CharacterType.All)
+        {
+            Debug.LogWarning("[OutfitManager] Cannot reset when CharacterType = All.");
+            return;
+        }
+
+        // Find all default skins that belong to the current character
+        var defaultSkins = allSkins
+            .Where(s => s.owner == currentCharacter && s.isDefaultSkin)
+            .ToList();
+
+        if (defaultSkins.Count == 0)
+        {
+            Debug.Log($"[OutfitManager] No default skins found for {currentCharacter}.");
+            return;
+        }
+
+        // Unequip all current outfits
+        equippedOutfits.RemoveAll(e => e.owner == currentCharacter);
+
+        // Equip each default skin
+        foreach (var skin in defaultSkins)
+        {
+            equippedOutfits.Add(new EquippedOutfitEntry
+            {
+                owner = currentCharacter,
+                outfitType = skin.skinType,
+                skinID = skin.name
+            });
+
+            // Ensure it's marked unlocked
+            if (!unlockedSkins.Contains(skin.name))
+                unlockedSkins.Add(skin.name);
+        }
+
+        // Apply changes visually and save
+        RefreshEquippedVisuals();
+        AutoSave();
+
+        AudioManager.Instance.PlayInteractSound(8);
+
+        Debug.Log($"[OutfitManager] Reset {currentCharacter}'s outfits to default skins.");
     }
 }

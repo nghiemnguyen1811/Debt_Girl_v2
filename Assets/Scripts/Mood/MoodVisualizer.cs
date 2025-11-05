@@ -17,6 +17,7 @@ public class MoodVisualizer : MonoBehaviour
 
     [Header("Face Materials")]
     [SerializeField] private CharacterFaceData[] characterFaceDataArray;
+    private Material currentEyebrowMat;
     private Material currentEyeMat;
     private Material currentMouthMat;
 
@@ -78,6 +79,7 @@ public class MoodVisualizer : MonoBehaviour
         {
             if (newProfile.characterType == faceData.characterType)
             {
+                currentEyebrowMat = faceData.eyebrowMat;
                 currentEyeMat = faceData.eyeMat;
                 currentMouthMat = faceData.mouthMat;
                 break;
@@ -184,6 +186,9 @@ public class MoodVisualizer : MonoBehaviour
         var set = FindMaterialSet(type);
         if (set == null) return;
 
+        if (currentEyebrowMat != null && set.eyebrowSprite != null)
+            currentEyebrowMat.mainTexture = set.eyebrowSprite.texture;
+
         if (currentEyeMat != null && set.eyeSprite != null)
             currentEyeMat.mainTexture = set.eyeSprite.texture;
 
@@ -259,6 +264,7 @@ public class MoodVisualizer : MonoBehaviour
 public class CharacterFaceData
 {
     public CharacterType characterType;
+    public Material eyebrowMat;
     public Material eyeMat;
     public Material mouthMat;
 }

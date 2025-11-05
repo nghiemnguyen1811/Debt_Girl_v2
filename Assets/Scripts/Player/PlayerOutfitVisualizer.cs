@@ -1,13 +1,35 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 /// <summary>
 /// Applies equipped meshes and materials for in-game and preview models.
 /// </summary>
 public class PlayerOutfitVisualizer : MonoBehaviour
 {
+    #region === Serialized Fields ===
+
     [Header("Character Visual Sets")]
     [SerializeField] private List<CharacterVisualSet> visualSets = new();
+
+    #endregion
+
+    #region === Private Fields ===
+
+    private PlayerControl control;
+
+    #endregion
+
+    #region === Unity Events ===
+
+    private void Start()
+    {
+        control = GetComponent<PlayerControl>();
+    }
+
+    #endregion
+
+    #region === Public Utility ===
 
     /// <summary>
     /// Apply equipped outfits for the given character.
@@ -37,7 +59,13 @@ public class PlayerOutfitVisualizer : MonoBehaviour
                     break;
             }
         }
+
+        control.animationHandler.PlayPreviewAnimation("ChangeOutfit");
     }
+
+    #endregion
+
+    #region === Helpers ===
 
     /// <summary>
     /// Apply mesh and material to both renderers.
@@ -65,6 +93,8 @@ public class PlayerOutfitVisualizer : MonoBehaviour
         if (skin.outfitMaterials != null && skin.outfitMaterials.Length > 0)
             renderer.sharedMaterials = skin.outfitMaterials;
     }
+
+    #endregion
 }
 
 [System.Serializable]

@@ -7,6 +7,7 @@ public class FaceMaterialSetSO : ScriptableObject
     public MoodConditionType conditionType = MoodConditionType.None;
 
     [Header("Face Materials")]
+    public Sprite eyebrowSprite;
     public Sprite eyeSprite;
     public Sprite mouthSprite;
 }

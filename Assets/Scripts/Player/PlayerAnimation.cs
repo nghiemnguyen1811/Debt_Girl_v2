@@ -9,7 +9,10 @@ public class PlayerAnimation : MonoBehaviour
     #region === Inspector References ===
 
     [Header("Character Models")]
-    [SerializeField] private Transform models;
+    [SerializeField] private Transform[] modelArray;
+
+    [Header(" Avatar Mask ")]
+    [SerializeField] private Avatar[] avatars;
 
     #endregion
 
@@ -17,6 +20,7 @@ public class PlayerAnimation : MonoBehaviour
 
     private PlayerControl playerControl;
     private Animator animator;
+    private Animator animatorPreview;
 
     #endregion
 
@@ -33,6 +37,7 @@ public class PlayerAnimation : MonoBehaviour
     {
         playerControl = GetComponent<PlayerControl>();
         animator = GetComponentInChildren<Animator>();
+        animatorPreview = modelArray[1].GetComponent<Animator>();
 
         // Subscribe to profile change
         if (playerControl != null)
@@ -57,13 +62,21 @@ public class PlayerAnimation : MonoBehaviour
     private void HandleCharacterProfileChanged(CharacterInfoSO newProfile)
     {
         // Disable all models first
-        foreach (Transform model in models)
-            model.gameObject.SetActive(false);
+        foreach (Transform models in modelArray)
+            foreach (Transform model in models)
+                model.gameObject.SetActive(false);
 
         // Convert enum to int index
         int index = (int)newProfile.characterType;
 
-        if (index >= 0) models.GetChild(index - 1).gameObject.SetActive(true);
+        if (index >= 0)
+        {
+            foreach (Transform models in modelArray)
+                models.GetChild(index - 1).gameObject.SetActive(true);
+
+            animator.avatar = avatars[index - 1];
+            animatorPreview.avatar = avatars[index - 1];
+        }
 
         else Debug.LogWarning($"[PlayerAnimation] Invalid characterType index: {index}");
     }
@@ -94,7 +107,21 @@ public class PlayerAnimation : MonoBehaviour
     /// </summary>
     public void SetTrigger(string triggerName)
     {
+        if (animator == null) return;
+
+        animator.ResetTrigger(triggerName);
         animator.SetTrigger(triggerName);
+    }
+
+    /// <summary>
+    /// Plays a preview animation (e.g., idle, spin, pose) on the preview outfit animator.
+    /// </summary>
+    public void PlayPreviewAnimation(string triggerName)
+    {
+        if (animatorPreview == null) return;
+
+        animatorPreview.ResetTrigger(triggerName);
+        animatorPreview.SetTrigger(triggerName);
     }
 
     #endregion

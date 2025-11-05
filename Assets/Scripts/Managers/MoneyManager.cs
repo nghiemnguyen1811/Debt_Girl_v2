@@ -138,5 +138,6 @@ public class MoneyManager : SingletonMonobehaviour<MoneyManager>
         SetMoneys(saveData.playerMoney);
         SetDiamonds(saveData.playerDiamond);
         BankManager.Instance.RefreshPayButton();
+        OutfitManager.Instance.RefreshUnlockButtons();
     }
 }

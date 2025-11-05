@@ -109,6 +109,8 @@ public class SkinSlot : MonoBehaviour
         if (!isUnlocked || isEquipped) return;
 
         OutfitManager.Instance.OnSkinSelected(this);
+        AudioManager.Instance.PlayInteractSound(8);
+
         SetSelected(true);
     }
 
@@ -210,6 +212,4 @@ public class SkinSlot : MonoBehaviour
     public SkinDataSO SkinData => skinData;
     public bool IsUnlocked => isUnlocked;
     public bool IsEquipped => isEquipped;
-
-
 }
