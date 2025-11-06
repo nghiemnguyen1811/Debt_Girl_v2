@@ -174,6 +174,7 @@ public enum PanelType
     Pause,
     Banking,
     DailyQuest,
+    Outfit,
 }
 
 public enum AppType

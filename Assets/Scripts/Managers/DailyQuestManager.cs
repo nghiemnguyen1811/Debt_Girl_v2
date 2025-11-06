@@ -17,8 +17,8 @@ public class QuestUIGroup
     public TextMeshProUGUI descriptionText;
     public Slider progressBar;
     public TextMeshProUGUI progressText;
-    public TextMeshProUGUI rewardText;
-    public GameObject completedMark;
+    public TextMeshProUGUI[] rewardTexts;
+    public GameObject completedOverlay;
 
     [Header("Reward Buttons")]
     public Button rewardButtonEnable;
@@ -41,7 +41,6 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
 
     [Header("UI References")]
     [SerializeField] private QuestUIGroup[] questUIGroups;
-    [SerializeField] private GameObject[] separatorLines;
 
     [Header("Completion Reward UI")]
     [SerializeField] private Button completionRewardEnable;
@@ -293,9 +292,11 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
             var quest = activeQuests[i];
             ui.descriptionText.text = quest.Description;
             ui.progressText.text = $"{quest.currentCount}/{quest.targetCount}";
-            ui.rewardText.text = $"x {quest.questTemplate.rewardDiamond}";
             ui.progressBar.value = (float)quest.currentCount / quest.targetCount;
-            ui.completedMark.SetActive(quest.isCompleted);
+            ui.completedOverlay.SetActive(quest.isCompleted);
+
+            foreach (TextMeshProUGUI rewardText in ui.rewardTexts)
+                rewardText.text = $"{quest.questTemplate.rewardDiamond}";
 
             bool canClaim = quest.isCompleted && !quest.hasClaimedReward;
             bool alreadyClaimed = quest.isCompleted && quest.hasClaimedReward;
@@ -316,9 +317,6 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
         bool canClaimAll = claimableCount >= 2;
         claimAllEnable?.gameObject.SetActive(canClaimAll);
         claimAllDisable?.gameObject.SetActive(!canClaimAll);
-
-        for (int i = 0; i < separatorLines.Length; i++)
-            separatorLines[i]?.SetActive(i < questCount - 1);
 
         UpdateCompletionRewardUI();
     }

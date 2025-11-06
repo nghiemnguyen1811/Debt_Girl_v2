@@ -32,6 +32,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     [SerializeField] private GameObject bankingPanel;
     [SerializeField] private GameObject dialoguePanel;
     [SerializeField] private GameObject dailyquestPanel;
+    [SerializeField] private GameObject outfitPanel;
     [SerializeField] private GameObject settingsPanel;
     [SerializeField] private GameObject pausePanel;
     [SerializeField] private GameObject exitPanel;
@@ -121,6 +122,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
             case PanelType.Banking: panel = bankingPanel; break;
             case PanelType.Dialogue: panel = dialoguePanel; break;
             case PanelType.DailyQuest: panel = dailyquestPanel; break;
+            case PanelType.Outfit: panel = outfitPanel; break;
             case PanelType.Exit: panel = exitPanel; break;
 
             case PanelType.Upgrade:
@@ -178,7 +180,8 @@ public class UIManager : SingletonMonobehaviour<UIManager>
 
         if (type == PanelType.CoinTrade || type == PanelType.Upgrade ||
             type == PanelType.Shopping || type == PanelType.SelectRoom ||
-            type == PanelType.Post || type == PanelType.Banking)
+            type == PanelType.Post || type == PanelType.Banking ||
+            type == PanelType.Outfit)
         {
             phonePanel.SetActive(!show);
         }
@@ -209,6 +212,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     public void ToggleBankingPanel(bool show) => TogglePanelByType(PanelType.Banking, show);
     public void ToggleDialoguePanel(bool show) => TogglePanelByType(PanelType.Dialogue, show);
     public void ToggleDailyQuestPanel(bool show) => TogglePanelByType(PanelType.DailyQuest, show);
+    public void ToggleOutfitPanel(bool show) => TogglePanelByType(PanelType.Outfit, show);
     public void ToggleSettingsPanel(bool show) => TogglePanelByType(PanelType.Settings, show);
     public void TogglePausePanelFromButton(bool show) => TogglePanelByType(PanelType.Pause, show);
 
