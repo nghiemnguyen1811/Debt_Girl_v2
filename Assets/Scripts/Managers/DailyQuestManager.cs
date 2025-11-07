@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using DG.Tweening;
 using URandom = UnityEngine.Random;
 
 // ==================================================
@@ -31,6 +32,7 @@ public class QuestUIGroup
 // ==================================================
 public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
 {
+    //─────────────────────────────────────────────────────────────
     #region === Inspector Fields ===
     [Header("Quest Database")]
     [SerializeField] private List<DailyQuestDataSO> questTemplates = new();
@@ -43,10 +45,14 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
     [SerializeField] private QuestUIGroup[] questUIGroups;
 
     [Header("Completion Reward UI")]
+    [SerializeField] private Slider overallProgressBar;
+    [SerializeField] private GameObject completedOverlay;
+    [SerializeField] private TextMeshProUGUI overallProgressText;
+    [SerializeField] private TextMeshProUGUI[] bonusDiamondTexts;
+
     [SerializeField] private Button completionRewardEnable;
     [SerializeField] private Button completionRewardDisable;
     [SerializeField] private Button completionRewardClaimed;
-    [SerializeField] private TextMeshProUGUI[] bonusDiamondTexts;
 
     [Header("Claim All Reward UI")]
     [SerializeField] private Button claimAllEnable;
@@ -59,12 +65,13 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
     [SerializeField] private List<InteractableBase> registeredInteractables = new();
     #endregion
 
+    //─────────────────────────────────────────────────────────────
     #region === Private Fields & Properties ===
     private string currentDate;
     private float checkInterval = 60f;
     private bool hasClaimedBonus;
 
-    // Cached handlers
+    // Cached event handlers
     private Action cakeBakedHandler, dishCookedHandler, debtPaidHandler;
     private Action coinBoughtHandler, coinSellHandler, postCreatedHandler, itemPurchasedHandler;
 
@@ -72,17 +79,19 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
     private int PlayerLevel => GameManager.Instance != null ? GameManager.Instance.CurrentLevel : 1;
     #endregion
 
+    //─────────────────────────────────────────────────────────────
     #region === Unity Lifecycle ===
-    private void Start() => InitializeSystem(); // 🔹 Entry point
+    private void Start() => InitializeSystem(); // Initialize quest system on start
     private void OnDestroy()
     {
-        UnsubscribeEvents();
-        StopAllCoroutines();
+        UnsubscribeEvents(); // Unsubscribe to avoid leaks
+        StopAllCoroutines(); // Stop date check loop
     }
     #endregion
 
+    //─────────────────────────────────────────────────────────────
     #region === Initialization ===
-    /// <summary>Initializes system, UI, listeners, and daily checks.</summary>
+    /// <summary>Initialize system, UI, and listeners.</summary>
     private void InitializeSystem()
     {
         currentDate = DateTime.Now.ToString("yyyy-MM-dd");
@@ -93,7 +102,7 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
         StartCoroutine(CheckDateChangeRoutine());
     }
 
-    /// <summary>Sets button listeners for reward and claim-all.</summary>
+    /// <summary>Set up button listeners for rewards and claim all.</summary>
     private void SetupListeners()
     {
         if (completionRewardEnable != null)
@@ -109,29 +118,11 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
         }
     }
 
-    /// <summary>Displays diamond bonus in UI.</summary>
+    /// <summary>Set initial diamond bonus texts.</summary>
     private void InitializeBonusUI()
     {
-        foreach (TextMeshProUGUI bonusText in bonusDiamondTexts)
+        foreach (var bonusText in bonusDiamondTexts)
             bonusText.text = $"{bonusDiamondAmount}";
-    }
-    #endregion
-
-    #region === Bonus Reward ===
-    /// <summary>Claims daily bonus reward when all quests complete.</summary>
-    private void ClaimDailyBonus()
-    {
-        if (hasClaimedBonus)
-        {
-            Debug.Log("[DailyQuestManager] Bonus already claimed for today.");
-            return;
-        }
-
-        hasClaimedBonus = true;
-        MoneyManager.Instance.ChangeDiamonds(bonusDiamondAmount);
-        AudioManager.Instance.PlayInteractSound(14);
-        AutoSave();
-        UpdateCompletionRewardUI();
     }
     #endregion
 
@@ -157,12 +148,13 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
     }
     #endregion
 
+
+    //─────────────────────────────────────────────────────────────
     #region === Quest Generation ===
-    /// <summary>Generates a new set of daily quests.</summary>
+    /// <summary>Create new random daily quests.</summary>
     private void GenerateNewDailyQuests()
     {
         activeQuests.Clear();
-
         var available = GetAvailableQuestsForLevel(PlayerLevel);
         if (available.Count == 0)
         {
@@ -175,14 +167,14 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
         AutoSave();
     }
 
-    /// <summary>Returns all quests available for current level.</summary>
+    /// <summary>Filter quests available for current level.</summary>
     private List<DailyQuestDataSO> GetAvailableQuestsForLevel(int level)
         => questTemplates.FindAll(q => q.requiredLevel <= level);
 
-    /// <summary>Randomly shuffles quest list.</summary>
+    /// <summary>Randomly shuffle quest list.</summary>
     private List<DailyQuestDataSO> ShuffleList(List<DailyQuestDataSO> source)
     {
-        List<DailyQuestDataSO> shuffled = new(source);
+        var shuffled = new List<DailyQuestDataSO>(source);
         for (int i = 0; i < shuffled.Count; i++)
         {
             int r = URandom.Range(i, shuffled.Count);
@@ -191,7 +183,7 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
         return shuffled;
     }
 
-    /// <summary>Creates quest instances from templates.</summary>
+    /// <summary>Instantiate daily quest data from templates.</summary>
     private void CreateActiveQuestsFromTemplates(List<DailyQuestDataSO> shuffled, int level)
     {
         int questToAdd = Mathf.Min(dailyQuestCount, shuffled.Count);
@@ -204,7 +196,7 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
                 template.activityRequirements != null &&
                 template.activityRequirements.Length > 0)
             {
-                List<DailyActivityRequirement> valid = new();
+                var valid = new List<DailyActivityRequirement>();
                 foreach (var req in template.activityRequirements)
                     if (req.requiredLevel <= level) valid.Add(req);
 
@@ -224,7 +216,6 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
                 continue;
             }
 
-            // Normal quest
             activeQuests.Add(new DailyQuestData
             {
                 questID = template.name,
@@ -237,8 +228,9 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
     }
     #endregion
 
+    //─────────────────────────────────────────────────────────────
     #region === Quest Progression ===
-    /// <summary>Updates quest progress when player performs an action.</summary>
+    /// <summary>Add progress to matching quest type.</summary>
     public void AddProgress(DailyQuestType type, DailyActivity activity = DailyActivity.None)
     {
         bool changed = false;
@@ -259,7 +251,7 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
         }
     }
 
-    /// <summary>Checks if quest can be progressed based on activity type.</summary>
+    /// <summary>Check if quest progress is valid for player activity.</summary>
     private bool CanProgressQuest(DailyQuestData quest, DailyQuestType type, DailyActivity activity, int playerLevel)
     {
         if (quest == null || quest.isCompleted || quest.questTemplate == null) return false;
@@ -275,65 +267,9 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
     }
     #endregion
 
-    #region === UI Handling ===
-    /// <summary>Refreshes all quest UI elements and reward states.</summary>
-    private void RefreshUI()
-    {
-        if (questUIGroups == null || questUIGroups.Length == 0) return;
-        int questCount = activeQuests.Count;
-
-        for (int i = 0; i < questUIGroups.Length; i++)
-        {
-            var ui = questUIGroups[i];
-            bool active = i < questCount;
-            ui.questGroup?.SetActive(active);
-            if (!active) continue;
-
-            var quest = activeQuests[i];
-            ui.descriptionText.text = quest.Description;
-            ui.progressText.text = $"{quest.currentCount}/{quest.targetCount}";
-            ui.progressBar.value = (float)quest.currentCount / quest.targetCount;
-            ui.completedOverlay.SetActive(quest.isCompleted);
-
-            foreach (TextMeshProUGUI rewardText in ui.rewardTexts)
-                rewardText.text = $"{quest.questTemplate.rewardDiamond}";
-
-            bool canClaim = quest.isCompleted && !quest.hasClaimedReward;
-            bool alreadyClaimed = quest.isCompleted && quest.hasClaimedReward;
-            ui.rewardButtonEnable.gameObject.SetActive(canClaim);
-            ui.rewardButtonDisable.gameObject.SetActive(!quest.isCompleted);
-            ui.claimedButton.gameObject.SetActive(alreadyClaimed);
-
-            ui.rewardButtonEnable.onClick.RemoveAllListeners();
-            int index = i;
-            ui.rewardButtonEnable.onClick.AddListener(() => ClaimQuestReward(index));
-        }
-
-        // Handle Claim All button
-        int claimableCount = 0;
-        foreach (var quest in activeQuests)
-            if (quest.isCompleted && !quest.hasClaimedReward) claimableCount++;
-
-        bool canClaimAll = claimableCount >= 2;
-        claimAllEnable?.gameObject.SetActive(canClaimAll);
-        claimAllDisable?.gameObject.SetActive(!canClaimAll);
-
-        UpdateCompletionRewardUI();
-    }
-
-    /// <summary>Updates the completion reward (daily bonus) buttons.</summary>
-    private void UpdateCompletionRewardUI()
-    {
-        bool allCompleted = activeQuests.TrueForAll(q => q.isCompleted);
-
-        completionRewardEnable?.gameObject.SetActive(allCompleted && !hasClaimedBonus);
-        completionRewardDisable?.gameObject.SetActive(!allCompleted);
-        completionRewardClaimed?.gameObject.SetActive(allCompleted && hasClaimedBonus);
-    }
-    #endregion
-
-    #region === Rewards (Individual & All) ===
-    /// <summary>Claims reward for a single quest.</summary>
+    //─────────────────────────────────────────────────────────────
+    #region === Rewards (Single, All, Bonus) ===
+    /// <summary>Claim one quest reward.</summary>
     public void ClaimQuestReward(int questIndex)
     {
         if (questIndex < 0 || questIndex >= activeQuests.Count) return;
@@ -344,25 +280,37 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
         MoneyManager.Instance.ChangeDiamonds(quest.questTemplate.rewardDiamond);
         AudioManager.Instance.PlayInteractSound(14);
 
-        var ui = questUIGroups[questIndex];
-        ui.rewardButtonEnable.gameObject.SetActive(false);
-        ui.rewardButtonDisable.gameObject.SetActive(false);
-        ui.claimedButton.gameObject.SetActive(true);
+        UpdateQuestUI(questIndex);
+        UpdateOverallProgressUI();
+        UpdateCompletionRewardUI();
+
         AutoSave();
     }
 
-    /// <summary>Claims all available quest rewards at once.</summary>
+    /// <summary>Claim all completed quests and bonus reward.</summary>
     private void ClaimAllRewards()
     {
         int claimCount = 0;
-        foreach (var quest in activeQuests)
+
+        for (int i = 0; i < activeQuests.Count; i++)
         {
+            var quest = activeQuests[i];
             if (quest.isCompleted && !quest.hasClaimedReward)
             {
                 quest.hasClaimedReward = true;
                 MoneyManager.Instance.ChangeDiamonds(quest.questTemplate.rewardDiamond);
                 claimCount++;
+                questUIGroups[i].completedOverlay?.SetActive(true);
             }
+        }
+
+        bool allCompleted = activeQuests.TrueForAll(q => q.isCompleted);
+        if (allCompleted && !hasClaimedBonus)
+        {
+            hasClaimedBonus = true;
+            MoneyManager.Instance.ChangeDiamonds(bonusDiamondAmount);
+            claimCount++;
+            completedOverlay?.SetActive(true);
         }
 
         if (claimCount > 0)
@@ -370,12 +318,138 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
             AudioManager.Instance.PlayInteractSound(14);
             AutoSave();
             RefreshUI();
+            UpdateOverallProgressUI();
+            UpdateCompletionRewardUI();
         }
+    }
+
+    /// <summary>Claim daily completion bonus reward.</summary>
+    private void ClaimDailyBonus()
+    {
+        if (hasClaimedBonus)
+        {
+            Debug.Log("[DailyQuestManager] Bonus already claimed for today.");
+            return;
+        }
+
+        hasClaimedBonus = true;
+        MoneyManager.Instance.ChangeDiamonds(bonusDiamondAmount);
+        AudioManager.Instance.PlayInteractSound(14);
+
+        UpdateClaimAllButtons();
+        UpdateCompletionRewardUI();
+
+        completedOverlay?.SetActive(true);
+        AutoSave();
     }
     #endregion
 
+    //─────────────────────────────────────────────────────────────
+    #region === UI Handling ===
+    /// <summary>Refresh all quest UI and buttons.</summary>
+    private void RefreshUI()
+    {
+        if (questUIGroups == null || questUIGroups.Length == 0) return;
+        int questCount = activeQuests.Count;
+
+        for (int i = 0; i < questUIGroups.Length; i++)
+            UpdateQuestUI(i);
+
+        UpdateClaimAllButtons();
+        UpdateCompletionRewardUI();
+        UpdateOverallProgressUI();
+    }
+
+    /// <summary>Update one quest UI by index.</summary>
+    private void UpdateQuestUI(int index)
+    {
+        if (index < 0 || index >= questUIGroups.Length) return;
+        if (index >= activeQuests.Count) return;
+
+        var ui = questUIGroups[index];
+        bool active = index < activeQuests.Count;
+        ui.questGroup?.SetActive(active);
+        if (!active) return;
+
+        var quest = activeQuests[index];
+
+        ui.descriptionText.text = quest.Description;
+        ui.progressText.text = $"{quest.currentCount}/{quest.targetCount}";
+        ui.completedOverlay?.SetActive(quest.isCompleted && quest.hasClaimedReward);
+
+        float targetValue = (float)quest.currentCount / quest.targetCount;
+        ui.progressBar.DOKill();
+        ui.progressBar.DOValue(targetValue, 0.4f).SetEase(Ease.OutCubic);
+
+        foreach (var rewardText in ui.rewardTexts)
+            rewardText.text = $"{quest.questTemplate.rewardDiamond}";
+
+        bool canClaim = quest.isCompleted && !quest.hasClaimedReward;
+        bool alreadyClaimed = quest.isCompleted && quest.hasClaimedReward;
+
+        ui.rewardButtonEnable.gameObject.SetActive(canClaim);
+        ui.rewardButtonDisable.gameObject.SetActive(!quest.isCompleted);
+        ui.claimedButton.gameObject.SetActive(alreadyClaimed);
+
+        ui.rewardButtonEnable.onClick.RemoveAllListeners();
+        ui.rewardButtonEnable.onClick.AddListener(() => ClaimQuestReward(index));
+    }
+
+    /// <summary>Update daily bonus button state.</summary>
+    private void UpdateCompletionRewardUI()
+    {
+        bool allCompleted = activeQuests.TrueForAll(q => q.isCompleted);
+        completionRewardEnable?.gameObject.SetActive(allCompleted && !hasClaimedBonus);
+        completionRewardDisable?.gameObject.SetActive(!allCompleted);
+        completionRewardClaimed?.gameObject.SetActive(allCompleted && hasClaimedBonus);
+    }
+
+    /// <summary>Update total progress bar and overlay.</summary>
+    private void UpdateOverallProgressUI()
+    {
+        if (overallProgressBar == null || overallProgressText == null) return;
+
+        if (activeQuests == null || activeQuests.Count == 0)
+        {
+            overallProgressBar.value = 0f;
+            overallProgressText.text = "0/0";
+            completedOverlay?.SetActive(false);
+            return;
+        }
+
+        int completedCount = 0;
+        foreach (var quest in activeQuests)
+            if (quest.isCompleted) completedCount++;
+
+        float progress = (float)completedCount / activeQuests.Count;
+
+        overallProgressBar.DOKill();
+        overallProgressBar.DOValue(progress, 0.5f).SetEase(Ease.OutCubic);
+        overallProgressText.text = $"{completedCount}/{activeQuests.Count}";
+        completedOverlay?.SetActive(hasClaimedBonus);
+    }
+
+    /// <summary>Update Claim All button state.</summary>
+    private void UpdateClaimAllButtons()
+    {
+        int claimableCount = 0;
+        foreach (var quest in activeQuests)
+            if (quest.isCompleted && !quest.hasClaimedReward)
+                claimableCount++;
+
+        bool allCompleted = activeQuests.TrueForAll(q => q.isCompleted);
+        if (allCompleted && !hasClaimedBonus)
+            claimableCount++;
+
+        bool canClaimAll = claimableCount >= 2;
+        claimAllEnable?.gameObject.SetActive(canClaimAll);
+        claimAllDisable?.gameObject.SetActive(!canClaimAll);
+    }
+    #endregion
+
+    //─────────────────────────────────────────────────────────────
     #region === Save & Load ===
-    /// <summary>Imports saved quest data from SaveData.</summary>
+    /// <summary>Load quest data from SaveManager.</summary>
     public void ImportSaveData(SaveData data)
     {
         if (data == null)
@@ -401,14 +475,13 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
         {
             if (quest.questTemplate == null && !string.IsNullOrEmpty(quest.questID))
                 quest.questTemplate = questTemplates.Find(q => q.name == quest.questID);
-
             quest.selectedActivity = (DailyActivity)quest.savedActivityInt;
         }
 
         RefreshUI();
     }
 
-    /// <summary>Saves quest data to SaveManager.</summary>
+    /// <summary>Save quest progress automatically.</summary>
     public void AutoSave(bool includeDate = false)
     {
         if (SaveManager.Data == null) return;
@@ -418,7 +491,7 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
         SaveManager.SaveGame();
     }
 
-    /// <summary>Resets daily quests manually.</summary>
+    /// <summary>Reset daily quests manually.</summary>
     public void ResetDailyQuests()
     {
         GenerateNewDailyQuests();
@@ -427,17 +500,15 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
     }
     #endregion
 
+    //─────────────────────────────────────────────────────────────
     #region === Event System ===
-    private void SubscribeToEvents() => HandleEventSubscriptions(true);
-    private void UnsubscribeEvents() => HandleEventSubscriptions(false);
+    private void SubscribeToEvents() => HandleEventSubscriptions(true); // Subscribe all gameplay events
+    private void UnsubscribeEvents() => HandleEventSubscriptions(false); // Unsubscribe all events
 
-
-    /// Subscribes or unsubscribes all quest-related gameplay events.</summary>
+    /// <summary>Bind or unbind all gameplay-related quest triggers.</summary>
     private void HandleEventSubscriptions(bool subscribe)
     {
-        // ──────────────────────────────────────────────
-        // 🧁 Baking System
-        // ──────────────────────────────────────────────
+        // Baking
         if (BakingManager.Instance != null)
         {
             if (subscribe)
@@ -448,9 +519,7 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
             else BakingManager.Instance.OnCakeBaked -= cakeBakedHandler;
         }
 
-        // ──────────────────────────────────────────────
-        // 🍳 Cooking System
-        // ──────────────────────────────────────────────
+        // Cooking
         if (CookingManager.Instance != null)
         {
             if (subscribe)
@@ -461,9 +530,7 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
             else CookingManager.Instance.OnDishCooked -= dishCookedHandler;
         }
 
-        // ──────────────────────────────────────────────
-        // 💰 Bank / Debt System
-        // ──────────────────────────────────────────────
+        // Bank / Debt
         if (BankManager.Instance != null)
         {
             if (subscribe)
@@ -471,13 +538,10 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
                 debtPaidHandler = () => AddProgress(DailyQuestType.PayDebt);
                 BankManager.Instance.OnDebtPaid += debtPaidHandler;
             }
-
             else BankManager.Instance.OnDebtPaid -= debtPaidHandler;
         }
 
-        // ──────────────────────────────────────────────
-        // 🪙 Coin Trading System
-        // ──────────────────────────────────────────────
+        // Coin Trading
         if (CoinTradeManager.Instance != null)
         {
             if (subscribe)
@@ -487,7 +551,6 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
                 CoinTradeManager.Instance.OnCoinBought += coinBoughtHandler;
                 CoinTradeManager.Instance.OnCoinSell += coinSellHandler;
             }
-
             else
             {
                 CoinTradeManager.Instance.OnCoinBought -= coinBoughtHandler;
@@ -495,9 +558,7 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
             }
         }
 
-        // ──────────────────────────────────────────────
-        // 📱 Post / Social System
-        // ──────────────────────────────────────────────
+        // Post System
         if (PostManager.Instance != null)
         {
             if (subscribe)
@@ -505,13 +566,10 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
                 postCreatedHandler = () => AddProgress(DailyQuestType.CreatePosts);
                 PostManager.Instance.OnPostCreated += postCreatedHandler;
             }
-
             else PostManager.Instance.OnPostCreated -= postCreatedHandler;
         }
 
-        // ──────────────────────────────────────────────
-        // 🛒 Shop System
-        // ──────────────────────────────────────────────
+        // Shop
         if (ShopManager.Instance != null)
         {
             if (subscribe)
@@ -519,20 +577,16 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
                 itemPurchasedHandler = () => AddProgress(DailyQuestType.BuyFromShop);
                 ShopManager.Instance.OnItemPurchased += itemPurchasedHandler;
             }
-
             else ShopManager.Instance.OnItemPurchased -= itemPurchasedHandler;
         }
 
-        // ──────────────────────────────────────────────
-        // 🧩 Debug Log
-        // ──────────────────────────────────────────────
         Debug.Log($"[DailyQuestManager] {(subscribe ? "Subscribed" : "Unsubscribed")} to events.");
     }
-
     #endregion
 
+    //─────────────────────────────────────────────────────────────
     #region === Coroutines ===
-    /// <summary>Checks for date change to refresh daily quests.</summary>
+    /// <summary>Check real-world date change every minute and reset quests.</summary>
     private IEnumerator CheckDateChangeRoutine()
     {
         while (true)

@@ -43,7 +43,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     [SerializeField] private float floatingTextFadeDuration = 2f;
 
     private Tween[] moneyTweens = new Tween[3];
-    private Tween[] debtTweens = new Tween[1];
+    private Tween[] debtTweens = new Tween[2];
     private Tween[] diamondTweens = new Tween[2];
 
     private bool hasInitialized = false;
