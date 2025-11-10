@@ -8,30 +8,8 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 /// Manages preload and release of Addressable assets for each scene.
 /// Attach this to a GameObject in your MainMenu or InitScene.
 /// </summary>
-public class AddressablePreloadManager : MonoBehaviour
+public class AddressablePreloadManager : SingletonMonobehaviour<AddressablePreloadManager>
 {
-    #region Singleton Setup
-
-    public static AddressablePreloadManager Instance { get; private set; }
-
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        Instance = this;
-
-        if (transform.parent != null)
-            Debug.LogWarning("AddressablePreloadManager is not a root GameObject. DontDestroyOnLoad will be ignored.");
-
-        DontDestroyOnLoad(gameObject);
-    }
-
-    #endregion
-
     #region Runtime Data
 
     private readonly Dictionary<string, AsyncOperationHandle> loadedHandles = new();

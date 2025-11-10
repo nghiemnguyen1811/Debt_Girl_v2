@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 public class ShopManager : SingletonMonobehaviour<ShopManager>
 {
-    public event Action OnDecorDataInitialized;
     public event Action OnItemPurchased;
 
     [Header("Food References")]
@@ -46,8 +45,6 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
     // ─────────────────────────────────────────────────────
     private void Start()
     {
-        OnDecorDataInitialized?.Invoke();
-
         InitializeFoodUI();
         InitializeDecorUI();
         InitializeCharacterTabs();
@@ -242,6 +239,17 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
     {
         foreach (var container in spawnedFoodContainers)
             container.UpdateButtonStates();
+    }
+
+    public void RefreshDecorOwnershipUI()
+    {
+        foreach (var container in spawnedDecorContainers)
+        {
+            if (container == null) continue;
+            container.RefreshOwnershipUI();
+        }
+
+        Debug.Log("[ShopManager] Decor containers refreshed after ImportSaveData.");
     }
 
     private void UpdatePurchaseButtonState()

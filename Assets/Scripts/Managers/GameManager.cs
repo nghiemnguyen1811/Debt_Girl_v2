@@ -35,6 +35,8 @@ public class GameManager : SingletonMonobehaviour<GameManager>
         // Start background music
         if (AudioManager.Instance != null)
             AudioManager.Instance.PlayMusic(1);
+
+        DataManager.Instance.ReloadAllData();
     }
 
     // ─────────────────────────────────────────────────────

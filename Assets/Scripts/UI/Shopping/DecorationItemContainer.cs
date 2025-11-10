@@ -44,7 +44,6 @@ public class DecorationItemContainer : MonoBehaviour
         currentQuantity = 0;
         isOwned = false;
 
-        UpdateOwnershipState();
         UpdateUI();
     }
 
@@ -108,6 +107,12 @@ public class DecorationItemContainer : MonoBehaviour
             minusButton.interactable = currentQuantity > 0;
             plusButton.interactable = currentQuantity < 1;
         }
+    }
+
+    public void RefreshOwnershipUI()
+    {
+        UpdateOwnershipState();
+        UpdateUI();
     }
 
     public void ConfirmPurchase()

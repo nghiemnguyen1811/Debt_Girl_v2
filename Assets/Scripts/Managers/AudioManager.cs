@@ -35,10 +35,8 @@ public class AudioManager : SingletonMonobehaviour<AudioManager>
     #region === Unity Events ===
 
     // Populate dictionary mapping enum to AudioSource arrays
-    protected override void Awake()
+    private void Start()
     {
-        base.Awake();
-
         audioGroups = new Dictionary<AudioGroup, AudioSource[]>
         {
             { AudioGroup.Music, musics },
@@ -46,8 +44,6 @@ public class AudioManager : SingletonMonobehaviour<AudioManager>
             { AudioGroup.Footstep, footstepSounds },
             { AudioGroup.Mood, moodSounds }
         };
-
-        DontDestroyOnLoad(gameObject);
     }
 
     #endregion

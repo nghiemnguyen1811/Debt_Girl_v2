@@ -97,6 +97,8 @@ public class DecorationManager : SingletonMonobehaviour<DecorationManager>
             decor.SetActive(active);
         }
 
+        ShopManager.Instance?.RefreshDecorOwnershipUI();
+
         Debug.Log($"[DecorationManager] Imported {ownedDecorations.Count} decorations");
     }
 }

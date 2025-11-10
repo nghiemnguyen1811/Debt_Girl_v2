@@ -4,33 +4,17 @@ using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
 
-public class LocalizationManager : MonoBehaviour
+public class LocalizationManager : SingletonMonobehaviour<LocalizationManager>
 {
-    public static LocalizationManager Instance;
-
     [Header("LibreTranslate API URL")]
-    [Tooltip("Link API server của bạn hoặc dùng tạm public server")]
+    [Tooltip("Your API server URL, or use a temporary public server")]
     [SerializeField] private string apiUrl = "https://libretranslate.com/translate";
 
-    // Cache tạm (RAM)
+    // Temporary cache (stored in RAM)
     private Dictionary<string, string> translationCache = new Dictionary<string, string>();
 
-    private void Awake()
-    {
-        // Đảm bảo chỉ có 1 object duy nhất
-        if (Instance == null)
-        {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
     /// <summary>
-    /// Dịch toàn bộ TextMeshProUGUI trong scene hiện tại
+    /// Translates all TextMeshProUGUI elements in the current scene.
     /// </summary>
     public void TranslateSceneUI(string targetLang)
     {
@@ -45,7 +29,7 @@ public class LocalizationManager : MonoBehaviour
         {
             string original = t.text;
 
-            // Bỏ qua text trống
+            // Skip empty text
             if (string.IsNullOrWhiteSpace(original))
                 continue;
 
@@ -57,20 +41,20 @@ public class LocalizationManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Dịch 1 đoạn text, có cache để tránh gọi lại
+    /// Translates a single text string with caching to avoid duplicate API calls.
     /// </summary>
     public IEnumerator Translate(string source, string targetLang, System.Action<string> callback)
     {
         string key = $"{source}_{targetLang}";
 
-        // 🔹 Nếu đã có trong cache, trả về luôn
+        // 🔹 If already cached, return immediately
         if (translationCache.TryGetValue(key, out var cached))
         {
             callback(cached);
             yield break;
         }
 
-        // 🔹 Nếu chưa có → gọi API
+        // 🔹 If not cached → call API
         yield return TranslatorLibre.Translate(source, targetLang, apiUrl, result =>
         {
             translationCache[key] = result;

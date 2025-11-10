@@ -31,25 +31,17 @@ public class DataManager : SingletonMonobehaviour<DataManager>
         cachedSaveData = SaveManager.LoadGame();
     }
 
-    private void OnEnable()
-    {
-        ShopManager.Instance.OnDecorDataInitialized += HandleDecorDataInitialized;
-    }
-
-    private void OnDisable()
-    {
-        // Unsubscribe to prevent memory leaks
-        ShopManager.Instance.OnDecorDataInitialized -= HandleDecorDataInitialized;
-    }
-
-    private void Start()
-    {
-        StartCoroutine(ReloadSaveData());
-    }
-
     // ─────────────────────────────────────────────────────
     // Public Methods
     // ─────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Public method to trigger reloading of save data.
+    /// </summary>
+    public void ReloadAllData()
+    {
+        StartCoroutine(ReloadSaveData());
+    }
 
     /// <summary>
     /// Reloads SaveData from SaveManager and re-imports data to managers.
@@ -69,6 +61,7 @@ public class DataManager : SingletonMonobehaviour<DataManager>
         CoinTradeManager.Instance?.ImportSaveData(cachedSaveData);
         MoodManager.Instance?.ImportSaveData(cachedSaveData);
         PostManager.Instance?.ImportSaveData(cachedSaveData);
+        DecorationManager.Instance?.ImportSaveData(cachedSaveData);
         OutfitManager.Instance?.ImportSaveData(cachedSaveData);
         MoneyManager.Instance?.ImportSaveData(cachedSaveData);
         DailyQuestManager.Instance?.ImportSaveData(cachedSaveData);
@@ -100,17 +93,5 @@ public class DataManager : SingletonMonobehaviour<DataManager>
         }
 
         Debug.Log($"[DataManager] Item database built with {itemDatabase.Count} entries");
-    }
-
-    // ─────────────────────────────────────────────────────
-    // Event Handlers
-    // ─────────────────────────────────────────────────────
-
-    private void HandleDecorDataInitialized()
-    {
-        if (cachedSaveData == null) return;
-
-        DecorationManager.Instance?.ImportSaveData(cachedSaveData);
-        Debug.Log("[DataManager] PlayerStats save data imported.");
     }
 }
