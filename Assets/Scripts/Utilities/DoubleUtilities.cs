@@ -9,7 +9,7 @@ public static class DoubleUtilities
     public static string ToIdleNotation(double value)
     {
         if (value < 1000)
-            return Math.Round(value).ToString();
+            return Math.Round(value).ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
 
         double tValue = value;
         int abbreviationIndex = -1;
@@ -20,15 +20,14 @@ public static class DoubleUtilities
             abbreviationIndex++;
         }
 
-        // Nếu vượt quá giới hạn abbreviation có sẵn thì dùng ScientificNotation
         if (abbreviationIndex == -1)
-            return value.ToString();
+            return value.ToString("N0", System.Globalization.CultureInfo.CurrentCulture);
 
         else if (abbreviationIndex >= abbreviations.Length)
             return ToScientificNotation(value);
 
         string abbreviation = abbreviations[abbreviationIndex];
-        return tValue.ToString("F1") + abbreviation;
+        return $"{tValue:F1}{abbreviation}";
     }
 
     public static string ToScientificNotation(double value)

@@ -95,11 +95,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
             statPointText.text = $"{total}";
     }
 
-    public void UpdateTotalPriceUI(double total)
-    {
-        if (totalPriceText != null)
-            totalPriceText.text = DoubleUtilities.ToIdleNotation(total) + "원";
-    }
+    
 
     #endregion
 

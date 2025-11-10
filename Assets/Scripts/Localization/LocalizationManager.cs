@@ -1,64 +1,135 @@
-﻿using UnityEngine;
-using TMPro;
-using UnityEngine.Networking;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
+using TMPro;
 
+/// <summary>
+/// Centralized localization manager that caches and provides translated strings by key.
+/// Supports dynamic runtime usage (e.g., items, floors, shop UI).
+/// </summary>
 public class LocalizationManager : SingletonMonobehaviour<LocalizationManager>
 {
-    [Header("LibreTranslate API URL")]
-    [Tooltip("Your API server URL, or use a temporary public server")]
-    [SerializeField] private string apiUrl = "https://libretranslate.com/translate";
-
-    // Temporary cache (stored in RAM)
-    private Dictionary<string, string> translationCache = new Dictionary<string, string>();
+    //─────────────────────────────────────────────
+    #region === Events ===
 
     /// <summary>
-    /// Translates all TextMeshProUGUI elements in the current scene.
+    /// Invoked when the active locale (language) changes.
     /// </summary>
-    public void TranslateSceneUI(string targetLang)
+    public event Action OnLanguageChanged;
+
+    #endregion
+
+    //─────────────────────────────────────────────
+    #region === Internal Cache ===
+
+    /// <summary>
+    /// Cache of localized texts by combined key (table_key).
+    /// Prevents redundant async loads for the same string.
+    /// </summary>
+    private readonly Dictionary<string, string> cachedTexts = new();
+
+    #endregion
+
+    //─────────────────────────────────────────────
+    #region === Unity Lifecycle ===
+
+    private void OnEnable()
     {
-        StartCoroutine(TranslateAllTexts(targetLang));
+        LocalizationSettings.SelectedLocaleChanged += HandleLanguageChanged;
     }
 
-    private IEnumerator TranslateAllTexts(string lang)
+    private void OnDisable()
     {
-        TextMeshProUGUI[] texts = FindObjectsByType<TextMeshProUGUI>(FindObjectsSortMode.None);
+        LocalizationSettings.SelectedLocaleChanged -= HandleLanguageChanged;
+    }
 
-        foreach (var t in texts)
+    /// <summary>
+    /// Clears cache when language changes and notifies subscribers.
+    /// </summary>
+    private void HandleLanguageChanged(UnityEngine.Localization.Locale locale)
+    {
+        cachedTexts.Clear();
+        OnLanguageChanged?.Invoke();
+    }
+
+    #endregion
+
+    //─────────────────────────────────────────────
+    #region === Public API ===
+
+    /// <summary>
+    /// Sets the localized text of a TMP_Text component using a table name and key.
+    /// Automatically caches results for faster subsequent lookups.
+    /// </summary>
+    /// <param name="label">The TextMeshProUGUI component to update.</param>
+    /// <param name="table">Localization table name.</param>
+    /// <param name="key">Entry key inside the table.</param>
+    public async void SetLocalizedText(TMP_Text label, string table, string key)
+    {
+        if (!label || string.IsNullOrEmpty(key) || string.IsNullOrEmpty(table))
         {
-            string original = t.text;
+            Debug.LogWarning($"[LocalizationManager] Invalid table/key: {table}/{key}");
+            return;
+        }
 
-            // Skip empty text
-            if (string.IsNullOrWhiteSpace(original))
-                continue;
+        string cacheKey = $"{table}_{key}";
 
-            yield return Translate(original, lang, translated =>
-            {
-                t.text = translated;
-            });
+        // Check cache first
+        if (cachedTexts.TryGetValue(cacheKey, out var cached))
+        {
+            label.text = cached;
+            return;
+        }
+
+        // Load from localization system
+        var locString = new LocalizedString(table, key);
+
+        try
+        {
+            string result = await locString.GetLocalizedStringAsync().Task;
+            cachedTexts[cacheKey] = result;
+            label.text = result;
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError($"[LocalizationManager] Failed to load key '{key}' from '{table}': {ex.Message}");
         }
     }
 
     /// <summary>
-    /// Translates a single text string with caching to avoid duplicate API calls.
+    /// Retrieves a localized string (without directly updating UI).
+    /// Use this when you need the text for logic or formatted composition.
     /// </summary>
-    public IEnumerator Translate(string source, string targetLang, System.Action<string> callback)
+    /// <param name="table">Localization table name.</param>
+    /// <param name="key">Entry key inside the table.</param>
+    /// <returns>Localized text as string.</returns>
+    public async System.Threading.Tasks.Task<string> GetLocalizedString(string table, string key)
     {
-        string key = $"{source}_{targetLang}";
+        if (string.IsNullOrEmpty(key) || string.IsNullOrEmpty(table))
+            return string.Empty;
 
-        // 🔹 If already cached, return immediately
-        if (translationCache.TryGetValue(key, out var cached))
+        string cacheKey = $"{table}_{key}";
+
+        // Return cached if exists
+        if (cachedTexts.TryGetValue(cacheKey, out var cached))
+            return cached;
+
+        var locString = new LocalizedString(table, key);
+
+        try
         {
-            callback(cached);
-            yield break;
+            string result = await locString.GetLocalizedStringAsync().Task;
+            cachedTexts[cacheKey] = result;
+            return result;
         }
-
-        // 🔹 If not cached → call API
-        yield return TranslatorLibre.Translate(source, targetLang, apiUrl, result =>
+        catch (Exception ex)
         {
-            translationCache[key] = result;
-            callback(result);
-        });
+            Debug.LogError($"[LocalizationManager] Failed to get key '{key}' from '{table}': {ex.Message}");
+            return string.Empty;
+        }
     }
+
+    #endregion
 }

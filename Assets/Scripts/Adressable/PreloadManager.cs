@@ -4,6 +4,14 @@ public class PreloadManager : MonoBehaviour
 {
     private void OnDestroy()
     {
-        AddressablePreloadManager.Instance.ReleaseAll();
+        // Only release if the AddressablePreloadManager actually exists
+        if (AddressablePreloadManager.Instance != null)
+        {
+            AddressablePreloadManager.Instance.ReleaseAll();
+        }
+        else
+        {
+            Debug.LogWarning("[PreloadManager] AddressablePreloadManager not found — skipped ReleaseAll().");
+        }
     }
 }

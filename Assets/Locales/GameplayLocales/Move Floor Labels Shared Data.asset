@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Move Floor Labels Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: Move Floor Labels
+  m_TableCollectionNameGuidString: 30c4c17ae68d6b54e88c8459f365bc34
+  m_Entries:
+  - m_Id: 7262103224320
+    m_Key: movefloor.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7265907458048
+    m_Key: movefloor.ok
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7267723591680
+    m_Key: movefloor.namef1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19011971923968
+    m_Key: movefloor.descriptionf1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19063742218240
+    m_Key: movefloor.namef2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19067064107008
+    m_Key: movefloor.descriptionf2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19093643411456
+    m_Key: movefloor.namef3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19097892241408
+    m_Key: movefloor.descriptionf3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19123360055296
+    m_Key: movefloor.namef4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19139692675072
+    m_Key: movefloor.descriptionf4
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 5709834480986357854
+  references:
+    version: 2
+    RefIds:
+    - rid: 5709834480986357854
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1762757801693

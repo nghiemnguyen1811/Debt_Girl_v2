@@ -31,7 +31,7 @@ public static class SaveManager
     {
         string json = JsonUtility.ToJson(Data, true); // Convert SaveData object to JSON
         File.WriteAllText(SavePath, json);           // Write JSON string to file
-        Debug.Log("[SaveManager] Game saved to: " + SavePath);
+        //Debug.Log("[SaveManager] Game saved to: " + SavePath);
     }
 
     /// <summary>

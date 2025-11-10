@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using Sirenix.OdinInspector;
 using System;
+using UnityEngine.Localization;
 
 [CreateAssetMenu(fileName = "New Floor Data", menuName = "Building/Floor Data")]
 public class FloorDataSO : ScriptableObject
@@ -9,10 +10,13 @@ public class FloorDataSO : ScriptableObject
     // Floor Info
     // ─────────────────────────────────────────────────────
     [Title("Floor Info")]
-    public string floorName;
     public FloorType floorType;
-    [TextArea(2, 4)]
-    public string floorDescription;
+
+    [Tooltip("Floor name key")]
+    public string floorNameKey;
+
+    [Tooltip("Floor description key")]
+    public string floorDescriptionKey;
 
     // ─────────────────────────────────────────────────────
     // Rooms

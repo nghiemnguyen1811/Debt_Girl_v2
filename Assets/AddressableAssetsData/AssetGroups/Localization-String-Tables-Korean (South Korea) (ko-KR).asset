@@ -36,8 +36,22 @@ MonoBehaviour:
     - Locale-ko-KR
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 78fceaa428cddfa4bb1b3cef05f2e4c9
+    m_Address: Food Labels_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 7aa9449fb3b51c24281e31cef48136a0
     m_Address: Phone Labels_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 834404eacf18b464882515df9da1de9e
+    m_Address: Move Floor Labels_ko-KR
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-ko-KR
@@ -59,6 +73,13 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: dc2e2c46debe4774ba8a8a3aeaefe1e7
     m_Address: Pause Labels_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fb639311f66403e41b785e4c01656b0e
+    m_Address: Shop Labels_ko-KR
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-ko-KR

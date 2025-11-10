@@ -15,6 +15,13 @@ MonoBehaviour:
   m_GroupName: Localization-String-Tables-English (en)
   m_GUID: 4fe78c4f03bb87b49b8afd762e599f43
   m_SerializeEntries:
+  - m_GUID: 023ca01b65bcefa4b8059934b83ea079
+    m_Address: Move Floor Labels_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 08a52bf80f5590046835b14cd00aa325
     m_Address: Loading Labels_en
     m_ReadOnly: 1
@@ -45,6 +52,20 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8e26907dcfb512b48ab8bb804097635a
     m_Address: Menu Labels_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e0cbb41d128ba9e4abd32f5401fef72a
+    m_Address: Shop Labels_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e948895ac6f56934aa543225b32fb89d
+    m_Address: Food Labels_en
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-en

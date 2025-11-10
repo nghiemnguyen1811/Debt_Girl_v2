@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Runtime.InteropServices;
 
 [DisallowMultipleComponent]
 [RequireComponent(typeof(Button))]
@@ -25,11 +26,21 @@ public class FloorSelectButton : MonoBehaviour
     // ─────────────────────────────────────────────────────
     // Unity Lifecycle
     // ─────────────────────────────────────────────────────
+    private void OnEnable()
+    {
+        LocalizationManager.Instance.OnLanguageChanged += RefreshUI;
+    }
+
     private void Start()
     {
         if (autoRefreshOnStart) RefreshUI();
     }
 
+    private void OnDisable()
+    {
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.OnLanguageChanged -= RefreshUI;
+    }
 #if UNITY_EDITOR
     private void OnValidate()
     {
@@ -75,7 +86,7 @@ public class FloorSelectButton : MonoBehaviour
     // ─────────────────────────────────────────────────────
     // Private Helpers
     // ─────────────────────────────────────────────────────
-    private void RefreshUI()
+    private async void RefreshUI()
     {
         if (!floorNameLabel) return;
 
@@ -85,14 +96,17 @@ public class FloorSelectButton : MonoBehaviour
             return;
         }
 
-        floorNameLabel.text = BuildDisplayName(floorData);
+        floorNameLabel.text = await BuildDisplayName(floorData);
     }
 
-    private static string BuildDisplayName(FloorDataSO data)
+    private static async System.Threading.Tasks.Task<string> BuildDisplayName(FloorDataSO data)
     {
         if (!data) return "(No Floor)";
-        return string.IsNullOrWhiteSpace(data.floorName)
-            ? data.floorType.ToString()
-            : data.floorName;
+        string localizedName = await LocalizationManager.Instance.GetLocalizedString("Move Floor Labels", data.floorNameKey);
+
+        if (string.IsNullOrWhiteSpace(localizedName))
+            return data.floorType.ToString();
+
+        return localizedName;
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 
 public class ShopManager : SingletonMonobehaviour<ShopManager>
@@ -30,9 +31,15 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
 
     [SerializeField] private UIColorsConfig uiColorsConfig;
 
+    [Header("Labels")]
+    [SerializeField] private TextMeshProUGUI totalPriceText;
+
     [Header("Buttons")]
     [SerializeField] private Button purchaseButtonEnabled;
     [SerializeField] private Button purchaseButtonDisabled;
+
+    // Localized currency symbol (₩, $, ₫ ...)
+    [SerializeField] private LocalizedString currencySymbol = new LocalizedString("Shop Labels", "shop.totalText");
 
     private readonly List<FoodItemContainer> spawnedFoodContainers = new();
     private readonly List<DecorationItemContainer> spawnedDecorContainers = new();
@@ -43,6 +50,21 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
     private double tempTotalPrice;
 
     // ─────────────────────────────────────────────────────
+    private void OnEnable()
+    {
+        currencySymbol.StringChanged += UpdateTotalPriceUI;
+    }
+
+    private void OnDisable()
+    {
+        currencySymbol.StringChanged -= UpdateTotalPriceUI;
+    }
+
+    private void UpdateTotalPriceUI(string _)
+    {
+        UpdateTotalPriceUI();
+    }
+
     private void Start()
     {
         InitializeFoodUI();
@@ -285,7 +307,10 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
 
     private void UpdateTotalPriceUI()
     {
-        UIManager.Instance?.UpdateTotalPriceUI(tempTotalPrice);
+        if (totalPriceText == null) return;
+        string formattedValue = DoubleUtilities.ToIdleNotation(tempTotalPrice);
+        string localizedSymbol = currencySymbol.GetLocalizedString();
+        totalPriceText.text = $"{formattedValue}{localizedSymbol}";
     }
 
     // ─────────────────────────────────────────────────────

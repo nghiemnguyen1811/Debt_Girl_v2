@@ -52,6 +52,22 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
     // ─────────────────────────────────────────────────────
     // Unity Lifecycle
     // ─────────────────────────────────────────────────────
+    
+    private void OnEnable()
+    {
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.OnLanguageChanged += HandleLanguageChanged;
+    }
+    private void OnDisable()
+    {
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.OnLanguageChanged -= HandleLanguageChanged;
+    }
+    private void HandleLanguageChanged()
+    {
+        if (currentFloor != null)
+            UpdateFloorDescriptionText(currentFloor);
+    }
     private void Start()
     {
         InitFloorButtons();
@@ -69,6 +85,7 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
         // Subscribe to level changes
         GameManager.Instance.OnLevelChanged += RefreshAllFloors;
     }
+    
 
     private void OnDestroy()
     {
@@ -109,7 +126,9 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
         UpdateNavButtons();
         ResetPendingSelection();
 
-        Debug.Log($"[FloorSelectionManager] Floor selected: {floor.floorName}");
+        var key = LocalizationManager.Instance.GetLocalizedString("Move Floor Labels", floor.floorNameKey);
+        Debug.Log($"[FloorSelectionManager] Floor selected: {key}");
+
     }
 
     /// <summary>
@@ -221,7 +240,9 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
             if (!data) continue;
 
             var btnInstance = Instantiate(floorButtonPrefab, floorButtonsRoot);
-            btnInstance.name = $"FloorButton_{data.floorName}";
+
+            var key = LocalizationManager.Instance.GetLocalizedString("Move Floor Labels", data.floorNameKey);
+            btnInstance.name = $"FloorButton_{key}";
             btnInstance.SetFloor(data);
 
             var uiBtn = btnInstance.GetButton();
@@ -297,18 +318,21 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
 
             if (!prefabGroup)
             {
-                Debug.LogWarning($"[FloorSelectionManager] Missing floorUIPrefab on floor: {floor.floorName}");
+                //var key = LocalizationManager.Instance.GetLocalizedString("Move Room Labels", floor.floorNameKey);
+                //Debug.LogWarning($"[FloorSelectionManager] Missing floorUIPrefab on floor: {key}");
                 continue;
             }
 
             var group = Instantiate(prefabGroup, roomGroupsRoot);
-            group.name = $"RoomGroup_{floor.floorName}";
+
+            //var key = LocalizationManager.Instance.GetLocalizedString("Move Room Labels", floor.floorNameKey);
+            //group.name = $"RoomGroup_{floor.floorNameLocal.GetLocalizedString()}";
             group.ApplyFloor(floor);
 
             group.onRoomSelected += (room) =>
             {
                 HideAllUnlockPanels();
-                
+
                 var buttons = group.GetRoomButtons();
 
                 foreach (var btn in buttons)
@@ -414,12 +438,20 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
     // ─────────────────────────────────────────────────────
     // UI Helpers
     // ─────────────────────────────────────────────────────
-    private void UpdateFloorDescriptionText(FloorDataSO floor)
+    private async void UpdateFloorDescriptionText(FloorDataSO floor)
     {
         if (!floorInfoText) return;
-        floorInfoText.text = (floor != null && !string.IsNullOrEmpty(floor.floorDescription))
-            ? floor.floorDescription
-            : string.Empty;
+
+        if (floor == null)
+        {
+            floorInfoText.text = string.Empty;
+            return;
+        }
+
+        string description = await LocalizationManager.Instance.GetLocalizedString("Move Floor Labels", floor.floorDescriptionKey);
+        floorInfoText.text = (floor != null && !string.IsNullOrEmpty(description)
+            ? description
+            : string.Empty);
     }
 
     // ─────────────────────────────────────────────────────

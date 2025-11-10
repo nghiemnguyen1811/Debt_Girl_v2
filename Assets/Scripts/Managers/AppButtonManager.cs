@@ -15,6 +15,9 @@ public class AppButtonManager : MonoBehaviour
     [Header("App Buttons")]
     [SerializeField] private AppButtonData[] appButtons;
 
+    [Header("Global Level Requirement")]
+    [SerializeField] private bool useLevelRequirement = true;
+
     // ─────────────────────────────────────────────────────
     // Unity Lifecycle
     // ─────────────────────────────────────────────────────
@@ -48,6 +51,16 @@ public class AppButtonManager : MonoBehaviour
         {
             if (!app.appButton) continue;
 
+            if (!useLevelRequirement)
+            {
+                app.appButton.interactable = true;
+
+                if (app.requiredLevelText)
+                    app.requiredLevelText.gameObject.SetActive(false);
+
+                continue;
+            }
+
             bool unlocked = currentLevel >= app.requiredLevel;
 
             app.appButton.interactable = unlocked;
@@ -60,6 +73,23 @@ public class AppButtonManager : MonoBehaviour
                     app.requiredLevelText.text = $"Lv. {app.requiredLevel}";
             }
         }
+    }
+
+    /// <summary>
+    /// Enables or disables level requirements for all apps.
+    /// </summary>
+    public void SetLevelRequirementActive(bool active)
+    {
+        useLevelRequirement = active;
+        RefreshAll();
+    }
+
+    /// <summary>
+    /// Returns whether level requirement is currently active.
+    /// </summary>
+    public bool IsLevelRequirementActive()
+    {
+        return useLevelRequirement;
     }
 }
 
@@ -76,6 +106,6 @@ public class AppButtonData
     public Button appButton;
     public TextMeshProUGUI requiredLevelText;
 
-    [Header("Unlock Requirement")]
+    //[Header("Unlock Requirement")]
     [Min(1)] public int requiredLevel = 1;
 }
