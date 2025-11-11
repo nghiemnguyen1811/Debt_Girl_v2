@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Localization;
 using UnityEngine.UI;
 
 public class ShopManager : SingletonMonobehaviour<ShopManager>
@@ -38,31 +37,31 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
     [SerializeField] private Button purchaseButtonEnabled;
     [SerializeField] private Button purchaseButtonDisabled;
 
-    // Localized currency symbol (₩, $, ₫ ...)
-    [SerializeField] private LocalizedString currencySymbol = new LocalizedString("Shop Labels", "shop.totalText");
-
     private readonly List<FoodItemContainer> spawnedFoodContainers = new();
     private readonly List<DecorationItemContainer> spawnedDecorContainers = new();
     private readonly List<CharacterTabButton> spawnedCharacterTabs = new();
 
-    private CharacterTabButton currentSelectedTab = null;
-    private Tab currentActiveTab = null;
+    private CharacterTabButton currentSelectedTab;
+    private Tab currentActiveTab;
     private double tempTotalPrice;
 
-    // ─────────────────────────────────────────────────────
-    private void OnEnable()
+    //─────────────────────────────────────────────────────
+    // Unity Lifecycle
+    //─────────────────────────────────────────────────────
+    protected override void Awake()
     {
-        currencySymbol.StringChanged += UpdateTotalPriceUI;
+        base.Awake();
+
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.RegisterForGlobalRefresh(RefreshAllLocalizedTexts);
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
-        currencySymbol.StringChanged -= UpdateTotalPriceUI;
-    }
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.UnregisterForGlobalRefresh(RefreshAllLocalizedTexts);
 
-    private void UpdateTotalPriceUI(string _)
-    {
-        UpdateTotalPriceUI();
+        CharacterTabButton.OnTabSelected -= HandleTabSelected;
     }
 
     private void Start()
@@ -73,9 +72,8 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
         SetupListeners();
         SetupShopTabs();
 
-        // Default: activate Food tab
         if (shopTabs.Count > 0)
-            ActivateTab(shopTabs[0]);
+            ActivateTab(shopTabs[0]); // Default to Food tab
     }
 
     private void SetupListeners()
@@ -86,14 +84,36 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
         CharacterTabButton.OnTabSelected += HandleTabSelected;
     }
 
-    private void OnDestroy()
+    //─────────────────────────────────────────────────────
+    // Localization Auto-Update
+    //─────────────────────────────────────────────────────
+    private void RefreshAllLocalizedTexts()
     {
-        CharacterTabButton.OnTabSelected -= HandleTabSelected;
+        // Refresh all food items
+        foreach (var container in spawnedFoodContainers)
+        {
+            if (container == null) continue;
+            container.RefreshLocalizedTexts();
+            container.RefreshLocalizedPrice();
+        }
+
+        // Refresh all decoration items
+        foreach (var container in spawnedDecorContainers)
+        {
+            if (container == null) continue;
+            container.RefreshLocalizedTexts();
+            container.RefreshLocalizedPrice();
+        }
+
+        // Update total price text with new symbol
+        UpdateTotalPriceUI();
+
+        Debug.Log("[ShopManager] Localization refreshed for all shop containers.");
     }
 
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────────────
     // Character Tabs
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────────────
     private void InitializeCharacterTabs()
     {
         foreach (var tabData in characterTabList)
@@ -107,7 +127,6 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
 
     private void HandleTabSelected(CharacterType selectedType)
     {
-        // Click again on the same tab → deselect and show all items
         if (currentSelectedTab != null && currentSelectedTab.CharacterType == selectedType)
         {
             currentSelectedTab.SetSelected(false);
@@ -116,11 +135,9 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
             return;
         }
 
-        // Deselect the old tab
         if (currentSelectedTab != null)
             currentSelectedTab.SetSelected(false);
 
-        // Select the new tab
         currentSelectedTab = spawnedCharacterTabs.Find(t => t.CharacterType == selectedType);
         if (currentSelectedTab != null)
         {
@@ -144,9 +161,9 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
         }
     }
 
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────────────
     // Food UI
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────────────
     private bool IsFoodItem(ItemDataSO item)
     {
         return item.itemType == ItemType.Material || item.itemType == ItemType.Consumable;
@@ -175,9 +192,9 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
         spawnedFoodContainers.Clear();
     }
 
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────────────
     // Decor UI
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────────────
     private void InitializeDecorUI()
     {
         ClearExistingDecorContainers();
@@ -200,9 +217,9 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
         spawnedDecorContainers.Clear();
     }
 
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────────────
     // Shop Tabs
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────────────
     private void SetupShopTabs()
     {
         foreach (var tab in shopTabs)
@@ -215,7 +232,6 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
 
     private void ActivateTab(Tab tab)
     {
-        // Deselect old tab
         if (currentActiveTab != null)
         {
             SetTabVisual(currentActiveTab, false);
@@ -223,33 +239,28 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
                 currentActiveTab.group.SetActive(false);
         }
 
-        // Select new tab
         currentActiveTab = tab;
         SetTabVisual(tab, true);
 
         if (tab.group != null)
             tab.group.SetActive(true);
 
-        // Only for Decoration and Fashion → enable CharacterSelection Panel
-        if (tab.tabName == "Decoration" || tab.tabName == "Fashion")
-            characterSelectionPanel.SetActive(true);
-
-        else characterSelectionPanel.SetActive(false);
+        // Show character tabs only for certain categories
+        characterSelectionPanel.SetActive(tab.tabName == "Decoration" || tab.tabName == "Fashion");
     }
 
     private void SetTabVisual(Tab tab, bool isActive)
     {
         if (tab.labelText != null)
-            tab.labelText.color = isActive ?
-                uiColorsConfig.tabOn : uiColorsConfig.tabOff;
+            tab.labelText.color = isActive ? uiColorsConfig.tabOn : uiColorsConfig.tabOff;
 
         if (tab.outline != null)
             tab.outline.SetActive(isActive);
     }
 
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────────────
     // UI Updates
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────────────
     public void UpdateAllUI()
     {
         UpdateAllItemButtons();
@@ -278,28 +289,9 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
     {
         if (purchaseButtonEnabled == null || purchaseButtonDisabled == null) return;
 
-        bool hasItemToBuy = false;
-
-        foreach (var container in spawnedFoodContainers)
-        {
-            if (container.GetCurrentQuantity() > 0)
-            {
-                hasItemToBuy = true;
-                break;
-            }
-        }
-
-        if (!hasItemToBuy)
-        {
-            foreach (var container in spawnedDecorContainers)
-            {
-                if (container.GetCount() > 0)
-                {
-                    hasItemToBuy = true;
-                    break;
-                }
-            }
-        }
+        bool hasItemToBuy =
+            spawnedFoodContainers.Any(c => c.GetCurrentQuantity() > 0) ||
+            spawnedDecorContainers.Any(c => c.GetCount() > 0);
 
         purchaseButtonEnabled.gameObject.SetActive(hasItemToBuy);
         purchaseButtonDisabled.gameObject.SetActive(!hasItemToBuy);
@@ -309,16 +301,15 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
     {
         if (totalPriceText == null) return;
         string formattedValue = DoubleUtilities.ToIdleNotation(tempTotalPrice);
-        string localizedSymbol = currencySymbol.GetLocalizedString();
+        string localizedSymbol = LocalizationManager.Instance.GetCurrencySymbol();
         totalPriceText.text = $"{formattedValue}{localizedSymbol}";
     }
 
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────────────
     // Purchase Logic
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────────────
     public void ApplyPurchase()
     {
-        // Food purchase
         foreach (var container in spawnedFoodContainers)
         {
             var itemData = container.GetItemData();
@@ -330,7 +321,6 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
             container.ConfirmPurchase();
         }
 
-        // Decor purchase
         foreach (var container in spawnedDecorContainers)
         {
             if (container.GetCount() > 0)
@@ -367,9 +357,9 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
         tempTotalPrice = 0;
     }
 
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────────────
     // Temporary Price Control
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────────────
     public bool TryAddToTempPrice(double price)
     {
         if (MoneyManager.Instance.HasEnoughMoney(tempTotalPrice + price))
@@ -378,7 +368,6 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
             UpdateTotalPriceUI();
             return true;
         }
-
         return false;
     }
 
@@ -400,9 +389,9 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
 [System.Serializable]
 public class Tab
 {
-    public string tabName;              // "Food" / "Decoration"
-    public Button button;               // Button reference
-    public TMP_Text labelText;          // Text label of the tab
-    public GameObject outline;          // Outline image of the tab
-    public GameObject group;     // Corresponding ScrollRect
+    public string tabName;     // "Food" / "Decoration"
+    public Button button;
+    public TMP_Text labelText;
+    public GameObject outline;
+    public GameObject group;   // Corresponding ScrollRect
 }

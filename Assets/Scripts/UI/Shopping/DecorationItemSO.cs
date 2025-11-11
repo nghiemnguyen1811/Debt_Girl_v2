@@ -12,12 +12,16 @@ public class DecorationItemSO : ScriptableObject
     [PreviewField(60), HideLabel, GUIColor(0.9f, 0.9f, 1f)]
     public Sprite icon;
 
-    [VerticalGroup("Top/Right"), LabelWidth(100)]
-    public string itemName;
+    //[VerticalGroup("Top/Right"), LabelWidth(100)]
+    //public string itemName;
 
-    [VerticalGroup("Top/Right"), LabelWidth(100)]
-    [TextArea(2, 4)]
-    public string description;
+    //[VerticalGroup("Top/Right"), LabelWidth(100)]
+    //[TextArea(2, 4)]
+    //public string description;
+
+    public string decorationNameKey;
+
+    public string decorationDescriptionKey;
 
     // ─────────────────────────────────────────────────────
     // Ownership & Identity

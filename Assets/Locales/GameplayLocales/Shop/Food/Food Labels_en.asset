@@ -1,0 +1,535 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Food Labels_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 1a56de674b575d2418b56442e9e8aef3, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 148602656997376
+    m_Localized: Almond
+    m_Metadata:
+      m_Items: []
+  - m_Id: 144950865248256
+    m_Localized: Rich and sweet-tasting nut.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997377
+    m_Localized: Baking Powder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997378
+    m_Localized: Leavening agent that helps dough rise.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997379
+    m_Localized: Baking Soda
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997380
+    m_Localized: Versatile leavening agent used in both baking and cleaning.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997381
+    m_Localized: Banana
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997382
+    m_Localized: Sweet and soft tropical fruit.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997383
+    m_Localized: Butter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997384
+    m_Localized: Essential dairy ingredient that enriches flavor.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997385
+    m_Localized: Chocolate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997386
+    m_Localized: Sweet cocoa-based food used widely in desserts.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997387
+    m_Localized: Chocolate Bar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997388
+    m_Localized: Chocolate that can be melted or eaten as a snack.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997389
+    m_Localized: Chocolate Chips
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997390
+    m_Localized: Small chocolate pieces for cookies and desserts.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997391
+    m_Localized: Coconut Milk
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997392
+    m_Localized: Thick fragrant liquid extracted from coconut flesh.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997393
+    m_Localized: Coffee
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997394
+    m_Localized: Ingredient with rich aroma and deep flavor.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997395
+    m_Localized: Condensed Milk
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997396
+    m_Localized: Adds sweetness and richness to desserts.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997397
+    m_Localized: Cream Cheese
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997398
+    m_Localized: Cheese with soft and slightly tangy flavor.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997399
+    m_Localized: Egg
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997400
+    m_Localized: Essential ingredient for various dishes.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997401
+    m_Localized: Fresh Milk
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997402
+    m_Localized: Adds smooth and moist flavor.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997403
+    m_Localized: Fried Egg
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997404
+    m_Localized: Soft yolk and crispy white fried egg.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997405
+    m_Localized: Gelatin
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997406
+    m_Localized: Clear gelling agent for setting desserts.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997407
+    m_Localized: Glutinous Rice Flour
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997408
+    m_Localized: Used for chewy texture in desserts.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997409
+    m_Localized: Honey
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997410
+    m_Localized: Natural sweetener with floral aroma.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997411
+    m_Localized: Ladyfinger
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997412
+    m_Localized: "Soft sponge biscuit used in tiramisu.\t"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997413
+    m_Localized: Matcha Powder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997414
+    m_Localized: Fine green tea powder adding color and flavor.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997415
+    m_Localized: Mayonnaise
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997416
+    m_Localized: Sauce made of eggs and oil.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997417
+    m_Localized: Milk
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997418
+    m_Localized: Essential dairy ingredient for drinks and baking.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997419
+    m_Localized: Pineapple Jam
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997420
+    m_Localized: Sweet and tangy tropical fruit jam.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997421
+    m_Localized: Pork Floss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997422
+    m_Localized: Soft and savory pork topping.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997423
+    m_Localized: Red Bean Paste
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997424
+    m_Localized: Sweet traditional paste made from red beans.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997425
+    m_Localized: Salted Egg
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997426
+    m_Localized: Preserved egg with salty and rich flavor.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997427
+    m_Localized: Strawberry
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997428
+    m_Localized: Sweet and tart red fruit.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997429
+    m_Localized: Sugar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997430
+    m_Localized: Essential sweetener used in almost all desserts.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997431
+    m_Localized: Vanilla Extract
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997432
+    m_Localized: Extract that enhances dessert aroma.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997433
+    m_Localized: Walnut
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997434
+    m_Localized: Nut with rich and slightly bitter flavor.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997435
+    m_Localized: Whipped Cream
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997436
+    m_Localized: Light and fluffy topping for desserts.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997437
+    m_Localized: Whipping Cream
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997438
+    m_Localized: Thick cream used for whipping desserts and cakes.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163900177072128
+    m_Localized: Beef
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163901666050048
+    m_Localized: Main protein used in dishes like bulgogi, yukgaejang, and galbi.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163903217942528
+    m_Localized: Beef Ribs
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163905398980608
+    m_Localized: Premium cut used for galbitang and grilled ribs.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163906820849664
+    m_Localized: Black Bean Paste
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163908372742144
+    m_Localized: Used as the base sauce for jjajangmyeon and jjajang rice.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163909916246016
+    m_Localized: Cabbage
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163913498181632
+    m_Localized: Used in kimchi and broth-based dishes.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163915901517824
+    m_Localized: Carrot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163918057390080
+    m_Localized: Adds sweetness and color.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163919500230656
+    m_Localized: Chicken
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163920771104768
+    m_Localized: Protein used in many Korean dishes.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163922239111168
+    m_Localized: Chili
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163923501596672
+    m_Localized: Essential ingredient adding spiciness to Korean cuisine.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163925070266368
+    m_Localized: Chili Sauce
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163926429220864
+    m_Localized: Fermented chili paste that adds heat and depth.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163927825924096
+    m_Localized: Cold Noodles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163929155518464
+    m_Localized: Buckwheat noodles used in cold dishes.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163930443169792
+    m_Localized: Crab
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163931655323648
+    m_Localized: Seafood used in soups and spicy stews.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164242163843072
+    m_Localized: Cucumber
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164242742657024
+    m_Localized: Refreshing vegetable often served with cold noodles.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164243296305152
+    m_Localized: Fish Cake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164244500070400
+    m_Localized: Street food ingredient used in soups and stir-fry.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164245108244480
+    m_Localized: Flour
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164245687058432
+    m_Localized: Used for making Korean pancakes (jeon).
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164246270066688
+    m_Localized: Garlic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164246840492032
+    m_Localized: Essential seasoning for almost every dish.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164352222380032
+    m_Localized: Ginseng
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164352796999680
+    m_Localized: Special herbal ingredient used in samgyetang.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164353308704768
+    m_Localized: Glass Noodles
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164353900101632
+    m_Localized: Transparent noodles used in japchae and sundae.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164354512470016
+    m_Localized: Green Onion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164355124838400
+    m_Localized: Used as garnish to enhance flavor and aroma.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164355724623872
+    m_Localized: Lettuce
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164356303437824
+    m_Localized: Leaf vegetable used for wrapping grilled meat.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164356810948608
+    m_Localized: Onion
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164357733695488
+    m_Localized: Common vegetable used in stir-fry and soups.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164358354452480
+    m_Localized: Pork
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164358899712000
+    m_Localized: Used in soups, rice dishes, and barbecue.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164504949571584
+    m_Localized: Pork Belly
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164505515802624
+    m_Localized: Popular cut used for samgyeopsal and bossam.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164506090422272
+    m_Localized: Pork Bones
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164506690207744
+    m_Localized: Base ingredient for gamjatang broth.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164507323547648
+    m_Localized: Pork Intestine
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164507944304640
+    m_Localized: Used in sundae (Korean sausage).
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164508527312896
+    m_Localized: Potato
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164509655580672
+    m_Localized: Adds texture in soups and stews.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164510213423104
+    m_Localized: Radish
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164510767071232
+    m_Localized: Commonly used in soups and stews.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164641214119936
+    m_Localized: Rice
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164642149449728
+    m_Localized: Staple grain for rice and gimbap.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164642715680768
+    m_Localized: Rice Cake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164643273523200
+    m_Localized: Chewy rice cakes used in tteokbokki.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164643827171328
+    m_Localized: Seafood
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164644376625152
+    m_Localized: Mixed seafood (squid, mussel, clam) used in soups.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164719047819264
+    m_Localized: Seaweed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164719618244608
+    m_Localized: Used in gimbap and rice rolls.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164720213835776
+    m_Localized: Soy Sauce
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164720767483904
+    m_Localized: Essential condiment for stir-fry and marinades.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164721786699776
+    m_Localized: Tofu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164722373902336
+    m_Localized: Soft tofu used in soups and stews.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164722931744768
+    m_Localized: Vegetables
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164723539918848
+    m_Localized: Basic vegetable mix for bibimbap and stews.
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

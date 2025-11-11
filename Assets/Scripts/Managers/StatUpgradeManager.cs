@@ -23,16 +23,25 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
 
     private readonly List<StatContainer> spawnedContainers = new();
 
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────
     // Mono
-    // ─────────────────────────────────────────────────────
-
+    //─────────────────────────────────────────────
     private void Start()
     {
         playerControl = PlayerControl.Instance;
 
         InitializeStatUI();
         SetupListeners();
+
+        // Auto-refresh localized text on language change
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.RegisterForGlobalRefresh(RefreshAllLocalizedTexts);
+    }
+
+    private void OnDestroy()
+    {
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.UnregisterForGlobalRefresh(RefreshAllLocalizedTexts);
     }
 
     private void SetupListeners()
@@ -41,10 +50,9 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
             applyButtonEnabled.onClick.AddListener(ApplyAll);
     }
 
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────
     // UI Initialization
-    // ─────────────────────────────────────────────────────
-
+    //─────────────────────────────────────────────
     private void InitializeStatUI()
     {
         spawnedContainers.Clear();
@@ -60,9 +68,12 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
         UpdateStatPointUI();
     }
 
-    /// <summary>
-    /// Update button states and apply button interactability for all stat upgrades.
-    /// </summary>
+    private void RefreshAllLocalizedTexts()
+    {
+        foreach (var container in spawnedContainers)
+            container.RefreshLocalizedTexts();
+    }
+
     public void UpdateStatUpgradeUI()
     {
         UpdateAllStatButtons();
@@ -99,10 +110,9 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
         applyButtonDisabled.gameObject.SetActive(!hasPendingUpgrade);
     }
 
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────
     // Stat Upgrade Logic
-    // ─────────────────────────────────────────────────────
-
+    //─────────────────────────────────────────────
     public void ApplyAll()
     {
         foreach (var container in spawnedContainers)
@@ -113,7 +123,6 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
         UpdateStatPointUI();
 
         playerControl.stats.UpdateScaledStats();
-
         AudioManager.Instance.PlayInteractSound(8);
     }
 
@@ -127,10 +136,9 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
         UpdateStatPointUI();
     }
 
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────
     // Stat Point Management
-    // ─────────────────────────────────────────────────────
-
+    //─────────────────────────────────────────────
     public void AddStatPoint()
     {
         statPoints++;
@@ -147,7 +155,6 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
             UpdateStatPointUI();
             return true;
         }
-
         return false;
     }
 
@@ -167,19 +174,13 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
         AutoSave();
     }
 
-    private void ResetTempStatPoints()
-    {
-        tempStatPoints = 0;
-    }
-
+    private void ResetTempStatPoints() => tempStatPoints = 0;
     private int GetRemainingPoints() => statPoints - tempStatPoints;
-
     public bool HasAvailablePoints() => statPoints - tempStatPoints > 0;
 
     // ─────────────────────────────────────────────────────
     // Stat Lookup
     // ─────────────────────────────────────────────────────
-
     public StatDataSO GetStatDataByType(StatType type)
     {
         foreach (var stat in statDataArray)
@@ -187,7 +188,6 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
             if (stat.statType == type)
                 return stat;
         }
-
         return null;
     }
 
@@ -202,10 +202,9 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
         return container != null ? container.GetCurrentLevel() : 1;
     }
 
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────
     // Save/Load API
-    // ─────────────────────────────────────────────────────
-
+    //─────────────────────────────────────────────
     public void ImportSaveData(SaveData saveData)
     {
         if (saveData == null) return;
@@ -228,9 +227,8 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
     protected void AutoSave()
     {
         SaveManager.Data.statPoints = statPoints;
-
-        // Lưu level của tất cả stat
         SaveManager.Data.statLevels.Clear();
+
         foreach (var stat in statDataArray)
         {
             SaveManager.Data.statLevels.Add(new StatSaveData
@@ -242,5 +240,4 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
 
         SaveManager.SaveGame();
     }
-
 }

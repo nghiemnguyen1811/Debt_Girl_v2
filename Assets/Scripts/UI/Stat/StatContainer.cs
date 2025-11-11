@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using TMPro;
 
-public class StatContainer : MonoBehaviour
+public class StatContainer : MonoBehaviour, ILocalizableContainer
 {
     [Header("UI References")]
     [SerializeField] private Image iconImage;
@@ -27,24 +27,35 @@ public class StatContainer : MonoBehaviour
         statData = data;
         pendingLevel = 0;
 
-        if (statData != null)
-        {
-            iconImage.sprite = statData.icon;
-            statNameText.text = statData.statName;
-            descriptionText.text = statData.description;
-        }
+        if (statData == null) return;
 
+        iconImage.sprite = statData.icon;
+        RefreshLocalizedTexts();
         RefreshUI();
         UpdatePendingUI();
     }
 
+    //─────────────────────────────────────────────
+    // Localization
+    //─────────────────────────────────────────────
+    public void RefreshLocalizedTexts()
+    {
+        if (statData == null) return;
+
+        // Use "Stat Labels" as main table
+        LocalizationManager.Instance.SetLocalizedText(statNameText, "Stat Labels", statData.statNameKey);
+        LocalizationManager.Instance.SetLocalizedText(descriptionText, "Stat Labels", statData.statDescriptionKey);
+    }
+
+    //─────────────────────────────────────────────
+    // Button Events
+    //─────────────────────────────────────────────
     private void OnPlusClicked()
     {
         if (!StatUpgradeManager.Instance.TrySpendTempPoint()) return;
 
         pendingLevel++;
         UpdatePendingUI();
-
         StatUpgradeManager.Instance.UpdateStatUpgradeUI();
         AudioManager.Instance.PlayInteractSound(8);
     }
@@ -56,11 +67,13 @@ public class StatContainer : MonoBehaviour
         pendingLevel--;
         StatUpgradeManager.Instance.RefundTempPoint();
         UpdatePendingUI();
-
         StatUpgradeManager.Instance.UpdateStatUpgradeUI();
         AudioManager.Instance.PlayInteractSound(8);
     }
 
+    //─────────────────────────────────────────────
+    // UI Updates
+    //─────────────────────────────────────────────
     private void UpdatePendingUI()
     {
         pendingLevelText.text = pendingLevel > 0 ? $"{pendingLevel}" : "0";
@@ -71,6 +84,9 @@ public class StatContainer : MonoBehaviour
         levelText.text = $"{statData.level}";
     }
 
+    //─────────────────────────────────────────────
+    // Logic
+    //─────────────────────────────────────────────
     public void CommitPendingLevel()
     {
         if (pendingLevel <= 0) return;
@@ -101,6 +117,9 @@ public class StatContainer : MonoBehaviour
         UpdateButtonStates();
     }
 
+    //─────────────────────────────────────────────
+    // Accessors
+    //─────────────────────────────────────────────
     public int GetCurrentLevel() => statData != null ? statData.level : 1;
     public StatType GetStatType() => statData != null ? statData.statType : default;
     public int GetPendingLevel() => pendingLevel;

@@ -282,7 +282,7 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
         UpdateBakeTime(SelectedCakeData.craftingTime);
 
         if (selectedCakeName != null)
-            selectedCakeName.text = SelectedCakeData.itemName;
+            LocalizationManager.Instance.SetLocalizedText(selectedCakeName, "Recipe Labels", SelectedCakeData.itemNameKey);
 
         // 4. Update navigation buttons
         if (prevButton != null)

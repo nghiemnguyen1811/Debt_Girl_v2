@@ -3,8 +3,14 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 
-public class DecorationItemContainer : MonoBehaviour
+/// <summary>
+/// Handles display, interaction, and localization for each decoration item in the shop.
+/// </summary>
+public class DecorationItemContainer : MonoBehaviour, ILocalizableContainer
 {
+    //─────────────────────────────────────────────────────
+    // UI References
+    //─────────────────────────────────────────────────────
     [Header("UI References")]
     [SerializeField] private Image iconImage;
     [SerializeField] private TextMeshProUGUI nameText;
@@ -19,64 +25,76 @@ public class DecorationItemContainer : MonoBehaviour
     [SerializeField] private GameObject itemControlGroup;
     [SerializeField] private GameObject outlinedText;
 
+    //─────────────────────────────────────────────────────
+    // Private Data
+    //─────────────────────────────────────────────────────
     private DecorationItemSO itemData;
-    private int currentQuantity = 0;
+    private int currentQuantity;
     private bool isOwned;
 
+    //─────────────────────────────────────────────────────
+    // Unity Lifecycle
+    //─────────────────────────────────────────────────────
     private void Start()
     {
-        minusButton.onClick.AddListener(OnMinusClicked);
         plusButton.onClick.AddListener(OnPlusClicked);
-
+        minusButton.onClick.AddListener(OnMinusClicked);
         UpdateUI();
     }
 
+    private void OnEnable()
+    {
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.RegisterForGlobalRefresh(RefreshLocalizedTexts);
+    }
+
+    private void OnDisable()
+    {
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.UnregisterForGlobalRefresh(RefreshLocalizedTexts);
+    }
+
+    //─────────────────────────────────────────────────────
+    // Setup
+    //─────────────────────────────────────────────────────
     public void Configure(DecorationItemSO data)
     {
         itemData = data;
-
-        iconImage.sprite = data.icon;
-        nameText.text = data.itemName;
-        descriptionText.text = data.description;
-        ownerText.text = $"{data.owner}";
-        priceText.text = $"{data.price}$";
-
         currentQuantity = 0;
         isOwned = false;
 
+        if (itemData == null) return;
+
+        iconImage.sprite = data.icon;
+
+        RefreshLocalizedTexts();
+        RefreshLocalizedPrice();
         UpdateUI();
     }
 
-    private void OnMinusClicked()
+    //─────────────────────────────────────────────────────
+    // Localization
+    //─────────────────────────────────────────────────────
+    public void RefreshLocalizedTexts()
     {
-        if (isOwned || currentQuantity <= 0) return;
+        if (itemData == null) return;
+        
+        LocalizationManager.Instance.SetLocalizedText(nameText, "Decoration Labels", itemData.decorationNameKey);
+        LocalizationManager.Instance.SetLocalizedText(descriptionText, "Decoration Labels", itemData.decorationDescriptionKey);
 
-        currentQuantity--;
-        ShopManager.Instance.RefundFromTempPrice(itemData.price);
-        UpdateUI();
-        ShopManager.Instance.UpdateAllUI();
-        AudioManager.Instance.PlayInteractSound(8);
+        // Owner name is usually enum (CharacterType), convert to string directly
+        ownerText.text = itemData.owner.ToString();
     }
 
-    private void OnPlusClicked()
+    public void RefreshLocalizedPrice()
     {
-        if (isOwned || currentQuantity >= 1) return;
-
-        if (!ShopManager.Instance.TryAddToTempPrice(itemData.price)) return;
-
-        currentQuantity++;
-        UpdateUI();
-        ShopManager.Instance.UpdateAllUI();
-        AudioManager.Instance.PlayInteractSound(8);
+        string localizedSymbol = LocalizationManager.Instance.GetCurrencySymbol();
+        priceText.text = $"{DoubleUtilities.ToIdleNotation(itemData.price)}{localizedSymbol}";
     }
 
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────────────
     // Ownership & UI
-    // ─────────────────────────────────────────────────────
-
-    /// <summary>
-    /// Checks if this decoration is already owned using (itemID, owner).
-    /// </summary>
+    //─────────────────────────────────────────────────────
     private void UpdateOwnershipState()
     {
         if (itemData == null || DecorationManager.Instance == null)
@@ -90,10 +108,10 @@ public class DecorationItemContainer : MonoBehaviour
 
     private void ToggleUI(bool owned)
     {
-        if (outlinedText != null && outlinedText.activeSelf != owned)
+        if (outlinedText != null)
             outlinedText.SetActive(owned);
 
-        if (itemControlGroup != null && itemControlGroup.activeSelf == owned)
+        if (itemControlGroup != null)
             itemControlGroup.SetActive(!owned);
     }
 
@@ -115,6 +133,34 @@ public class DecorationItemContainer : MonoBehaviour
         UpdateUI();
     }
 
+    //─────────────────────────────────────────────────────
+    // Button Handlers
+    //─────────────────────────────────────────────────────
+    private void OnPlusClicked()
+    {
+        if (isOwned || currentQuantity >= 1) return;
+        if (!ShopManager.Instance.TryAddToTempPrice(itemData.price)) return;
+
+        currentQuantity++;
+        UpdateUI();
+        ShopManager.Instance.UpdateAllUI();
+        AudioManager.Instance.PlayInteractSound(8);
+    }
+
+    private void OnMinusClicked()
+    {
+        if (isOwned || currentQuantity <= 0) return;
+
+        currentQuantity--;
+        ShopManager.Instance.RefundFromTempPrice(itemData.price);
+        UpdateUI();
+        ShopManager.Instance.UpdateAllUI();
+        AudioManager.Instance.PlayInteractSound(8);
+    }
+
+    //─────────────────────────────────────────────────────
+    // Purchase Logic
+    //─────────────────────────────────────────────────────
     public void ConfirmPurchase()
     {
         if (currentQuantity <= 0 || itemData == null) return;
@@ -132,6 +178,9 @@ public class DecorationItemContainer : MonoBehaviour
         UpdateUI();
     }
 
+    //─────────────────────────────────────────────────────
+    // Accessors
+    //─────────────────────────────────────────────────────
     public int GetCount() => currentQuantity;
     public double GetTotalPrice() => currentQuantity * (itemData != null ? itemData.price : 0);
     public DecorationItemSO GetItemData() => itemData;

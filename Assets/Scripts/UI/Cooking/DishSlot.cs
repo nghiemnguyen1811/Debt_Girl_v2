@@ -44,7 +44,7 @@ public class DishSlot : MonoBehaviour
     {
         itemData = newItemData;
 
-        dishNameText.text = itemData.itemName;
+        LocalizationManager.Instance.SetLocalizedText(dishNameText, "Recipe Labels", itemData.itemNameKey);
         dishImage.sprite = itemData.icon;
 
         EvaluateLockState();

@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,7 +18,7 @@ public class CakeInventoryUI : InventoryBase<CakeInventoryUI>
     [SerializeField] private Button closeButton;
 
     /// <summary>
-    /// Unity Start – initialize slots and bind button events.
+    /// Unity Start â€“ initialize slots and bind button events.
     /// </summary>
     protected override void Start()
     {
@@ -40,8 +40,10 @@ public class CakeInventoryUI : InventoryBase<CakeInventoryUI>
         itemIconImage.sprite = data.icon;
         itemIconImage.gameObject.SetActive(true);
 
-        itemNameText.text = data.itemName;
-        itemDescriptionText.text = data.description;
+        LocalizationManager.Instance.SetLocalizedText(itemNameText, "Recipe Labels", data.itemNameKey);
+
+        LocalizationManager.Instance.SetLocalizedText(itemDescriptionText, "Recipe Labels", data.itemDescriptionKey);
+
         sellPriceText.text = $"{data.SellPrice}$";
 
         // Toggle buttons and groups
@@ -87,7 +89,7 @@ public class CakeInventoryUI : InventoryBase<CakeInventoryUI>
     }
 
     /// <summary>
-    /// Handles "Sell Item" action – increases money and plays sounds.
+    /// Handles "Sell Item" action â€“ increases money and plays sounds.
     /// </summary>
     protected override void OnSellSelectedItem(ItemDataSO data)
     {
@@ -96,7 +98,7 @@ public class CakeInventoryUI : InventoryBase<CakeInventoryUI>
     }
 
     /// <summary>
-    /// Handles "Drop Item" action – only plays feedback sound.
+    /// Handles "Drop Item" action â€“ only plays feedback sound.
     /// </summary>
     protected override void OnDropSelectedItem(ItemDataSO data)
     {
@@ -104,7 +106,7 @@ public class CakeInventoryUI : InventoryBase<CakeInventoryUI>
     }
 
     /// <summary>
-    /// Handles closing the inventory – stops interaction and plays sound.
+    /// Handles closing the inventory â€“ stops interaction and plays sound.
     /// </summary>
     protected override void OnCloseRequested()
     {

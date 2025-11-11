@@ -1,0 +1,540 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Food Labels Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: Food Labels
+  m_TableCollectionNameGuidString: 1a56de674b575d2418b56442e9e8aef3
+  m_Entries:
+  - m_Id: 148602656997376
+    m_Key: food.almondName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 144950865248256
+    m_Key: food.almondDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997377
+    m_Key: food.bakingPowderName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997378
+    m_Key: food.bakingPowderDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997379
+    m_Key: food.bakingSodaName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997380
+    m_Key: food.bakingSodaDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997381
+    m_Key: food.bananaName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997382
+    m_Key: food.bananaDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997383
+    m_Key: food.butterName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997384
+    m_Key: food.butterDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997385
+    m_Key: food.chocolateName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997386
+    m_Key: food.chocolateDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997387
+    m_Key: food.chocolateBarName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997388
+    m_Key: food.chocolateBarDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997389
+    m_Key: food.chocolateChipsName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997390
+    m_Key: food.chocolateChipsDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997391
+    m_Key: food.coconutMilkName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997392
+    m_Key: food.coconutMilkDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997393
+    m_Key: food.coffeeName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997394
+    m_Key: food.coffeeDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997395
+    m_Key: food.condensedMilkName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997396
+    m_Key: food.condensedMilkDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997397
+    m_Key: food.creamCheeseName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997398
+    m_Key: food.creamCheeseDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997399
+    m_Key: food.eggName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997400
+    m_Key: food.eggDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997401
+    m_Key: food.freshMilkName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997402
+    m_Key: food.freshMilkDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997403
+    m_Key: food.friedEggName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997404
+    m_Key: food.friedEggDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997405
+    m_Key: food.gelatinName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997406
+    m_Key: food.gelatinDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997407
+    m_Key: food.glutinousRiceFlourName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997408
+    m_Key: food.glutinousRiceFlourDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997409
+    m_Key: food.honeyName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997410
+    m_Key: food.honeyDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997411
+    m_Key: food.ladyfingerName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997412
+    m_Key: food.ladyfingerDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997413
+    m_Key: food.matchaPowderName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997414
+    m_Key: food.matchaPowderDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997415
+    m_Key: food.mayonnaiseName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997416
+    m_Key: food.mayonnaiseDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997417
+    m_Key: food.milkName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997418
+    m_Key: food.milkDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997419
+    m_Key: food.pineappleJamName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997420
+    m_Key: food.pineappleJamDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997421
+    m_Key: food.porkFlossName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997422
+    m_Key: food.porkFlossDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997423
+    m_Key: food.redBeanPasteName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997424
+    m_Key: food.redBeanPasteDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997425
+    m_Key: food.saltedEggName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997426
+    m_Key: food.saltedEggDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997427
+    m_Key: food.strawberryName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997428
+    m_Key: food.strawberryDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997429
+    m_Key: food.sugarName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997430
+    m_Key: food.sugarDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997431
+    m_Key: food.vanillaExtractName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997432
+    m_Key: food.vanillaExtractDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997433
+    m_Key: food.walnutName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997434
+    m_Key: food.walnutDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997435
+    m_Key: food.whippedCreamName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997436
+    m_Key: food.whippedCreamDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997437
+    m_Key: food.whippingCreamName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 148602656997438
+    m_Key: food.whippingCreamDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163900177072128
+    m_Key: food.beefName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163901666050048
+    m_Key: food.beefDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163903217942528
+    m_Key: food.beefRibsName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163905398980608
+    m_Key: food.beefRibsDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163906820849664
+    m_Key: food.blackBeanPasteName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163908372742144
+    m_Key: food.blackBeanPasteDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163909916246016
+    m_Key: food.cabbageName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163913498181632
+    m_Key: food.cabbageDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163915901517824
+    m_Key: food.carrotName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163918057390080
+    m_Key: food.carrotDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163919500230656
+    m_Key: food.chickenName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163920771104768
+    m_Key: food.chickenDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163922239111168
+    m_Key: food.chiliName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163923501596672
+    m_Key: food.chiliDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163925070266368
+    m_Key: food.chiliSauceName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163926429220864
+    m_Key: food.chiliSauceDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163927825924096
+    m_Key: food.coldNoodlesName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163929155518464
+    m_Key: food.coldNoodlesDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163930443169792
+    m_Key: food.crabName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 163931655323648
+    m_Key: food.crabDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164242163843072
+    m_Key: food.cucumberName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164242742657024
+    m_Key: food.cucumberDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164243296305152
+    m_Key: food.fishCakeName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164244500070400
+    m_Key: food.fishCakeDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164245108244480
+    m_Key: food.flourName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164245687058432
+    m_Key: food.flourDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164246270066688
+    m_Key: food.garlicName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164246840492032
+    m_Key: food.garlicDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164352222380032
+    m_Key: food.ginsengName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164352796999680
+    m_Key: food.ginsengDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164353308704768
+    m_Key: food.glassNoodlesName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164353900101632
+    m_Key: food.glassNoodlesDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164354512470016
+    m_Key: food.greenOnionName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164355124838400
+    m_Key: food.greenOnionDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164355724623872
+    m_Key: food.lettuceName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164356303437824
+    m_Key: food.lettuceDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164356810948608
+    m_Key: food.onionName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164357733695488
+    m_Key: food.onionDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164358354452480
+    m_Key: food.porkName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164358899712000
+    m_Key: food.porkDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164504949571584
+    m_Key: food.porkBellyName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164505515802624
+    m_Key: food.porkBellyDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164506090422272
+    m_Key: food.porkBonesName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164506690207744
+    m_Key: food.porkBonesDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164507323547648
+    m_Key: food.porkIntestineName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164507944304640
+    m_Key: food.porkIntestineDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164508527312896
+    m_Key: food.potatoName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164509655580672
+    m_Key: food.potatoDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164510213423104
+    m_Key: food.radishName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164510767071232
+    m_Key: food.radishDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164641214119936
+    m_Key: food.riceName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164642149449728
+    m_Key: food.riceDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164642715680768
+    m_Key: food.riceCakeName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164643273523200
+    m_Key: food.riceCakeDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164643827171328
+    m_Key: food.seafoodName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164644376625152
+    m_Key: food.seafoodDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164719047819264
+    m_Key: food.seaweedName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164719618244608
+    m_Key: food.seaweedDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164720213835776
+    m_Key: food.soySauceName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164720767483904
+    m_Key: food.soySauceDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164721786699776
+    m_Key: food.tofuName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164722373902336
+    m_Key: food.tofuDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164722931744768
+    m_Key: food.vegetablesName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 164723539918848
+    m_Key: food.vegetablesDes
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 5709834480986357899
+  references:
+    version: 2
+    RefIds:
+    - rid: 5709834480986357899
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1762801408896

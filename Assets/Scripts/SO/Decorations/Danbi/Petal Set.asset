@@ -15,6 +15,8 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 89553b3d2ca5a764daafe78ee2621660, type: 3}
   itemName: Petal Set
   description: Trio of daisy wall decor, brightens up any room.
+  decorationNameKey: decoration.danbi6Name
+  decorationDescriptionKey: decoration.danbi6Des
   itemID: 5
   owner: 1
   price: 800

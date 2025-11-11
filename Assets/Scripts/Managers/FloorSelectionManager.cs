@@ -4,12 +4,16 @@ using TMPro;
 using System.Collections.Generic;
 using System.Linq;
 
+/// <summary>
+/// Manages the floor selection UI and handles localized floor labels/descriptions.
+/// Works with LocalizationManager for dynamic language switching.
+/// </summary>
 [DisallowMultipleComponent]
 public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManager>
 {
-    // ─────────────────────────────────────────────────────
-    // Inspector Fields
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────────────
+    #region === Inspector Fields ===
+
     [Header("Floor Button Prefab & Root")]
     [SerializeField] private FloorSelectButton floorButtonPrefab;
     [SerializeField] private Transform floorButtonsRoot;
@@ -34,9 +38,11 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
     [Header("Config")]
     [SerializeField] private UIColorsConfig colorsConfig;
 
-    // ─────────────────────────────────────────────────────
-    // Runtime State
-    // ─────────────────────────────────────────────────────
+    #endregion
+
+    //─────────────────────────────────────────────────────
+    #region === Runtime State ===
+
     private readonly List<FloorSelectButton> spawnedFloorButtons = new();
     private readonly Dictionary<FloorDataSO, FloorRoomButtonGroup> roomGroupsByFloor = new();
 
@@ -44,30 +50,25 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
     private int currentIndex;
     private RoomType? pendingRoom;
 
-    // ─────────────────────────────────────────────────────
-    // Properties
-    // ─────────────────────────────────────────────────────
     public FloorDataSO CurrentFloor => currentFloor;
 
-    // ─────────────────────────────────────────────────────
-    // Unity Lifecycle
-    // ─────────────────────────────────────────────────────
-    
+    #endregion
+
+    //─────────────────────────────────────────────────────
+    #region === Unity Lifecycle ===
+
     private void OnEnable()
     {
         if (LocalizationManager.Instance != null)
             LocalizationManager.Instance.OnLanguageChanged += HandleLanguageChanged;
     }
+
     private void OnDisable()
     {
         if (LocalizationManager.Instance != null)
             LocalizationManager.Instance.OnLanguageChanged -= HandleLanguageChanged;
     }
-    private void HandleLanguageChanged()
-    {
-        if (currentFloor != null)
-            UpdateFloorDescriptionText(currentFloor);
-    }
+
     private void Start()
     {
         InitFloorButtons();
@@ -77,15 +78,14 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
 
         if (autoSelectFirst && floorDataArray != null && floorDataArray.Length > 0)
             SelectFloor(floorDataArray[0]);
-
-        else UpdateFloorDescriptionText(null);
+        else
+            UpdateFloorDescriptionText(null);
 
         UpdateNavButtons();
 
-        // Subscribe to level changes
-        GameManager.Instance.OnLevelChanged += RefreshAllFloors;
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnLevelChanged += RefreshAllFloors;
     }
-    
 
     private void OnDestroy()
     {
@@ -101,17 +101,41 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        if (!Application.isPlaying && autoSelectFirst == false)
+        if (!Application.isPlaying && !autoSelectFirst)
             UpdateFloorDescriptionText(null);
     }
 #endif
 
-    // ─────────────────────────────────────────────────────
-    // Public API
-    // ─────────────────────────────────────────────────────
+    #endregion
+
+    //─────────────────────────────────────────────────────
+    #region === Localization Integration ===
 
     /// <summary>
-    /// Select a floor by reference.
+    /// Called when the game language changes.
+    /// Refreshes current floor description and button labels.
+    /// </summary>
+    private void HandleLanguageChanged()
+    {
+        // Refresh description
+        if (currentFloor != null)
+            UpdateFloorDescriptionText(currentFloor);
+
+        // Refresh button labels
+        foreach (var btn in spawnedFloorButtons)
+        {
+            if (btn && btn.GetFloorAsset() != null)
+                btn.UpdateLocalizedLabel();
+        }
+    }
+
+    #endregion
+
+    //─────────────────────────────────────────────────────
+    #region === Public API ===
+
+    /// <summary>
+    /// Selects a floor by data reference.
     /// </summary>
     public void SelectFloor(FloorDataSO floor)
     {
@@ -126,13 +150,11 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
         UpdateNavButtons();
         ResetPendingSelection();
 
-        var key = LocalizationManager.Instance.GetLocalizedString("Move Floor Labels", floor.floorNameKey);
-        Debug.Log($"[FloorSelectionManager] Floor selected: {key}");
-
+        Debug.Log($"[FloorSelectionManager] Floor selected: {floor.floorNameKey}");
     }
 
     /// <summary>
-    /// Select a floor by its type (FloorType enum).
+    /// Selects a floor by its enum type.
     /// </summary>
     public void SelectFloorByType(FloorType type)
     {
@@ -140,10 +162,6 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
         if (found) SelectFloor(found);
     }
 
-    /// <summary>
-    /// Refreshes the currently selected floor's UI,
-    /// including re-applying room group to update button states.
-    /// </summary>
     public void RefreshCurrentFloor()
     {
         if (!currentFloor) return;
@@ -162,9 +180,6 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
                 kv.Value.ApplyFloor(kv.Key);
     }
 
-    /// <summary>
-    /// Hide all unlock panels in all room buttons across all floors
-    /// </summary>
     public void HideAllUnlockPanels()
     {
         foreach (var kv in roomGroupsByFloor)
@@ -173,21 +188,19 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
             if (!group) continue;
 
             foreach (var roomBtn in group.GetRoomButtons())
-            {
-                if (!roomBtn) continue;
-                roomBtn.ShowUnlockPanel(false);
-            }
+                if (roomBtn) roomBtn.ShowUnlockPanel(false);
         }
     }
 
-    // ─────────────────────────────────────────────────────
-    // Room Selection Logic
-    // ─────────────────────────────────────────────────────
+    #endregion
+
+    //─────────────────────────────────────────────────────
+    #region === Room Selection Logic ===
+
     private void CachePendingRoom(RoomType room)
     {
         pendingRoom = room;
         if (confirmRoomButton) confirmRoomButton.interactable = true;
-        Debug.Log($"[FloorSelectionManager] Pending room set: {room}");
     }
 
     private void ConfirmPendingRoom()
@@ -195,38 +208,31 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
         if (!pendingRoom.HasValue)
         {
             ResetPendingSelection();
-            Debug.Log("[FloorSelectionManager] No pending room to confirm.");
             return;
         }
 
-        RoomType chosenRoom = pendingRoom.Value;
-
-        // Thực hiện dịch chuyển
-        HandleRoomChosen(chosenRoom);
-
-        // Reset state
+        HandleRoomChosen(pendingRoom.Value);
         ResetPendingSelection();
     }
 
-
     private void HandleRoomChosen(RoomType room)
     {
-        Debug.Log($"[FloorSelectionManager] Room confirmed: {room}");
-
         UIManager.Instance.ToggleSelectRoomPanel(false);
         RoomManager.Instance.SetActiveRoom(room);
     }
 
-    // ─────────────────────────────────────────────────────
-    // Floor Buttons
-    // ─────────────────────────────────────────────────────
+    #endregion
+
+    //─────────────────────────────────────────────────────
+    #region === Floor Buttons ===
+
     private void InitFloorButtons() => BuildFloorButtons();
 
     private void BuildFloorButtons()
     {
         if (!floorButtonPrefab || !floorButtonsRoot)
         {
-            Debug.LogWarning("[FloorSelectionManager] Missing floorButtonPrefab or floorButtonsRoot.");
+            Debug.LogWarning("[FloorSelectionManager] Missing floorButtonPrefab or root.");
             return;
         }
 
@@ -240,13 +246,10 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
             if (!data) continue;
 
             var btnInstance = Instantiate(floorButtonPrefab, floorButtonsRoot);
-
-            var key = LocalizationManager.Instance.GetLocalizedString("Move Floor Labels", data.floorNameKey);
-            btnInstance.name = $"FloorButton_{key}";
             btnInstance.SetFloor(data);
+            btnInstance.UpdateLocalizedLabel();
 
             var uiBtn = btnInstance.GetButton();
-
             if (uiBtn)
             {
                 int idx = i;
@@ -267,11 +270,9 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
         {
             if (!fsb) continue;
             var btn = fsb.GetButton();
-
             if (btn) btn.onClick.RemoveAllListeners();
             Destroy(fsb.gameObject);
         }
-
         spawnedFloorButtons.Clear();
     }
 
@@ -283,7 +284,6 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
             var btn = fsb.GetButton();
             if (btn) btn.onClick.RemoveAllListeners();
         }
-
         spawnedFloorButtons.Clear();
     }
 
@@ -300,9 +300,11 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
         }
     }
 
-    // ─────────────────────────────────────────────────────
-    // Room Groups
-    // ─────────────────────────────────────────────────────
+    #endregion
+
+    //─────────────────────────────────────────────────────
+    #region === Room Groups ===
+
     private void InitRoomGroups() => BuildRoomGroups();
 
     private void BuildRoomGroups()
@@ -315,18 +317,9 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
             if (roomGroupsByFloor.ContainsKey(floor) && roomGroupsByFloor[floor]) continue;
 
             var prefabGroup = floor.floorUIPrefab;
-
-            if (!prefabGroup)
-            {
-                //var key = LocalizationManager.Instance.GetLocalizedString("Move Room Labels", floor.floorNameKey);
-                //Debug.LogWarning($"[FloorSelectionManager] Missing floorUIPrefab on floor: {key}");
-                continue;
-            }
+            if (!prefabGroup) continue;
 
             var group = Instantiate(prefabGroup, roomGroupsRoot);
-
-            //var key = LocalizationManager.Instance.GetLocalizedString("Move Room Labels", floor.floorNameKey);
-            //group.name = $"RoomGroup_{floor.floorNameLocal.GetLocalizedString()}";
             group.ApplyFloor(floor);
 
             group.onRoomSelected += (room) =>
@@ -334,7 +327,6 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
                 HideAllUnlockPanels();
 
                 var buttons = group.GetRoomButtons();
-
                 foreach (var btn in buttons)
                 {
                     if (btn && btn.RoomType == room)
@@ -357,7 +349,6 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
         foreach (var kv in roomGroupsByFloor)
         {
             bool shouldBeActive = (floor != null && kv.Key == floor);
-
             if (kv.Value && kv.Value.gameObject.activeSelf != shouldBeActive)
                 kv.Value.gameObject.SetActive(shouldBeActive);
         }
@@ -371,13 +362,14 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
             if (!grp) continue;
             grp.onRoomSelected -= CachePendingRoom;
         }
-
         roomGroupsByFloor.Clear();
     }
 
-    // ─────────────────────────────────────────────────────
-    // Navigation
-    // ─────────────────────────────────────────────────────
+    #endregion
+
+    //─────────────────────────────────────────────────────
+    #region === Navigation ===
+
     private void InitNavigation()
     {
         BindButton(prevButton, SelectPrevFloor, true);
@@ -391,7 +383,6 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
 
         currentIndex--;
         SelectFloor(floorDataArray[currentIndex]);
-
         AudioManager.Instance.PlayInteractSound(8);
     }
 
@@ -402,7 +393,6 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
 
         currentIndex++;
         SelectFloor(floorDataArray[currentIndex]);
-
         AudioManager.Instance.PlayInteractSound(8);
     }
 
@@ -418,9 +408,11 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
         BindButton(nextButton, SelectNextFloor, false);
     }
 
-    // ─────────────────────────────────────────────────────
-    // Confirm Button
-    // ─────────────────────────────────────────────────────
+    #endregion
+
+    //─────────────────────────────────────────────────────
+    #region === Confirm Button ===
+
     private void InitConfirmButton()
     {
         if (confirmRoomButton)
@@ -435,9 +427,11 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
         BindButton(confirmRoomButton, ConfirmPendingRoom, false);
     }
 
-    // ─────────────────────────────────────────────────────
-    // UI Helpers
-    // ─────────────────────────────────────────────────────
+    #endregion
+
+    //─────────────────────────────────────────────────────
+    #region === UI Helpers ===
+
     private async void UpdateFloorDescriptionText(FloorDataSO floor)
     {
         if (!floorInfoText) return;
@@ -449,14 +443,14 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
         }
 
         string description = await LocalizationManager.Instance.GetLocalizedString("Move Floor Labels", floor.floorDescriptionKey);
-        floorInfoText.text = (floor != null && !string.IsNullOrEmpty(description)
-            ? description
-            : string.Empty);
+        floorInfoText.text = !string.IsNullOrEmpty(description) ? description : string.Empty;
     }
 
-    // ─────────────────────────────────────────────────────
-    // Utility Helpers
-    // ─────────────────────────────────────────────────────
+    #endregion
+
+    //─────────────────────────────────────────────────────
+    #region === Utility ===
+
     private void ResetPendingSelection()
     {
         pendingRoom = null;
@@ -469,4 +463,6 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
         if (bind) button.onClick.AddListener(action);
         else button.onClick.RemoveListener(action);
     }
+
+    #endregion
 }

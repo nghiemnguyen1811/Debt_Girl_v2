@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System;
+using UnityEngine.Localization;
 
-public class FoodItemContainer : MonoBehaviour
+public class FoodItemContainer : MonoBehaviour, ILocalizableContainer
 {
     [Header("UI References")]
     [SerializeField] private Image itemIconImage;
@@ -20,10 +22,9 @@ public class FoodItemContainer : MonoBehaviour
     private int currentQuantity;
     private double itemPrice;
 
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────────────
     // Mono
-    // ─────────────────────────────────────────────────────
-
+    //─────────────────────────────────────────────────────
     private void Start()
     {
         plusButton.onClick.AddListener(OnPlusClicked);
@@ -31,10 +32,9 @@ public class FoodItemContainer : MonoBehaviour
         UpdateQuantityUI();
     }
 
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────────────
     // Setup
-    // ─────────────────────────────────────────────────────
-
+    //─────────────────────────────────────────────────────
     public void Configure(ItemDataSO data)
     {
         itemData = data;
@@ -43,13 +43,29 @@ public class FoodItemContainer : MonoBehaviour
         if (itemData == null) return;
 
         itemIconImage.sprite = data.icon;
-        itemNameText.text = data.itemName;
-        itemDescriptionText.text = data.description;
         itemPrice = data.purchaseCost;
-        itemPriceText.text = $"{DoubleUtilities.ToIdleNotation(itemPrice)}원";
 
+        RefreshLocalizedTexts();
+        RefreshLocalizedPrice();
         DisplayStatUI(data);
         UpdateQuantityUI();
+    }
+
+    //─────────────────────────────────────────────────────
+    // Localization
+    //─────────────────────────────────────────────────────
+    public void RefreshLocalizedTexts()
+    {
+        if (itemData == null) return;
+
+        LocalizationManager.Instance.SetLocalizedText(itemNameText, "Food Labels", itemData.itemNameKey);
+        LocalizationManager.Instance.SetLocalizedText(itemDescriptionText, "Food Labels", itemData.itemDescriptionKey);
+    }
+
+    public void RefreshLocalizedPrice()
+    {
+        string localizedSymbol = LocalizationManager.Instance.GetCurrencySymbol();
+        itemPriceText.text = $"{DoubleUtilities.ToIdleNotation(itemPrice)}{localizedSymbol}";
     }
 
     private void DisplayStatUI(ItemDataSO data)
@@ -77,10 +93,9 @@ public class FoodItemContainer : MonoBehaviour
         statGroupRoot.gameObject.SetActive(hasEnergy || hasMood);
     }
 
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────────────
     // Button Handlers
-    // ─────────────────────────────────────────────────────
-
+    //─────────────────────────────────────────────────────
     private void OnPlusClicked()
     {
         if (!ShopManager.Instance.TryAddToTempPrice(itemPrice)) return;
@@ -102,10 +117,9 @@ public class FoodItemContainer : MonoBehaviour
         AudioManager.Instance.PlayInteractSound(8);
     }
 
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────────────
     // UI Update
-    // ─────────────────────────────────────────────────────
-
+    //─────────────────────────────────────────────────────
     private void UpdateQuantityUI()
     {
         quantityText.text = currentQuantity.ToString();
@@ -117,10 +131,9 @@ public class FoodItemContainer : MonoBehaviour
         minusButton.interactable = currentQuantity > 0;
     }
 
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────────────
     // Purchase Logic
-    // ─────────────────────────────────────────────────────
-
+    //─────────────────────────────────────────────────────
     public void ConfirmPurchase()
     {
         if (currentQuantity <= 0) return;
@@ -135,10 +148,9 @@ public class FoodItemContainer : MonoBehaviour
         UpdateQuantityUI();
     }
 
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────────────
     // Accessors
-    // ─────────────────────────────────────────────────────
-
+    //─────────────────────────────────────────────────────
     public int GetCurrentQuantity() => currentQuantity;
     public double GetTotalPrice() => currentQuantity * itemPrice;
     public ItemDataSO GetItemData() => itemData;

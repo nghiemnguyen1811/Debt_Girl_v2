@@ -22,6 +22,13 @@ MonoBehaviour:
     - Locale-ko-KR
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 20f146d0a94a67f43aa85bba9b6664bc
+    m_Address: Decoration Labels_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 23bf09c15412ed44699330dc8983837b
     m_Address: Menu Labels_ko-KR
     m_ReadOnly: 1
@@ -50,8 +57,22 @@ MonoBehaviour:
     - Locale-ko-KR
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 824253af438475e4bba64bc807dba62b
+    m_Address: Recipe Labels_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 834404eacf18b464882515df9da1de9e
     m_Address: Move Floor Labels_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8a41394c586861443bcaa85dd84f647f
+    m_Address: Stat Labels_ko-KR
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-ko-KR

@@ -8,8 +8,8 @@ public class StatDataSO : ScriptableObject
 
     [Header("Display Info")]
     public Sprite icon;
-    public string statName;
-    [TextArea] public string description;
+    public string statNameKey;       // Localization key for name
+    public string statDescriptionKey; // Localization key for description
 
     [Header("Runtime Data")]
     public int level = 0;

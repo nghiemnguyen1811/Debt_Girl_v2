@@ -46,9 +46,9 @@ public class FoodInventoryUI : InventoryBase<FoodInventoryUI>
         itemIconImage.sprite = data.icon;
         itemIconImage.gameObject.SetActive(true);
 
-        itemNameText.text = data.itemName;
+        LocalizationManager.Instance.SetLocalizedText(itemNameText, "Food Labels", data.itemNameKey);
         itemQuantityText.text = slot.Quantity.ToString();
-        itemDescriptionText.text = data.description;
+        LocalizationManager.Instance.SetLocalizedText(itemDescriptionText, "Food Labels", data.itemDescriptionKey);
         sellPriceText.text = $"{data.SellPrice}원";
 
         // Toggle buttons and groups

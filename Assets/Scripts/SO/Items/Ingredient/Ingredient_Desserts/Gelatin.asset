@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6acbbd15e75140948b9abbe0097c4bec, type: 3}
+  m_Name: Gelatin
+  m_EditorClassIdentifier: 
+  icon: {fileID: 21300000, guid: 058fc48c2cd1f184fbf7b2f226a58aea, type: 3}
+  itemName: "\uC824\uB77C\uD2F4"
+  description: "\uB514\uC800\uD2B8\uB97C \uAD73\uD788\uB294 \uB370 \uC4F0\uC774\uB294
+    \uD22C\uBA85\uD55C \uC824\uD654\uC81C."
+  itemNameKey: food.gelatinName
+  itemDescriptionKey: food.gelatinDes
+  itemType: 0
+  ingredientType: 16
+  requiredIngredients:
+  - ingredientType: 6
+    icon: {fileID: -145345779, guid: 4e2a8781c4ae171469315681a3eb2fd8, type: 3}
+    amount: 2
+  - ingredientType: 11
+    icon: {fileID: 833449269, guid: 4e2a8781c4ae171469315681a3eb2fd8, type: 3}
+    amount: 1
+  - ingredientType: 7
+    icon: {fileID: -1476512224, guid: 4e2a8781c4ae171469315681a3eb2fd8, type: 3}
+    amount: 2
+  canBeSold: 1
+  sellPrice: 300
+  craftingTime: 130
+  requiredLevel: 0
+  energy: 16
+  mood: 20
+  purchaseCost: 2500
+  canStackItem: 1
+  maxStackAmount: 20

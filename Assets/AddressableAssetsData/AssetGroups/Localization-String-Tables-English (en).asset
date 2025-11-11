@@ -43,6 +43,13 @@ MonoBehaviour:
     - Locale-en
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2eecc99b5edb18b4aae7728c8c5526cd
+    m_Address: Recipe Labels_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4f427288d532cd24787fc6c73e03a3e2
     m_Address: Setting Labels_en
     m_ReadOnly: 1
@@ -52,6 +59,20 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8e26907dcfb512b48ab8bb804097635a
     m_Address: Menu Labels_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a74b89ad11c7b954a9710ad4de7ae2b8
+    m_Address: Decoration Labels_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c70847aca4090d240975bd15a1756fbb
+    m_Address: Stat Labels_en
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-en

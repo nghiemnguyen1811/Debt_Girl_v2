@@ -1,15 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Runtime.InteropServices;
 
 [DisallowMultipleComponent]
 [RequireComponent(typeof(Button))]
 public class FloorSelectButton : MonoBehaviour
 {
-    // ─────────────────────────────────────────────────────
-    // Inspector Fields
-    // ─────────────────────────────────────────────────────
     [Header("Data")]
     private FloorDataSO floorData;
 
@@ -23,12 +19,13 @@ public class FloorSelectButton : MonoBehaviour
     [Header("Runtime Cache")]
     [SerializeField] private Button cachedButton;
 
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────────────
     // Unity Lifecycle
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────────────
     private void OnEnable()
     {
-        LocalizationManager.Instance.OnLanguageChanged += RefreshUI;
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.OnLanguageChanged += RefreshUI;
     }
 
     private void Start()
@@ -41,18 +38,18 @@ public class FloorSelectButton : MonoBehaviour
         if (LocalizationManager.Instance != null)
             LocalizationManager.Instance.OnLanguageChanged -= RefreshUI;
     }
+
 #if UNITY_EDITOR
     private void OnValidate()
     {
-        // Keep references and label preview in sync while editing
         if (!cachedButton) cachedButton = GetComponent<Button>();
         if (autoRefreshOnStart) RefreshUI();
     }
 #endif
 
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────────────
     // Public API
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────────────
     public Button GetButton()
     {
         if (!cachedButton) cachedButton = GetComponent<Button>();
@@ -83,9 +80,17 @@ public class FloorSelectButton : MonoBehaviour
         if (floorNameLabel) floorNameLabel.color = color;
     }
 
-    // ─────────────────────────────────────────────────────
+    /// <summary>
+    /// Called externally by FloorSelectionManager to refresh localized name.
+    /// </summary>
+    public void UpdateLocalizedLabel()
+    {
+        RefreshUI();
+    }
+
+    //─────────────────────────────────────────────────────
     // Private Helpers
-    // ─────────────────────────────────────────────────────
+    //─────────────────────────────────────────────────────
     private async void RefreshUI()
     {
         if (!floorNameLabel) return;
@@ -102,11 +107,10 @@ public class FloorSelectButton : MonoBehaviour
     private static async System.Threading.Tasks.Task<string> BuildDisplayName(FloorDataSO data)
     {
         if (!data) return "(No Floor)";
+
         string localizedName = await LocalizationManager.Instance.GetLocalizedString("Move Floor Labels", data.floorNameKey);
-
-        if (string.IsNullOrWhiteSpace(localizedName))
-            return data.floorType.ToString();
-
-        return localizedName;
+        return string.IsNullOrWhiteSpace(localizedName)
+            ? data.floorType.ToString()
+            : localizedName;
     }
 }

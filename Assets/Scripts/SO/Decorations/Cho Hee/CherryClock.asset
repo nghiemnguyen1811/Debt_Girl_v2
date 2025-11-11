@@ -15,6 +15,8 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: e08bd8d397540d64d819df82529a8da5, type: 3}
   itemName: CherryClock
   description: Bright pink wall clock with a clean, playful design.
+  decorationNameKey: decoration.chohee2Name
+  decorationDescriptionKey: decoration.chohee2Des
   itemID: 1
   owner: 5
   price: 1800
