@@ -5,7 +5,7 @@ public class MainMenu : MonoBehaviour
 {
     [Header(" Elements ")]
     [SerializeField] private GameObject settingsPanel;
-    [SerializeField] private GameObject howtoplayPanel;
+    [SerializeField] private GameObject instructPanel;
     [SerializeField] private GameObject quitPanel;
     [SerializeField] private ScenePreloadDataSO gameplayPreloadDataSO;
     private void Start()
@@ -21,7 +21,7 @@ public class MainMenu : MonoBehaviour
 
     public void ToggleSettingsPanel(bool show) => TogglePanel(settingsPanel, show);
 
-    public void ToggleHowToPlayPanel(bool show) => TogglePanel(howtoplayPanel, show);
+    public void ToggleInstructPanel(bool show) => TogglePanel(instructPanel, show);
 
     public void ToggleQuitPanel(bool show) => TogglePanel(quitPanel, show);
 
