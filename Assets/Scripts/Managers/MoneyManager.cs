@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿ using UnityEngine;
 
 /// <summary>
 /// Handles player money and diamond balance, UI updates, and saving.

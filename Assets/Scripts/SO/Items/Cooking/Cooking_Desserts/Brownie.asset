@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Brownie
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: fc6aaa16155c2ce439a80a1b086124fc, type: 3}
-  itemNameKey: recipe.brownieName
-  itemDescriptionKey: recipe.brownieDes
+  itemNameKey: cake.brownieName
+  itemDescriptionKey: cake.brownieDes
   itemType: 1
   ingredientType: 38
   requiredIngredients:

@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Cupcake
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 804cd687c3824d242b8c12c5df220005, type: 3}
-  itemNameKey: recipe.cupcakeName
-  itemDescriptionKey: recipe.cupcakeDes
+  itemNameKey: cake.cupcakeName
+  itemDescriptionKey: cake.cupcakeDes
   itemType: 1
   ingredientType: 43
   requiredIngredients:

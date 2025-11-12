@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Crepe
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: e13939cea1d3faf42bb5375cffb0c3cc, type: 3}
-  itemNameKey: recipe.crepeName
-  itemDescriptionKey: recipe.crepeDes
+  itemNameKey: cake.crepeName
+  itemDescriptionKey: cake.crepeDes
   itemType: 1
   ingredientType: 42
   requiredIngredients:

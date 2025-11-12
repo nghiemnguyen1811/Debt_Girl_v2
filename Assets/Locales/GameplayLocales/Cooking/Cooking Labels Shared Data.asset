@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Cooking Labels Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: Cooking Labels
+  m_TableCollectionNameGuidString: 5a1183d7bee2f2141938e3821738e482
+  m_Entries:
+  - m_Id: 10495541248
+    m_Key: cooking.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12030656512
+    m_Key: cooking.ok
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7412234141696
+    m_Key: 'fridge.title
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9083458764800
+    m_Key: fridge.info
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9145660293120
+    m_Key: fridge.discard
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9470194565120
+    m_Key: fridge.sell
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13327586902016
+    m_Key: fridge.use
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 5709834530734473310
+  references:
+    version: 2
+    RefIds:
+    - rid: 5709834530734473310
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1762934743343

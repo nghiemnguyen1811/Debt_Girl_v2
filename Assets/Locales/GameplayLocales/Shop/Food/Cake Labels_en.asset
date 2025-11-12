@@ -1,0 +1,145 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: Cake Labels_en
+  m_EditorClassIdentifier: 
+  m_LocaleId:
+    m_Code: en
+  m_SharedData: {fileID: 11400000, guid: 4196ac322e2ebe44d81a17d052101f5d, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 17343553290240
+    m_Localized: Banana Bread
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17346237644800
+    m_Localized: Moist and sweet bread made with ripe bananas.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17367913807872
+    m_Localized: Brownie
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17369406980096
+    m_Localized: Rich and chewy chocolate dessert bar.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17370841432064
+    m_Localized: Butter Cookies
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17374511448064
+    m_Localized: Crispy cookies filled with rich buttery flavor.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17377317437440
+    m_Localized: Cheesecake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17380626743296
+    m_Localized: Soft and creamy dessert with deep cheese flavor.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17383499841536
+    m_Localized: Chocolate Chip Cookies
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17385806708736
+    m_Localized: Soft cookies filled with rich chocolate chips.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17387245355008
+    m_Localized: Crepe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17388415565824
+    m_Localized: Thin and delicate pancake that can be filled with sweet or savory
+      fillings.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17389053100032
+    m_Localized: Cupcake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17389686439936
+    m_Localized: Small cake decorated with sweet cream.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17390315585536
+    m_Localized: Flan
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17390961508352
+    m_Localized: Creamy pudding dessert served with caramel sauce.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17391594848256
+    m_Localized: Matcha Roll Cake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17392223993856
+    m_Localized: Soft sponge cake rolled with matcha cream.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17392857333760
+    m_Localized: Mochi
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17393499062272
+    m_Localized: Chewy rice cake filled with sweet paste.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17394090459136
+    m_Localized: Red Velvet Cake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17394665078784
+    m_Localized: Soft cake with cocoa flavor and cream cheese frosting.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17677390528512
+    m_Localized: Salted Egg Sponge Cake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17678007091200
+    m_Localized: Light and fluffy sponge cake with rich salted egg flavor.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17678615265280
+    m_Localized: Sponge Cake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17679219245056
+    m_Localized: Soft and airy textured cake.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17679806447616
+    m_Localized: Strawberry Mousse Cake
+    m_Metadata:
+      m_Items: []
+  - m_Id: 491671315103744
+    m_Localized: Soft mousse cake with fresh strawberry flavor.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 491583461212160
+    m_Localized: Tiramisu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 491584593674240
+    m_Localized: Italian dessert made with coffee-soaked ladyfingers and mascarpone
+      cream.
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

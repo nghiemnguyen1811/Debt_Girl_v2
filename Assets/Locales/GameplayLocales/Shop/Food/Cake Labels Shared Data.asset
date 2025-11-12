@@ -1,0 +1,150 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Cake Labels Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: Cake Labels
+  m_TableCollectionNameGuidString: 4196ac322e2ebe44d81a17d052101f5d
+  m_Entries:
+  - m_Id: 17343553290240
+    m_Key: cake.bananaBreadName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17346237644800
+    m_Key: cake.bananaBreadDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17367913807872
+    m_Key: cake.brownieName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17369406980096
+    m_Key: cake.brownieDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17370841432064
+    m_Key: cake.butterCookiesName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17374511448064
+    m_Key: cake.butterCookiesDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17377317437440
+    m_Key: cake.cheesecakeName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17380626743296
+    m_Key: cake.cheesecakeDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17383499841536
+    m_Key: cake.chocolateChipCookiesName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17385806708736
+    m_Key: cake.chocolateChipCookiesDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17387245355008
+    m_Key: cake.crepeName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17388415565824
+    m_Key: cake.crepeDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17389053100032
+    m_Key: cake.cupcakeName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17389686439936
+    m_Key: cake.cupcakeDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17390315585536
+    m_Key: cake.flanName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17390961508352
+    m_Key: cake.flanDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17391594848256
+    m_Key: cake.matchaRollCakeName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17392223993856
+    m_Key: cake.matchaRollCakeDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17392857333760
+    m_Key: cake.mochiName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17393499062272
+    m_Key: cake.mochiDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17394090459136
+    m_Key: cake.redVelvetCakeName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17394665078784
+    m_Key: cake.redVelvetCakeDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17677390528512
+    m_Key: cake.saltedEggSpongeCakeName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17678007091200
+    m_Key: cake.saltedEggSpongeCakeDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17678615265280
+    m_Key: cake.spongeCakeName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17679219245056
+    m_Key: cake.spongeCakeDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 17679806447616
+    m_Key: cake.strawberryMousseCakeName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 491583461212160
+    m_Key: cake.tiramisuName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 491584593674240
+    m_Key: cake.tiramisuDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 491671315103744
+    m_Key: 'cake.strawberryMousseCakeDes
+
+'
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 5709834505177530377
+  references:
+    version: 2
+    RefIds:
+    - rid: 5709834505177530377
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1762841443572

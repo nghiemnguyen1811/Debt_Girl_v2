@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Strawberry Mousse Cake
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 6867e3812deee744d86928f4c907f972, type: 3}
-  itemNameKey: recipe.strawberryMousseCakeName
-  itemDescriptionKey: recipe.strawberryMousseCakeDes
+  itemNameKey: cake.strawberryMousseCakeName
+  itemDescriptionKey: cake.strawberryMousseCakeDes
   itemType: 1
   ingredientType: 50
   requiredIngredients:

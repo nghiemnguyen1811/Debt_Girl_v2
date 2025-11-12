@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Banana Bread
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: e1a3c11ba81e792498e64781f3531eed, type: 3}
-  itemNameKey: recipe.bananaBreadName
-  itemDescriptionKey: recipe.bananaBreadDes
+  itemNameKey: cake.bananaBreadName
+  itemDescriptionKey: cake.bananaBreadDes
   itemType: 1
   ingredientType: 37
   requiredIngredients:

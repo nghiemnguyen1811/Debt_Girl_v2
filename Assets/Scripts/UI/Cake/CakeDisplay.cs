@@ -53,7 +53,7 @@ public class CakeDisplay : MonoBehaviour
         itemData = newItemData;
 
         cakeIconImage.sprite = itemData.icon;
-        LocalizationManager.Instance.SetLocalizedText(cakeNameLabel, "Recipe Labels", itemData.itemNameKey);
+        LocalizationManager.Instance.SetLocalizedText(cakeNameLabel, "Cake Labels", itemData.itemNameKey);
 
         EvaluateLockState();
         SetSelected(false);

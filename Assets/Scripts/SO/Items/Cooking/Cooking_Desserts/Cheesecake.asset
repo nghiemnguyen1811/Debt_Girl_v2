@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Cheesecake
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: ec4ff3dfeee88164abd7ff346816e6f0, type: 3}
-  itemNameKey: recipe.cheesecakeName
-  itemDescriptionKey: recipe.cheesecakeDes
+  itemNameKey: cake.cheesecakeName
+  itemDescriptionKey: cake.cheesecakeDes
   itemType: 1
   ingredientType: 40
   requiredIngredients:

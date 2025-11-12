@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6acbbd15e75140948b9abbe0097c4bec, type: 3}
+  m_Name: Kimchi
+  m_EditorClassIdentifier: 
+  icon: {fileID: 21300000, guid: 318b7da7caa834145bc0b19b8b06adad, type: 3}
+  itemNameKey: food.kimchiName
+  itemDescriptionKey: food.kimchiDes
+  itemType: 1
+  ingredientType: 81
+  requiredIngredients:
+  - ingredientType: 49
+    icon: {fileID: 21300000, guid: b1646479b3b47da4380f70edf3be3779, type: 3}
+    amount: 2
+  - ingredientType: 50
+    icon: {fileID: 21300000, guid: b3eb11a832c69c7499338396597841c2, type: 3}
+    amount: 2
+  - ingredientType: 51
+    icon: {fileID: 21300000, guid: f711a9bac7ae96840b5ece6153071eea, type: 3}
+    amount: 1
+  canBeSold: 0
+  sellPrice: 0
+  craftingTime: 3
+  requiredLevel: 4
+  energy: 8
+  mood: 5
+  purchaseCost: 0
+  canStackItem: 0
+  maxStackAmount: 1

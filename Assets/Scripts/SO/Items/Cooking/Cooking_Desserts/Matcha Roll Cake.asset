@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Matcha Roll Cake
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 20b73e893d6e7d042a8b76419af11332, type: 3}
-  itemNameKey: recipe.matchaRollCakeName
-  itemDescriptionKey: recipe.matchaRollCakeDes
+  itemNameKey: cake.matchaRollCakeName
+  itemDescriptionKey: cake.matchaRollCakeDes
   itemType: 1
   ingredientType: 45
   requiredIngredients:

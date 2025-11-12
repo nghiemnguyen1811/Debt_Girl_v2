@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Flan
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 89383f936c13fa04f8d89972fe3f21fa, type: 3}
-  itemNameKey: recipe.flanName
-  itemDescriptionKey: recipe.flanDes
+  itemNameKey: cake.flanName
+  itemDescriptionKey: cake.flanDes
   itemType: 1
   ingredientType: 44
   requiredIngredients:

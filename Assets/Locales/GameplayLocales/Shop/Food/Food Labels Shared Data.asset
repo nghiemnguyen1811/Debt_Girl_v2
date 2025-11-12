@@ -15,6 +15,182 @@ MonoBehaviour:
   m_TableCollectionName: Food Labels
   m_TableCollectionNameGuidString: 1a56de674b575d2418b56442e9e8aef3
   m_Entries:
+  - m_Id: 19971364438016
+    m_Key: food.bibimbapName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19971955834880
+    m_Key: food.bibimbapDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19973037965312
+    m_Key: food.bossamName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19973646139392
+    m_Key: food.bossamDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 19974237536256
+    m_Key: food.bulgogiName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20051244957696
+    m_Key: food.bulgogiDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20051827965952
+    m_Key: food.dakgangjeongName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20052398391296
+    m_Key: food.dakgangjeongDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20054164193280
+    m_Key: food.galbiName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20054776561664
+    m_Key: food.galbiDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20055313432576
+    m_Key: food.galbitangName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20152881332224
+    m_Key: food.galbitangDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20153476923392
+    m_Key: food.gamjatangName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20154055737344
+    m_Key: food.gamjatangDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20154663911424
+    m_Key: food.gimbapName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20155276279808
+    m_Key: food.gimbapDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20385732313088
+    m_Key: food.japchaeName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20386327904256
+    m_Key: food.japchaeDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20386906718208
+    m_Key: food.jjajangbapName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20387523280896
+    m_Key: food.jjajangbapDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20388081123328
+    m_Key: food.jjamppongName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20388685103104
+    m_Key: food.jjamppongDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20526501543936
+    m_Key: food.kimchiName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20528741302272
+    m_Key: food.kimchiDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20530985254912
+    m_Key: food.kimchiFriedRiceName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20532423901184
+    m_Key: food.kimchiFriedRiceDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20534118400000
+    m_Key: food.kimchiJeonName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20536177803264
+    m_Key: food.kimchiJeonDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20537989742592
+    m_Key: food.kimchiJjigaeName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20540753788928
+    m_Key: food.kimchiJjigaeDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20644093050880
+    m_Key: food.manduName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20644684447744
+    m_Key: food.manduDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20645280038912
+    m_Key: food.odengName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20645884018688
+    m_Key: food.odengDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20646437666816
+    m_Key: food.samgyeopsalName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20648950054912
+    m_Key: food.samgyeopsalDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20721335353344
+    m_Key: food.samgyetangName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20721951916032
+    m_Key: food.samgyetangDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20722555895808
+    m_Key: food.soondaeName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20723134709760
+    m_Key: food.soondaeDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20783469772800
+    m_Key: food.tteokbokkiName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20784119889920
+    m_Key: food.tteokbokkiDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20784711286784
+    m_Key: food.yukgaejangName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20785231380480
+    m_Key: food.yukgaejangDes
+    m_Metadata:
+      m_Items: []
   - m_Id: 148602656997376
     m_Key: food.almondName
     m_Metadata:
@@ -525,6 +701,78 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 164723539918848
     m_Key: food.vegetablesDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20258313551872
+    m_Key: food.jajangmyeonName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 20258921725952
+    m_Key: food.jajangmyeonDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 709226071932928
+    m_Key: food.steamedRiceName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 726978379726848
+    m_Key: food.steamedRiceDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 727195242020864
+    m_Key: food.gyeranMariName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 727245368147968
+    m_Key: food.gyeranMariDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 727462356271104
+    m_Key: food.sundubuJjigaeName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 727463765557248
+    m_Key: food.sundubuJjigaeDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 727543205675008
+    m_Key: food.haemulPajeonName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 727544669487104
+    m_Key: food.haemulPajeonDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 727646209392640
+    m_Key: food.eomukBokkeumName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 727646729486336
+    m_Key: food.eomukBokkeumDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 727795585335296
+    m_Key: recipe.jjajangbapName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 727796084457472
+    m_Key: recipe.jjajangbapDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 728092722413568
+    m_Key: food.haeganggukName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 728093762600960
+    m_Key: food.haeganggukDes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 728168941305856
+    m_Key: food.bibimNaengmyeonName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 728169738223616
+    m_Key: food.bibimNaengmyeonDes
     m_Metadata:
       m_Items: []
   m_Metadata:

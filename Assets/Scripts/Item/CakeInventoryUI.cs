@@ -40,11 +40,13 @@ public class CakeInventoryUI : InventoryBase<CakeInventoryUI>
         itemIconImage.sprite = data.icon;
         itemIconImage.gameObject.SetActive(true);
 
-        LocalizationManager.Instance.SetLocalizedText(itemNameText, "Recipe Labels", data.itemNameKey);
+        LocalizationManager.Instance.SetLocalizedText(itemNameText, "Cake Labels", data.itemNameKey);
 
-        LocalizationManager.Instance.SetLocalizedText(itemDescriptionText, "Recipe Labels", data.itemDescriptionKey);
+        LocalizationManager.Instance.SetLocalizedText(itemDescriptionText, "Cake Labels", data.itemDescriptionKey);
 
-        sellPriceText.text = $"{data.SellPrice}$";
+        string formattedValue = DoubleUtilities.ToIdleNotation(data.SellPrice);
+        string localizedSymbol = LocalizationManager.Instance.GetCurrencySymbol();
+        sellPriceText.text = $"{formattedValue}{localizedSymbol}";
 
         // Toggle buttons and groups
         sellButton.gameObject.SetActive(data.CanBeSold);

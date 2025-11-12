@@ -43,6 +43,20 @@ MonoBehaviour:
     - Locale-ko-KR
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5888cb634e37e3b4096aa1ef9f639e17
+    m_Address: Baking Labels_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5f2fdc55dfe33f140a143e9961c5976a
+    m_Address: SNS Labels_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 78fceaa428cddfa4bb1b3cef05f2e4c9
     m_Address: Food Labels_ko-KR
     m_ReadOnly: 1
@@ -57,8 +71,15 @@ MonoBehaviour:
     - Locale-ko-KR
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7b8a829ac29b6434a9d2ee7510793023
+    m_Address: Banking Labels_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 824253af438475e4bba64bc807dba62b
-    m_Address: Recipe Labels_ko-KR
+    m_Address: Cake Labels_ko-KR
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-ko-KR
@@ -85,6 +106,13 @@ MonoBehaviour:
     - Locale-ko-KR
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9f56de641f93af34582bedf4a85ae140
+    m_Address: Invest Labels_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: ab70eab90d4945d4a88d4be85c129ee8
     m_Address: Quit Labels_ko-KR
     m_ReadOnly: 1
@@ -92,8 +120,22 @@ MonoBehaviour:
     - Locale-ko-KR
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c4b87e3cfe1619149b8b157c3b3122b2
+    m_Address: Cooking Labels_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: dc2e2c46debe4774ba8a8a3aeaefe1e7
     m_Address: Pause Labels_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e4e99983930641e4696bae6fe432bc73
+    m_Address: Outfit Labels_ko-KR
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-ko-KR

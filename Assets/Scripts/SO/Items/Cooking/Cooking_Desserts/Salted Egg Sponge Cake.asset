@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Salted Egg Sponge Cake
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: cf1a7007cb077be409c3f1f8e890b9a2, type: 3}
-  itemNameKey: recipe.saltedEggSpongeCakeName
-  itemDescriptionKey: recipe.saltedEggSpongeCakeDes
+  itemNameKey: cake.saltedEggSpongeCakeName
+  itemDescriptionKey: cake.saltedEggSpongeCakeDes
   itemType: 1
   ingredientType: 48
   requiredIngredients:

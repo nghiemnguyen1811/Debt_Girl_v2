@@ -43,8 +43,29 @@ MonoBehaviour:
     - Locale-en
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 23d67bc5b35febd46a7b87af5107bc8d
+    m_Address: Baking Labels_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 2eecc99b5edb18b4aae7728c8c5526cd
-    m_Address: Recipe Labels_en
+    m_Address: Cake Labels_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3cef5a1d2a61e714f8ab2d005b98dc5c
+    m_Address: Invest Labels_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4d74a7d2eb53daa45a6a6c4a555e18e7
+    m_Address: Outfit Labels_en
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-en
@@ -52,6 +73,27 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4f427288d532cd24787fc6c73e03a3e2
     m_Address: Setting Labels_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 50c5aa8326d097d4f89fbff42d1dbf33
+    m_Address: Cooking Labels_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5fa2eca6f2c741840a8b426a68cb65ad
+    m_Address: Banking Labels_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 700b4f13dfb56b64c90f793f3eea3b82
+    m_Address: SNS Labels_en
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-en

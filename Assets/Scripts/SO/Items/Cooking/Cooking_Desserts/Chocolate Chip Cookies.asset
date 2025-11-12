@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Chocolate Chip Cookies
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: ac56530511453f24391af84bbf7ca6a8, type: 3}
-  itemNameKey: recipe.chocolateChipCookiesName
-  itemDescriptionKey: recipe.chocolateChipCookiesDes
+  itemNameKey: cake.chocolateChipCookiesName
+  itemDescriptionKey: cake.chocolateChipCookiesDes
   itemType: 1
   ingredientType: 41
   requiredIngredients:

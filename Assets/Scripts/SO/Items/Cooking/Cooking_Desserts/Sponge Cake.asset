@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Sponge Cake
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: b4248cfcc7f501c428821f2045c2e446, type: 3}
-  itemNameKey: recipe.spongeCakeName
-  itemDescriptionKey: recipe.spongeCakeDes
+  itemNameKey: cake.spongeCakeName
+  itemDescriptionKey: cake.spongeCakeDes
   itemType: 1
   ingredientType: 49
   requiredIngredients:

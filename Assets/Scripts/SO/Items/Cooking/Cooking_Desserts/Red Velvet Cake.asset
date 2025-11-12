@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Red Velvet Cake
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 0dfb0955235624a47abdc011958431a2, type: 3}
-  itemNameKey: recipe.redVelvetCakeName
-  itemDescriptionKey: recipe.redVelvetCakeDes
+  itemNameKey: cake.redVelvetCakeName
+  itemDescriptionKey: cake.redVelvetCakeDes
   itemType: 1
   ingredientType: 47
   requiredIngredients:

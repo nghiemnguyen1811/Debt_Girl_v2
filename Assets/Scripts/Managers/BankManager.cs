@@ -20,8 +20,10 @@ public class BankManager : SingletonMonobehaviour<BankManager>
     //─────────────────────────────────────────────
     [Header("Debt Settings")]
     [SerializeField] private double initialDebt = 100;
-    [SerializeField] private float debtMultiplier = 1.5f;
-
+    //[SerializeField] private float debtMultiplier = 1.5f;
+    [SerializeField] private float earlyRate = 1.15f;
+    [SerializeField] private float lateRate = 1.05f;
+    [SerializeField] private float smoothRange = 50f;
     [Header("Pay Debt Buttons")]
     [SerializeField] private Button payDebtButtonEnabled;
     [SerializeField] private Button payDebtButtonDisabled;
@@ -149,7 +151,8 @@ public class BankManager : SingletonMonobehaviour<BankManager>
     public void RecalculateDebtFromLevel()
     {
         int level = GameManager.Instance.CurrentLevel;
-        currentDebt = Math.Round(initialDebt * Math.Pow(debtMultiplier, level - 1), 2);
+        float growthFactor = Mathf.Lerp(earlyRate, lateRate, Mathf.Clamp01(level / smoothRange));
+        currentDebt = Math.Round(initialDebt * Mathf.Pow(growthFactor, level - 1), 2);
         UpdateDebtUI();
     }
 
