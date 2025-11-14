@@ -40,5 +40,13 @@ public class CharacterTabButton : MonoBehaviour
     {
         if (outline != null)
             outline.SetActive(selected);
+
+        if (avatarIcon != null)
+        {
+            Color c = avatarIcon.color;
+            c.a = selected ? 1f : 0.5f;
+            avatarIcon.color = c;
+        }
     }
+
 }

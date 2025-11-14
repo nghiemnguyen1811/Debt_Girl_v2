@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Sirenix.OdinInspector;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -389,9 +390,23 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
 [System.Serializable]
 public class Tab
 {
-    public string tabName;     // "Food" / "Decoration"
+    public string tabName;
+
+    [Header("Main")]
     public Button button;
-    public TMP_Text labelText;
     public GameObject outline;
-    public GameObject group;   // Corresponding ScrollRect
+    public GameObject group;
+
+    public enum TabDisplayMode { Text, Icon, Both }
+
+    [LabelText("Display Mode")]
+    public TabDisplayMode displayMode;
+
+    // Text
+    [ShowIf("@displayMode == TabDisplayMode.Text || displayMode == TabDisplayMode.Both")]
+    public TMP_Text labelText;
+
+    // Icon
+    [ShowIf("@displayMode == TabDisplayMode.Icon || displayMode == TabDisplayMode.Both")]
+    public Image icon;
 }

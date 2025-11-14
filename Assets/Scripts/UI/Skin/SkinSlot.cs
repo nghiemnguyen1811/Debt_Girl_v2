@@ -9,7 +9,7 @@ public class SkinSlot : MonoBehaviour
     // 🔗 UI REFERENCES (Inspector)
     // ─────────────────────────────────────────────────────
     [Title("UI References", bold: true)]
-    [SerializeField] private Image iconImage;
+    [SerializeField] private Image skinImage;
     [SerializeField] private Image characterIcon;
     [SerializeField] private TMP_Text[] priceTexts;
     [SerializeField] private Button selectButton;
@@ -50,7 +50,7 @@ public class SkinSlot : MonoBehaviour
         isUnlocked = unlocked;
         isEquipped = equipped;
 
-        if (iconImage) iconImage.sprite = data.icon;
+        if (skinImage) skinImage.sprite = data.icon;
         if (characterIcon) characterIcon.sprite = GetCharacterIcon(data.owner);
 
         foreach (var text in priceTexts)
@@ -161,6 +161,7 @@ public class SkinSlot : MonoBehaviour
     public void SetEquipped(bool equipped)
     {
         isEquipped = equipped;
+        characterIcon.gameObject.SetActive(!equipped);
         UpdateVisualState();
     }
 

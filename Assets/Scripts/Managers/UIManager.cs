@@ -95,7 +95,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
             statPointText.text = $"{total}";
     }
 
-    
+
 
     #endregion
 
@@ -230,6 +230,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
         ToggleBankingPanel(false);
         ToggleDialoguePanel(false);
         ToggleDailyQuestPanel(false);
+        ToggleOutfitPanel(false);
         TogglePhonePanel(false);
     }
 

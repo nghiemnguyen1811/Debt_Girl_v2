@@ -316,6 +316,10 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
     /// </summary>
     private void SetTabVisual(Tab tab, bool isActive)
     {
+        if (tab.icon != null)
+            tab.icon.color = isActive
+                ? Color.black : new Color32(0xD9, 0xD9, 0xD9, 0xFF);
+
         if (tab.outline != null)
             tab.outline.SetActive(isActive);
     }
@@ -367,6 +371,7 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
         }
 
         EquipSkin(currentSelectedSlot.SkinData);
+        AudioManager.Instance.PlayInteractSound(8);
     }
 
     // ══════════════════════════════════════════════════════
