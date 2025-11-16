@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SellCoin
   m_EditorClassIdentifier: 
   questType: 5
-  description: Sell {0} coins in the app.
+  descriptionKey: daily.quest7Des
   minTarget: 1
   maxTarget: 3
   rewardDiamond: 1

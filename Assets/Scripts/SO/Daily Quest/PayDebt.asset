@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PayDebt
   m_EditorClassIdentifier: 
   questType: 3
-  description: Pay off your bank debt.
+  descriptionKey: daily.quest6Des
   minTarget: 1
   maxTarget: 1
   rewardDiamond: 1

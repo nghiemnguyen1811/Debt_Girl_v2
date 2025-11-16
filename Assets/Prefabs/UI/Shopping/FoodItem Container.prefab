@@ -67,8 +67,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uD53C\uC790"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 01a59c6e3c042024abb2f4d052b3d87b, type: 2}
-  m_sharedMaterial: {fileID: 1980600929090335748, guid: 01a59c6e3c042024abb2f4d052b3d87b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5ff9b0b4b34f38949a1ba4563311f74e, type: 2}
+  m_sharedMaterial: {fileID: 4822976353960735996, guid: 5ff9b0b4b34f38949a1ba4563311f74e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -406,8 +406,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uCF64\uBE44\uB124\uC774\uC158 \uD53C\uC790 "
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 01a59c6e3c042024abb2f4d052b3d87b, type: 2}
-  m_sharedMaterial: {fileID: 1980600929090335748, guid: 01a59c6e3c042024abb2f4d052b3d87b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5ff9b0b4b34f38949a1ba4563311f74e, type: 2}
+  m_sharedMaterial: {fileID: 4822976353960735996, guid: 5ff9b0b4b34f38949a1ba4563311f74e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -431,8 +431,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 35
-  m_fontSizeBase: 35
+  m_fontSize: 45
+  m_fontSizeBase: 45
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 32
@@ -602,18 +602,6 @@ MonoBehaviour:
   minusButton: {fileID: 5906261874433737800}
   plusButton: {fileID: 3914441657020807001}
   statGroupRoot: {fileID: 4014886456494307181}
-  currencySymbol:
-    m_TableReference:
-      m_TableCollectionName: GUID:6a1ec320bfa743c4ea4e21f32e18c102
-    m_TableEntryReference:
-      m_KeyId: 62024983068672
-      m_Key: 
-    m_FallbackState: 0
-    m_WaitForCompletion: 0
-    m_LocalVariables: []
-  references:
-    version: 2
-    RefIds: []
 --- !u!1 &3644863733850201803
 GameObject:
   m_ObjectHideFlags: 0
@@ -865,8 +853,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 50
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: bbcc67452c32b064b960dd30bc6b50b4, type: 2}
-  m_sharedMaterial: {fileID: 5439797245525787225, guid: bbcc67452c32b064b960dd30bc6b50b4, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5ff9b0b4b34f38949a1ba4563311f74e, type: 2}
+  m_sharedMaterial: {fileID: 4822976353960735996, guid: 5ff9b0b4b34f38949a1ba4563311f74e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1001,8 +989,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "99.9K\uC6D0"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: bbcc67452c32b064b960dd30bc6b50b4, type: 2}
-  m_sharedMaterial: {fileID: 5439797245525787225, guid: bbcc67452c32b064b960dd30bc6b50b4, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5ff9b0b4b34f38949a1ba4563311f74e, type: 2}
+  m_sharedMaterial: {fileID: 4822976353960735996, guid: 5ff9b0b4b34f38949a1ba4563311f74e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1852,8 +1840,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 99
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: bbcc67452c32b064b960dd30bc6b50b4, type: 2}
-  m_sharedMaterial: {fileID: 5439797245525787225, guid: bbcc67452c32b064b960dd30bc6b50b4, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5ff9b0b4b34f38949a1ba4563311f74e, type: 2}
+  m_sharedMaterial: {fileID: 4822976353960735996, guid: 5ff9b0b4b34f38949a1ba4563311f74e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2053,8 +2041,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 0
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: d7de4e7a1935d7f4cb8c5f6d66297a1b, type: 2}
-  m_sharedMaterial: {fileID: -914551256021618152, guid: d7de4e7a1935d7f4cb8c5f6d66297a1b, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5ff9b0b4b34f38949a1ba4563311f74e, type: 2}
+  m_sharedMaterial: {fileID: 4822976353960735996, guid: 5ff9b0b4b34f38949a1ba4563311f74e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

@@ -78,7 +78,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b715d75f51fb327459c7092bc6cbe73e, type: 3}
   m_Name: ToonStylizeRenderFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   settings:
     posterizeSteps: 4
     outlineThickness: 1.2

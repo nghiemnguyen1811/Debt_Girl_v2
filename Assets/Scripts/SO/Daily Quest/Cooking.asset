@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Cooking
   m_EditorClassIdentifier: 
   questType: 2
-  description: Cook {0} random dishes.
+  descriptionKey: daily.quest4Des
   minTarget: 1
   maxTarget: 3
   rewardDiamond: 1

@@ -25,7 +25,7 @@ MonoBehaviour:
   m_SupportsTerrainHoles: 1
   m_SupportsHDR: 1
   m_HDRColorBufferPrecision: 0
-  m_MSAA: 1
+  m_MSAA: 4
   m_RenderScale: 1
   m_UpscalingFilter: 0
   m_FsrOverrideSharpness: 0
@@ -34,7 +34,7 @@ MonoBehaviour:
   m_LODCrossFadeDitheringType: 1
   m_ShEvalMode: 0
   m_LightProbeSystem: 1
-  m_ProbeVolumeMemoryBudget: 1024
+  m_ProbeVolumeMemoryBudget: 512
   m_ProbeVolumeBlendingMemoryBudget: 256
   m_SupportProbeVolumeGPUStreaming: 0
   m_SupportProbeVolumeDiskStreaming: 0
@@ -91,7 +91,7 @@ MonoBehaviour:
   m_MaxPixelLights: 0
   m_ShadowAtlasResolution: 256
   m_VolumeFrameworkUpdateMode: 0
-  m_VolumeProfile: {fileID: 11400000, guid: ab09877e2e707104187f6f83e2f62510, type: 2}
+  m_VolumeProfile: {fileID: 11400000, guid: cea2a8fcce34a274d9597a21cc00be9d, type: 2}
   apvScenesData:
     obsoleteSceneBounds:
       m_Keys: []

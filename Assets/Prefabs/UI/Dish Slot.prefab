@@ -315,8 +315,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: "\uAD6D\uC218"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: bbcc67452c32b064b960dd30bc6b50b4, type: 2}
-  m_sharedMaterial: {fileID: 5439797245525787225, guid: bbcc67452c32b064b960dd30bc6b50b4, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 5ff9b0b4b34f38949a1ba4563311f74e, type: 2}
+  m_sharedMaterial: {fileID: 4822976353960735996, guid: 5ff9b0b4b34f38949a1ba4563311f74e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -340,7 +340,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 64
+  m_fontSize: 60.05
   m_fontSizeBase: 64
   m_fontWeight: 400
   m_enableAutoSizing: 1

@@ -1,14 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using System.Collections.Generic;
 
 [DisallowMultipleComponent]
 public class DishSlot : MonoBehaviour
 {
-    // ─────────────────────────────────────────────────────
-    // Inspector Fields
-    // ─────────────────────────────────────────────────────
     [Header("Main Dish UI")]
     [SerializeField] private TextMeshProUGUI dishNameText;
     [SerializeField] private Image dishImage;
@@ -16,81 +12,64 @@ public class DishSlot : MonoBehaviour
     [SerializeField] private Button selectButton;
     [SerializeField] private GameObject[] statusGroup;
 
-    [Header("Shared UI Color Config")]
+    [Header("Shared UI Colors")]
     [SerializeField] private UIColorsConfig colorConfig;
 
-    // ─────────────────────────────────────────────────────
-    // Runtime Data
-    // ─────────────────────────────────────────────────────
     private ItemDataSO itemData;
     private bool isLocked;
 
-    // ─────────────────────────────────────────────────────
-    // Public Accessors
-    // ─────────────────────────────────────────────────────
     public ItemDataSO DishData => itemData;
     public Button GetButton() => selectButton;
     public bool IsLocked() => isLocked;
-    public ItemDataSO GetItemData() => itemData;
-
-    // ─────────────────────────────────────────────────────
-    // Public Methods
-    // ─────────────────────────────────────────────────────
 
     /// <summary>
-    /// Initializes the slot UI with given dish data.
+    /// Initializes the UI slot using dish data.
     /// </summary>
     public void SetupCookingContainer(ItemDataSO newItemData)
     {
         itemData = newItemData;
+        RefreshLocalizedName();
 
-        LocalizationManager.Instance.SetLocalizedText(dishNameText, "Food Labels", itemData.itemNameKey);
         dishImage.sprite = itemData.icon;
-
         EvaluateLockState();
         SetSelected(false);
     }
 
     /// <summary>
-    /// Highlights or unhighlights the dish slot when selected.
+    /// Refreshes the localized name text for this dish.
     /// </summary>
-    public void SetSelected(bool isSelected)
+    public void RefreshLocalizedName()
     {
-        if (selectionOutline == null) return;
-        selectionOutline.color = isSelected ? Color.red : colorConfig.plateEmptyColor;
+        LocalizationManager.Instance.SetLocalizedText(
+            dishNameText,
+            "Food Labels",
+            itemData.itemNameKey
+        );
     }
 
-    /// <summary>
-    /// Checks if this dish is locked based on player level.
-    /// </summary>
+    public void SetSelected(bool isSelected)
+    {
+        if (selectionOutline != null)
+            selectionOutline.color = isSelected ? Color.red : colorConfig.plateEmptyColor;
+    }
+
     public void EvaluateLockState()
     {
-        int requiredLevel = itemData.requiredLevel;
-        isLocked = GameManager.Instance.CurrentLevel < requiredLevel;
+        isLocked = GameManager.Instance.CurrentLevel < itemData.requiredLevel;
         UpdateLockVisuals(isLocked);
     }
 
-    // ─────────────────────────────────────────────────────
-    // Private Methods
-    // ─────────────────────────────────────────────────────
-
-    /// <summary>
-    /// Updates UI visuals to reflect locked/unlocked state.
-    /// </summary>
-    private void UpdateLockVisuals(bool isLocked)
+    private void UpdateLockVisuals(bool locked)
     {
-        if (statusGroup == null || statusGroup.Length < 2)
+        if (statusGroup.Length >= 2)
         {
-            Debug.LogWarning("Lock visual group is not properly configured.");
-            return;
+            statusGroup[0].SetActive(!locked);
+            statusGroup[1].SetActive(locked);
         }
 
-        statusGroup[0].SetActive(!isLocked);
-        statusGroup[1].SetActive(isLocked);
-        selectButton.interactable = !isLocked;
+        selectButton.interactable = !locked;
     }
 }
-
 [System.Serializable]
 public class IngredientUI
 {

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BuyShop
   m_EditorClassIdentifier: 
   questType: 7
-  description: Purchase any item in the shop {0} times.
+  descriptionKey: daily.quest3Des
   minTarget: 1
   maxTarget: 4
   rewardDiamond: 1

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BakeCake
   m_EditorClassIdentifier: 
   questType: 1
-  description: Bake {0} dessert cakes.
+  descriptionKey: daily.quest1Des
   minTarget: 1
   maxTarget: 3
   rewardDiamond: 1

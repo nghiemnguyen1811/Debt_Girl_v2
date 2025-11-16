@@ -10,10 +10,11 @@ public class DailyQuestDataSO : ScriptableObject
     [Header("Quest Settings")]
     public DailyQuestType questType;
 
-    [TextArea(2, 4)]
-    [ShowIf("@questType != DailyQuestType.Interact")]
-    public string description;
+    //[TextArea(2, 4)]
+    //[ShowIf("@questType != DailyQuestType.Interact")]
+    //public string description;
 
+    public string descriptionKey;
     // ─────────────────────────────────────────────────────
     // TARGET & REWARD SETTINGS
     // ─────────────────────────────────────────────────────
@@ -36,6 +37,8 @@ public class DailyQuestDataSO : ScriptableObject
     [BoxGroup("Daily Activity Requirement")]
     [LabelText("Interact Activities")]
     public DailyActivityRequirement[] activityRequirements;
+
+
 }
 
 [System.Serializable]
@@ -44,9 +47,8 @@ public class DailyActivityRequirement
     [LabelText("Daily Activity Type")]
     public DailyActivity activity;
 
-    [LabelText("Description")]
-    [TextArea(1, 3)]
-    public string description;
+    [LabelText("Localization Key (optional)")]
+    public string descriptionKey;
 
     [LabelText("Required Level")]
     [MinValue(1)]

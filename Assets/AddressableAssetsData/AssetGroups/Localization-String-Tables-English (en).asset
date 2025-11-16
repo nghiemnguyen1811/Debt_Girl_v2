@@ -57,6 +57,13 @@ MonoBehaviour:
     - Locale-en
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 35d075799db544842b03daf532159b43
+    m_Address: Daily Labels_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3cef5a1d2a61e714f8ab2d005b98dc5c
     m_Address: Invest Labels_en
     m_ReadOnly: 1
@@ -108,6 +115,13 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a74b89ad11c7b954a9710ad4de7ae2b8
     m_Address: Decoration Labels_en
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b46aa806b618a6146845ea303cc3929b
+    m_Address: Instruct Labels_en
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-en

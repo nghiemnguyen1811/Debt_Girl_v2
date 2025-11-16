@@ -1,0 +1,100 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: Daily Labels Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: Daily Labels
+  m_TableCollectionNameGuidString: 4fd6bc71bd912cb43963c387f2a3f92b
+  m_Entries:
+  - m_Id: 301119596478464
+    m_Key: daily.title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 301121983037440
+    m_Key: daily.all
+    m_Metadata:
+      m_Items: []
+  - m_Id: 311729293967360
+    m_Key: daily.quest1Des
+    m_Metadata:
+      m_Items: []
+  - m_Id: 311731059769344
+    m_Key: daily.quest2Des
+    m_Metadata:
+      m_Items: []
+  - m_Id: 311737686769664
+    m_Key: daily.quest3Des
+    m_Metadata:
+      m_Items: []
+  - m_Id: 311740207546368
+    m_Key: daily.quest4Des
+    m_Metadata:
+      m_Items: []
+  - m_Id: 312615768506368
+    m_Key: daily.quest5Des
+    m_Metadata:
+      m_Items: []
+  - m_Id: 312619178475520
+    m_Key: daily.quest6Des
+    m_Metadata:
+      m_Items: []
+  - m_Id: 312620784893952
+    m_Key: daily.quest7Des
+    m_Metadata:
+      m_Items: []
+  - m_Id: 339826001133568
+    m_Key: 'daily.interact1
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 339861405253632
+    m_Key: daily.interact2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 339875565223936
+    m_Key: daily.interact3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 339886126481408
+    m_Key: daily.interact4
+    m_Metadata:
+      m_Items: []
+  - m_Id: 339903537037312
+    m_Key: daily.interact5
+    m_Metadata:
+      m_Items: []
+  - m_Id: 339999930531840
+    m_Key: daily.interact6
+    m_Metadata:
+      m_Items: []
+  - m_Id: 340010252713984
+    m_Key: daily.interact7
+    m_Metadata:
+      m_Items: []
+  - m_Id: 350807267819520
+    m_Key: 'daily.bonus
+
+'
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 5709834551569416291
+  references:
+    version: 2
+    RefIds:
+    - rid: 5709834551569416291
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1763022022870

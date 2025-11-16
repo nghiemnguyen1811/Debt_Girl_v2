@@ -57,6 +57,13 @@ MonoBehaviour:
     - Locale-ko-KR
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 63cc60a340be9ca409a4887f830ac13b
+    m_Address: Daily Labels_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 78fceaa428cddfa4bb1b3cef05f2e4c9
     m_Address: Food Labels_ko-KR
     m_ReadOnly: 1
@@ -122,6 +129,13 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c4b87e3cfe1619149b8b157c3b3122b2
     m_Address: Cooking Labels_ko-KR
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ko-KR
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c5fe811a5de451d40ae1e72034b70355
+    m_Address: Instruct Labels_ko-KR
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-ko-KR

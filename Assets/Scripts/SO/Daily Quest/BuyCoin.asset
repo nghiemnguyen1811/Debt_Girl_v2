@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BuyCoin
   m_EditorClassIdentifier: 
   questType: 4
-  description: Buy {0} coins in the app.
+  descriptionKey: daily.quest2Des
   minTarget: 1
   maxTarget: 3
   rewardDiamond: 1

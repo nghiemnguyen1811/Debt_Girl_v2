@@ -13,30 +13,30 @@ MonoBehaviour:
   m_Name: Interact
   m_EditorClassIdentifier: 
   questType: 0
-  description: 
+  descriptionKey: 
   minTarget: 1
   maxTarget: 3
   rewardDiamond: 1
   requiredLevel: 1
   activityRequirements:
   - activity: 1
-    description: Go to sleep {0} time.
+    descriptionKey: 'daily.interact1 '
     requiredLevel: 1
   - activity: 2
-    description: Clean dirt {0} times.
+    descriptionKey: daily.interact2
     requiredLevel: 1
   - activity: 6
-    description: Work {0} times.
+    descriptionKey: daily.interact3
     requiredLevel: 1
   - activity: 5
-    description: Brush teeth {0} times.
+    descriptionKey: daily.interact4
     requiredLevel: 3
   - activity: 4
-    description: Take a shower {0} times.
+    descriptionKey: daily.interact5
     requiredLevel: 3
   - activity: 3
-    description: Work out {0} times.
+    descriptionKey: daily.interact6
     requiredLevel: 18
   - activity: 7
-    description: Talk to {0} people in the house.
+    descriptionKey: daily.interact7
     requiredLevel: 1

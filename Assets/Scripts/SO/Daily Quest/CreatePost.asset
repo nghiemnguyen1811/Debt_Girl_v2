@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CreatePost
   m_EditorClassIdentifier: 
   questType: 6
-  description: Post {0} times on social media.
+  descriptionKey: daily.quest5Des
   minTarget: 1
   maxTarget: 5
   rewardDiamond: 1

@@ -8,15 +8,14 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Manages the overall cooking UI, including spawning recipe slots, ingredient display, and cooking logic.
+/// Manages the cooking UI system: recipe list, ingredient display, selection, and cooking actions.
+/// Also updates localized dish names dynamically when the language changes.
 /// </summary>
 public class CookingManager : SingletonMonobehaviour<CookingManager>
 {
     public event Action OnDishCooked;
 
-    // ─────────────────────────────────────────────────────
     #region Serialized Fields
-    // ─────────────────────────────────────────────────────
 
     [Header("UI References")]
     [SerializeField] private Transform dishSlotParent;
@@ -28,11 +27,11 @@ public class CookingManager : SingletonMonobehaviour<CookingManager>
     [SerializeField] private List<IngredientUI> ingredientSlots = new();
     [SerializeField] private List<GameObject> plusSignsBetweenIngredients = new();
 
-    [Header("Dish Navigation Buttons")]
+    [Header("Navigation Buttons")]
     [SerializeField] private Button prevButton;
     [SerializeField] private Button nextButton;
 
-    [Header("Dish Recipes")]
+    [Header("Recipe Data")]
     [SerializeField] private List<ItemDataSO> allDishRecipes;
     [SerializeField] private DishSlot dishSlotPrefab;
 
@@ -44,9 +43,7 @@ public class CookingManager : SingletonMonobehaviour<CookingManager>
 
     #endregion
 
-    // ─────────────────────────────────────────────────────
     #region Internal Cache
-    // ─────────────────────────────────────────────────────
 
     private readonly List<DishSlot> spawnedDishSlots = new();
     private DishSlot selectedDish;
@@ -56,9 +53,13 @@ public class CookingManager : SingletonMonobehaviour<CookingManager>
 
     #endregion
 
-    // ─────────────────────────────────────────────────────
     #region Unity Lifecycle
-    // ─────────────────────────────────────────────────────
+
+    protected override void Awake()
+    {
+        base.Awake();
+        LocalizationManager.Instance.RegisterForGlobalRefresh(RefreshLocalization);
+    }
 
     private void OnEnable()
     {
@@ -72,6 +73,12 @@ public class CookingManager : SingletonMonobehaviour<CookingManager>
             GameManager.Instance.OnLevelChanged -= RefreshCakeUnlockStates;
     }
 
+    private void OnDestroy()
+    {
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.UnregisterForGlobalRefresh(RefreshLocalization);
+    }
+
     private void Start()
     {
         InitializeUI();
@@ -80,20 +87,35 @@ public class CookingManager : SingletonMonobehaviour<CookingManager>
 
     #endregion
 
-    // ─────────────────────────────────────────────────────
-    #region Initialization
-    // ─────────────────────────────────────────────────────
+    #region Localization Refresh
 
     /// <summary>
-    /// Called when player level changes in GameManager.
-    /// Refreshes all cake displays to unlock newly available cakes.
+    /// Refreshes all dish names and ingredient labels when the language is changed.
     /// </summary>
+    private void RefreshLocalization()
+    {
+        foreach (var slot in spawnedDishSlots)
+        {
+            if (slot != null)
+                slot.RefreshLocalizedName();
+        }
+
+        if (selectedDish != null)
+        {
+            UpdateIngredientUI(SelectedDishData);
+        }
+    }
+
+    #endregion
+
+    #region Initialization
+
     public void RefreshCakeUnlockStates()
     {
-        foreach (var cakeDisplay in spawnedDishSlots)
+        foreach (var slot in spawnedDishSlots)
         {
-            if (cakeDisplay == null) continue;
-            cakeDisplay.EvaluateLockState();
+            if (slot != null)
+                slot.EvaluateLockState();
         }
 
         if (selectedDish != null && selectedDish.IsLocked())
@@ -104,18 +126,12 @@ public class CookingManager : SingletonMonobehaviour<CookingManager>
         }
     }
 
-    /// <summary>
-    /// Initializes UI elements, sets up listeners, and resets states.
-    /// </summary>
     private void InitializeUI()
     {
         SetupListeners();
         ResetUIState();
     }
 
-    /// <summary>
-    /// Sets up listeners for navigation and cook buttons.
-    /// </summary>
     private void SetupListeners()
     {
         cookButtonEnabled?.onClick.AddListener(TryCookSelectedDish);
@@ -135,87 +151,62 @@ public class CookingManager : SingletonMonobehaviour<CookingManager>
         });
     }
 
-    /// <summary>
-    /// Resets ingredient slots, plus signs, and disables the cook button.
-    /// </summary>
     private void ResetUIState()
     {
         ingredientSlots.ForEach(slot => slot.Hide());
-        plusSignsBetweenIngredients.ForEach(plus => plus.SetActive(false));
+        plusSignsBetweenIngredients.ForEach(p => p.SetActive(false));
 
-        if (cookButtonEnabled != null && cookButtonDisabled != null)
-        {
-            cookButtonEnabled.gameObject.SetActive(false);
-            cookButtonDisabled.gameObject.SetActive(true);
-        }
+        cookButtonEnabled.gameObject.SetActive(false);
+        cookButtonDisabled.gameObject.SetActive(true);
     }
 
     #endregion
 
-    // ─────────────────────────────────────────────────────
     #region Dish List Generation
-    // ─────────────────────────────────────────────────────
 
-    /// <summary>
-    /// Generates the dish selection UI list based on available recipes.
-    /// </summary>
     private void GenerateDishSelectionList()
     {
         ClearDishList();
 
-        var validDishes = allDishRecipes.Where(IsCookableRecipe).ToList();
-        for (int i = 0; i < validDishes.Count; i++)
+        var valid = allDishRecipes.Where(IsCookableRecipe).ToList();
+
+        for (int i = 0; i < valid.Count; i++)
         {
-            var display = Instantiate(dishSlotPrefab, dishSlotParent);
-            display.SetupCookingContainer(validDishes[i]);
+            var slot = Instantiate(dishSlotPrefab, dishSlotParent);
+            slot.SetupCookingContainer(valid[i]);
 
             int index = i;
-            display.GetButton().onClick.AddListener(() => SelectDishAtIndex(index));
-            spawnedDishSlots.Add(display);
+            slot.GetButton().onClick.AddListener(() => SelectDishAtIndex(index));
+
+            spawnedDishSlots.Add(slot);
         }
 
         StartCoroutine(DelayScrollReset());
     }
 
-    /// <summary>
-    /// Clears existing dish display elements.
-    /// </summary>
-    private void ClearDishList()
-    {
-        foreach (var display in spawnedDishSlots)
-            if (display != null)
-                Destroy(display.gameObject);
-
-        spawnedDishSlots.Clear();
-    }
-
-    /// <summary>
-    /// Determines if the given recipe is a cookable crafted food.
-    /// </summary>
     private bool IsCookableRecipe(ItemDataSO item)
     {
         return item.itemType == ItemType.CraftedFood && !item.canBeSold;
     }
 
-    /// <summary>
-    /// Waits one frame before resetting scroll to the start position.
-    /// </summary>
     private IEnumerator DelayScrollReset()
     {
-        yield return new WaitUntil(() => scrollRect.gameObject.activeInHierarchy);
         yield return null;
         scrollRect.horizontalNormalizedPosition = 0f;
     }
 
+    private void ClearDishList()
+    {
+        foreach (var slot in spawnedDishSlots)
+            if (slot != null) Destroy(slot.gameObject);
+
+        spawnedDishSlots.Clear();
+    }
+
     #endregion
 
-    // ─────────────────────────────────────────────────────
     #region Dish Selection
-    // ─────────────────────────────────────────────────────
 
-    /// <summary>
-    /// Selects a dish at the given index and updates the UI accordingly.
-    /// </summary>
     private void SelectDishAtIndex(int index)
     {
         if (index < 0 || index >= spawnedDishSlots.Count) return;
@@ -224,8 +215,8 @@ public class CookingManager : SingletonMonobehaviour<CookingManager>
         selectedDish = spawnedDishSlots[index];
         selectedIndex = index;
 
-        foreach (var dish in spawnedDishSlots)
-            dish.SetSelected(false);
+        foreach (var slot in spawnedDishSlots)
+            slot.SetSelected(false);
 
         selectedDish.SetSelected(true);
 
@@ -236,27 +227,16 @@ public class CookingManager : SingletonMonobehaviour<CookingManager>
         AudioManager.Instance.PlayInteractSound(8);
     }
 
-    /// <summary>
-    /// Updates the interactable state of previous and next buttons.
-    /// </summary>
     private void UpdateNavigationButtons(int index)
     {
-        if (prevButton != null)
-            prevButton.interactable = index > 0 && !spawnedDishSlots[index - 1].IsLocked();
-
-        if (nextButton != null)
-            nextButton.interactable = index < spawnedDishSlots.Count - 1 && !spawnedDishSlots[index + 1].IsLocked();
+        prevButton.interactable = index > 0 && !spawnedDishSlots[index - 1].IsLocked();
+        nextButton.interactable = index < spawnedDishSlots.Count - 1 && !spawnedDishSlots[index + 1].IsLocked();
     }
 
     #endregion
 
-    // ─────────────────────────────────────────────────────
     #region UI Updates
-    // ─────────────────────────────────────────────────────
 
-    /// <summary>
-    /// Updates ingredient slots for the selected dish.
-    /// </summary>
     private void UpdateIngredientUI(ItemDataSO dishData)
     {
         for (int i = 0; i < ingredientSlots.Count; i++)
@@ -270,18 +250,12 @@ public class CookingManager : SingletonMonobehaviour<CookingManager>
         UpdateDishButtonState();
     }
 
-    /// <summary>
-    /// Updates visibility of plus signs between ingredients.
-    /// </summary>
     private void UpdatePlusSigns(ItemDataSO dishData)
     {
         for (int i = 0; i < plusSignsBetweenIngredients.Count; i++)
             plusSignsBetweenIngredients[i].SetActive(i < dishData.requiredIngredients.Count - 1);
     }
 
-    /// <summary>
-    /// Enables or disables the cook button based on ingredient availability.
-    /// </summary>
     private void UpdateDishButtonState()
     {
         bool canCook = false;
@@ -289,27 +263,24 @@ public class CookingManager : SingletonMonobehaviour<CookingManager>
         if (SelectedDishData != null)
         {
             canCook = SelectedDishData.requiredIngredients
-                .All(ingredient => FoodInventoryUI.Instance.HasItems(ingredient));
+                .All(i => FoodInventoryUI.Instance.HasItems(i));
         }
 
         cookButtonEnabled.gameObject.SetActive(canCook);
         cookButtonDisabled.gameObject.SetActive(!canCook);
     }
 
-    /// <summary>
-    /// Smoothly scrolls the recipe list to the target index.
-    /// </summary>
     private void UpdateScrollPositionSmooth(int index)
     {
-        if (spawnedDishSlots.Count <= 1 || scrollRect == null) return;
+        if (spawnedDishSlots.Count <= 1) return;
 
-        float targetPos = Mathf.Clamp01((float)index / (spawnedDishSlots.Count - 1));
+        float target = Mathf.Clamp01((float)index / (spawnedDishSlots.Count - 1));
 
         DOTween.Kill(scrollRect);
         DOTween.To(
             () => scrollRect.horizontalNormalizedPosition,
             x => scrollRect.horizontalNormalizedPosition = x,
-            targetPos,
+            target,
             0.3f
         ).SetEase(Ease.OutCubic)
          .SetId(scrollRect);
@@ -317,26 +288,21 @@ public class CookingManager : SingletonMonobehaviour<CookingManager>
 
     #endregion
 
-    // ─────────────────────────────────────────────────────
     #region Cooking Logic
-    // ─────────────────────────────────────────────────────
 
-    /// <summary>
-    /// Attempts to cook the selected dish and consume required ingredients.
-    /// </summary>
     private void TryCookSelectedDish()
     {
         if (SelectedDishData == null) return;
 
-        foreach (var ingredient in SelectedDishData.requiredIngredients)
-        {
-            for (int i = 0; i < ingredient.amount; i++)
-                FoodInventoryUI.Instance.RemoveItem(ingredient);
-        }
+        foreach (var ing in SelectedDishData.requiredIngredients)
+            for (int i = 0; i < ing.amount; i++)
+                FoodInventoryUI.Instance.RemoveItem(ing);
 
         SelectDishAtIndex(selectedIndex);
+
         PlayerControl.Instance.interactDetector.ForceStartInteraction();
         FoodInventoryUI.Instance.AddItem(SelectedDishData, 1);
+
         UIManager.Instance.ToggleCookingPanel(false);
         AudioManager.Instance.PlayInteractSound(8);
 
@@ -345,18 +311,10 @@ public class CookingManager : SingletonMonobehaviour<CookingManager>
 
     #endregion
 
-    // ─────────────────────────────────────────────────────
     #region Public API
-    // ─────────────────────────────────────────────────────
 
-    /// <summary>
-    /// Returns all spawned dish slots.
-    /// </summary>
     public List<DishSlot> GetAllDishes() => spawnedDishSlots;
 
-    /// <summary>
-    /// Reselects the currently selected dish.
-    /// </summary>
     public void SelectCurrentDish() => SelectDishAtIndex(selectedIndex);
 
     #endregion
