@@ -55,7 +55,7 @@ public class SkinSlot : MonoBehaviour
 
         foreach (var text in priceTexts)
             if (text != null)
-                text.text = data.sellPrice.ToString();
+                text.text = "x " + data.sellPrice;
 
         UpdateLockState(!isUnlocked);
         UpdateVisualState();
