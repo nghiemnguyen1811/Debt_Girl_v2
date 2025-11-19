@@ -380,6 +380,8 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
     {
         if (SelectedCakeData == null) return;
 
+        AudioManager.Instance.PlayInteractSound(8);
+
         foreach (var plate in plateSlots)
         {
             if (!plate.IsEmpty()) continue;
@@ -399,7 +401,6 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
         }
 
         ShowWarningText(warningMessages[URandom.Range(0, warningMessages.Length)]);
-        AudioManager.Instance.PlayInteractSound(8);
     }
 
     // ─────────────────────────────────────────────────────

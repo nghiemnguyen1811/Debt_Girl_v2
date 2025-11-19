@@ -1,69 +1,97 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using System;
 using URandom = UnityEngine.Random;
 
 /// <summary>
-/// Manages the posting system: creating posts, handling cooldown,
-/// engagement decay, auto-money gain, and updating UI.
+/// Manages posting: create posts, cooldown, engagement decay,
+/// auto-income, FX updates, and UI updates.
 /// </summary>
 public class PostManager : SingletonMonobehaviour<PostManager>
 {
     public event Action OnPostCreated;
 
+    //─────────────────────────────────────────────────────────────
     #region === Inspector Fields ===
 
-    [Header("References")]
+    [Header("FX & Prefab References")]
     [SerializeField] private ReactionAndFollowerFX reactionFX;
     [SerializeField] private PostContainer postPrefab;
     [SerializeField] private PostDataSO[] postDataArray;
     [SerializeField] private RectTransform postParent;
+
+    [Header("UI References")]
     [SerializeField] private TextMeshProUGUI postCountText;
     [SerializeField] private TextMeshProUGUI postLevelText;
+    [SerializeField] private TextMeshProUGUI warningText;
     [SerializeField] private Button postButton;
 
     private PlayerControl playerControl;
 
-    [Header("Settings")]
+    [Header("Posting Settings")]
     [SerializeField] private Vector2 cooldownRange = new Vector2(20f, 40f);
+    [SerializeField] private float minMoodToPost = 30f;
+    [SerializeField] private bool canPost;
+    [HideInInspector] public bool hasPostedFirstTime;
+
+    [Header("Engagement Settings")]
     [SerializeField] private float decayRate = 0.1f;
-    [SerializeField] private float rewardOnPost = 10f;
     [SerializeField] private float fxUpdateInterval = 5f;
+
+    [Header("Money Settings")]
     [SerializeField] private double moneyPerInterval = 5.0;
     [SerializeField] private float moneyInterval = 10f;
-    [HideInInspector] public bool hasPostedFirstTime;
-    [SerializeField] private bool canPost;
+    [SerializeField] private float rewardOnPost = 10f;
+
+    [Header("Animation Settings")]
+    [SerializeField] private float floatingTextFadeDuration = 2f;
+
+    [Header("Mood Warning Messages")]
+    [TextArea(2, 5)]
+    [SerializeField]
+    private string[] warningMessages = {
+        "기분이 부족합니다.",
+        "너무 기분이 다운돼서 할 수 없습니다.",
+        "먼저 기분을 회복하는 게 좋습니다.",
+        "기분이 너무 낮습니다."
+    };
 
     #endregion
 
+    //─────────────────────────────────────────────────────────────
     #region === Internal State ===
 
     private Coroutine cooldownRoutine;
     private Coroutine decayRoutine;
     private Coroutine moneyRoutine;
+
     private readonly List<PostContainer> posts = new();
+    private Sequence warningSequence;
 
     private int postCount = 0;
 
     #endregion
 
+    //─────────────────────────────────────────────────────────────
     #region === Unity Events ===
 
     private void Start()
     {
+        // Setup references
         playerControl = PlayerControl.Instance;
 
         // Disable post button at start
         postButton.interactable = false;
         postButton.onClick.AddListener(OnPostButtonClicked);
 
-        // Start auto money routine
+        // Start passive money routine
         moneyRoutine = StartCoroutine(AutoAddMoney());
 
-        // Wait for PlayerStats to initialize
+        // Wait for PlayerStats to be ready
         playerControl.stats.OnStatsInitialized += OnStatsReady;
     }
 
@@ -75,12 +103,10 @@ public class PostManager : SingletonMonobehaviour<PostManager>
 
     #endregion
 
+    //─────────────────────────────────────────────────────────────
     #region === Initialization ===
 
-    /// <summary>
-    /// Called once PlayerStats are ready.
-    /// Initializes FX and starts cooldown.
-    /// </summary>
+    /// <summary>Called when PlayerStats are fully initialized.</summary>
     private void OnStatsReady()
     {
         UpdateFXAndPosts();
@@ -89,14 +115,17 @@ public class PostManager : SingletonMonobehaviour<PostManager>
 
     #endregion
 
+    //─────────────────────────────────────────────────────────────
     #region === Post Button Logic ===
 
-    /// <summary>
-    /// Triggered when the Post Button is clicked.
-    /// </summary>
+    /// <summary>Handles Post Button click.</summary>
     private void OnPostButtonClicked()
     {
-        if (!canPost) return;
+        if (!canPost || playerControl.stats.mood.current < 30)
+        {
+            ShowWarningText(warningMessages[URandom.Range(0, warningMessages.Length)]);
+            return;
+        }
 
         CreatePost();
         playerControl.stats.ApplyStatChange(StatType.IncomeRate, rewardOnPost);
@@ -113,19 +142,16 @@ public class PostManager : SingletonMonobehaviour<PostManager>
         AudioManager.Instance.PlayInteractSound(8);
     }
 
-    /// <summary>
-    /// Creates a new post with random data and engagement level.
-    /// </summary>
+    /// <summary>Creates a new post using random data.</summary>
     private void CreatePost()
     {
         var data = postDataArray[URandom.Range(0, postDataArray.Length)];
         var post = Instantiate(postPrefab, postParent);
-        var level = GetEngagementLevel(playerControl.stats.engagement.current);
 
+        var level = GetEngagementLevel(playerControl.stats.engagement.current);
         post.Configure(data.caption, data.image, level);
         posts.Add(post);
 
-        // Increment post count and update UI
         postCount++;
         UpdatePostCountUI();
 
@@ -134,11 +160,10 @@ public class PostManager : SingletonMonobehaviour<PostManager>
 
     #endregion
 
+    //─────────────────────────────────────────────────────────────
     #region === Cooldown & Engagement Decay ===
 
-    /// <summary>
-    /// Starts cooldown after posting and begins engagement decay.
-    /// </summary>
+    /// <summary>Begins cooldown and starts decay if first post was created.</summary>
     private void BeginCooldown()
     {
         canPost = false;
@@ -151,9 +176,7 @@ public class PostManager : SingletonMonobehaviour<PostManager>
             decayRoutine = StartCoroutine(DecayEngagement());
     }
 
-    /// <summary>
-    /// Handles cooldown duration before next post is allowed.
-    /// </summary>
+    /// <summary>Cooldown timer before next post allowed.</summary>
     private IEnumerator CooldownTimer()
     {
         yield return new WaitForSeconds(URandom.Range(cooldownRange.x, cooldownRange.y));
@@ -161,10 +184,7 @@ public class PostManager : SingletonMonobehaviour<PostManager>
         postButton.interactable = true;
     }
 
-    /// <summary>
-    /// Continuously reduces engagement over time.
-    /// Updates FX every interval.
-    /// </summary>
+    /// <summary>Gradually decreases engagement and updates FX periodically.</summary>
     private IEnumerator DecayEngagement()
     {
         float timer = 0f;
@@ -186,11 +206,10 @@ public class PostManager : SingletonMonobehaviour<PostManager>
 
     #endregion
 
+    //─────────────────────────────────────────────────────────────
     #region === Auto Money Gain ===
 
-    /// <summary>
-    /// Automatically adds passive money gain after first post.
-    /// </summary>
+    /// <summary>Adds passive income every interval after first post.</summary>
     private IEnumerator AutoAddMoney()
     {
         while (!hasPostedFirstTime)
@@ -200,28 +219,28 @@ public class PostManager : SingletonMonobehaviour<PostManager>
         {
             yield return new WaitForSeconds(moneyInterval);
 
-            float currentValue = playerControl.stats.engagement.current;
-            var level = GetEngagementLevel(currentValue);
+            float value = playerControl.stats.engagement.current;
+            var level = GetEngagementLevel(value);
+
             int multiplier = StatUpgradeManager.Instance.GetLevelOf(StatType.IncomeRate);
             double bonus = GetMoneyBonusByEngagementLevel(level);
-            double totalMoney = moneyPerInterval * bonus * multiplier;
+            double total = moneyPerInterval * bonus * multiplier;
 
-            MoneyManager.Instance.ChangeMoneys(totalMoney);
+            MoneyManager.Instance.ChangeMoneys(total);
             AudioManager.Instance.PlayInteractSound(0);
         }
     }
 
     #endregion
 
+    //─────────────────────────────────────────────────────────────
     #region === FX & Post Updating ===
 
-    /// <summary>
-    /// Updates flying reactions and refreshes all posts' engagement UI.
-    /// </summary>
+    /// <summary>Updates reaction FX and all posts’ engagement UI.</summary>
     private void UpdateFXAndPosts()
     {
-        float currentValue = playerControl.stats.engagement.GetPercentage();
-        var level = GetEngagementLevel(currentValue);
+        float pct = playerControl.stats.engagement.GetPercentage();
+        var level = GetEngagementLevel(pct);
 
         reactionFX.SetSpawnDistribution(level);
 
@@ -231,31 +250,55 @@ public class PostManager : SingletonMonobehaviour<PostManager>
         UpdatePostLevelUI(level);
     }
 
-    /// <summary>
-    /// Updates the UI showing number of posts created.
-    /// </summary>
+    /// <summary>Updates UI for total post count.</summary>
     private void UpdatePostCountUI()
     {
         if (postCountText != null)
             postCountText.text = postCount.ToString();
     }
 
-    /// <summary>
-    /// Updates the UI showing engagement level (converted to int).
-    /// </summary>
+    /// <summary>Updates UI for engagement level.</summary>
     private void UpdatePostLevelUI(EngagementLevel level)
     {
         if (postLevelText != null)
-            postLevelText.text = "Lv." + ConvertLevelToInt(level).ToString();
+            postLevelText.text = "Lv." + ConvertLevelToInt(level);
     }
 
     #endregion
 
+    //─────────────────────────────────────────────────────────────
+    #region === Warning System ===
+
+    /// <summary>Shows animated mood warning text.</summary>
+    private void ShowWarningText(string message)
+    {
+        if (warningSequence != null && warningSequence.IsActive())
+            warningSequence.Kill();
+
+        warningText.gameObject.SetActive(true);
+        warningText.text = message;
+        warningText.transform.localScale = Vector3.one;
+        warningText.color = new Color(warningText.color.r, warningText.color.g, warningText.color.b, 1f);
+
+        warningSequence = DOTween.Sequence()
+            .Append(warningText.transform.DOScale(Vector3.one * 1.2f, 0.1f).SetEase(Ease.OutBack))
+            .Append(warningText.transform.DOScale(Vector3.one, 0.15f).SetEase(Ease.OutBack))
+            .AppendInterval(0.5f)
+            .Append(warningText.DOFade(0f, floatingTextFadeDuration).SetEase(Ease.InOutQuad))
+            .OnComplete(() =>
+            {
+                warningText.gameObject.SetActive(false);
+                warningText.text = "";
+                warningText.color = new Color(warningText.color.r, warningText.color.g, warningText.color.b, 1f);
+            });
+    }
+
+    #endregion
+
+    //─────────────────────────────────────────────────────────────
     #region === Helpers ===
 
-    /// <summary>
-    /// Converts engagement value (0.0–1.0) to engagement level tier.
-    /// </summary>
+    /// <summary>Converts percentage to engagement tier.</summary>
     private EngagementLevel GetEngagementLevel(float value)
     {
         if (value <= .3f) return EngagementLevel.Low;
@@ -264,22 +307,17 @@ public class PostManager : SingletonMonobehaviour<PostManager>
         return EngagementLevel.VeryHigh;
     }
 
-    /// <summary>
-    /// Returns money multiplier based on engagement level.
-    /// </summary>
+    /// <summary>Returns money multiplier based on engagement tier.</summary>
     private double GetMoneyBonusByEngagementLevel(EngagementLevel level) => level switch
     {
         EngagementLevel.Low => 0.5,
         EngagementLevel.Medium => 1.0,
         EngagementLevel.High => 1.5,
         EngagementLevel.VeryHigh => 2.0,
-        _ => 0.0
+        _ => 0
     };
 
-    /// <summary>
-    /// Converts EngagementLevel enum to an int.
-    /// Low=1, Medium=2, High=3, VeryHigh=4
-    /// </summary>
+    /// <summary>Converts EngagementLevel to int.</summary>
     private int ConvertLevelToInt(EngagementLevel level) => level switch
     {
         EngagementLevel.Low => 1,
@@ -291,8 +329,10 @@ public class PostManager : SingletonMonobehaviour<PostManager>
 
     #endregion
 
+    //─────────────────────────────────────────────────────────────
     #region === Save / Load ===
 
+    /// <summary>Saves hasPostedFirstTime flag.</summary>
     public void AutoSave()
     {
         if (SaveManager.Data == null) return;
@@ -301,6 +341,7 @@ public class PostManager : SingletonMonobehaviour<PostManager>
         SaveManager.SaveGame();
     }
 
+    /// <summary>Applies loaded save data.</summary>
     public void ImportSaveData(SaveData data)
     {
         if (data == null) return;
@@ -315,5 +356,6 @@ public class PostManager : SingletonMonobehaviour<PostManager>
                 moneyRoutine = StartCoroutine(AutoAddMoney());
         }
     }
+
     #endregion
 }
