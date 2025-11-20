@@ -6,19 +6,27 @@ using UnityEngine.UI;
 public class CakeInventoryUI : InventoryBase<CakeInventoryUI>
 {
     [Header("UI Elements")]
-    [SerializeField] private Transform cakeInfoContainer;
     [SerializeField] private TextMeshProUGUI itemNameText;
     [SerializeField] private TextMeshProUGUI itemDescriptionText;
     [SerializeField] private TextMeshProUGUI sellPriceText;
     [SerializeField] private TextMeshProUGUI slotUsageText;
     [SerializeField] private Image itemIconImage;
-    [SerializeField] private GameObject infoDisplayGroup;
+    [SerializeField] private GameObject[] infoDisplayGroup;
+
+    [Header("UI Buttons")]
     [SerializeField] private Button sellButton;
     [SerializeField] private Button dropButton;
     [SerializeField] private Button closeButton;
 
+    [Header("Stand Setup")]
+    [SerializeField] private Transform standContainer;
+    [SerializeField] private GameObject standPrefab;
+    [SerializeField] private VerticalLayoutGroup layoutGroup;
+
+    #region === Unity Lifecycle ===
+
     /// <summary>
-    /// Unity Start – initialize slots and bind button events.
+    /// Initialize UI button listeners.
     /// </summary>
     protected override void Start()
     {
@@ -30,8 +38,51 @@ public class CakeInventoryUI : InventoryBase<CakeInventoryUI>
     }
 
     /// <summary>
-    /// Called when an item is selected from inventory.
-    /// Updates UI fields, icons, and available action buttons.
+    /// Runs after all inventory slots are created.
+    /// </summary>
+    protected override void OnInventoryInitialized()
+    {
+        base.OnInventoryInitialized();
+        SpawnStandBySlotCount();
+    }
+
+    #endregion
+
+    //─────────────────────────────────────────────────────────────
+    #region === Stand Generation Logic ===
+
+    /// <summary>
+    /// Creates stands based on slot count (1 stand per 4 slots).
+    /// Also adjusts spacing after the first stand.
+    /// </summary>
+    private void SpawnStandBySlotCount()
+    {
+        if (standPrefab == null || standContainer == null)
+            return;
+
+        int totalSlots = slots.Count;
+        int standCount = Mathf.CeilToInt(totalSlots / 4f);
+
+        // Create stands
+        for (int i = 0; i < standCount; i++)
+            Instantiate(standPrefab, standContainer);
+
+        // Adjust spacing based on number of extra stands
+        if (layoutGroup != null)
+        {
+            int extraStandCount = Mathf.Max(0, standCount - 1);
+            float newSpacing = layoutGroup.spacing - 350f * extraStandCount;
+            layoutGroup.spacing = newSpacing;
+        }
+    }
+
+    #endregion
+
+    //─────────────────────────────────────────────────────────────
+    #region === Item Selection & UI Updates ===
+
+    /// <summary>
+    /// Updates UI when an inventory item is selected.
     /// </summary>
     protected override void OnItemSelected(ItemSlot slot, bool playFeedback)
     {
@@ -41,57 +92,54 @@ public class CakeInventoryUI : InventoryBase<CakeInventoryUI>
         itemIconImage.gameObject.SetActive(true);
 
         LocalizationManager.Instance.SetLocalizedText(itemNameText, "Cake Labels", data.itemNameKey);
-
         LocalizationManager.Instance.SetLocalizedText(itemDescriptionText, "Cake Labels", data.itemDescriptionKey);
 
         string formattedValue = DoubleUtilities.ToIdleNotation(data.SellPrice);
-        string localizedSymbol = LocalizationManager.Instance.GetCurrencySymbol();
-        sellPriceText.text = $"{formattedValue}{localizedSymbol}";
+        string currency = LocalizationManager.Instance.GetCurrencySymbol();
+        sellPriceText.text = $"{formattedValue}{currency}";
 
-        // Toggle buttons and groups
-        sellButton.gameObject.SetActive(data.CanBeSold);
-        dropButton.gameObject.SetActive(true);
-        infoDisplayGroup.SetActive(true);
-
-        StartCoroutine(RebuildLayoutNextFrame(cakeInfoContainer));
+        foreach (var infoObj in infoDisplayGroup)
+            infoObj.SetActive(true);
 
         if (playFeedback)
             AudioManager.Instance.PlayInteractSound(8);
     }
 
     /// <summary>
-    /// Called when no item is selected.
-    /// Clears UI text and hides buttons/groups.
+    /// Clears UI when no item is selected.
     /// </summary>
     protected override void OnItemDeselected()
     {
         itemNameText.text = "";
         itemDescriptionText.text = "";
 
-        infoDisplayGroup.SetActive(false);
-        sellButton.gameObject.SetActive(false);
-        dropButton.gameObject.SetActive(false);
+        foreach (var infoObj in infoDisplayGroup)
+            infoObj.SetActive(false);
     }
 
     /// <summary>
-    /// Updates slot usage UI text (e.g. "3 / 52").
+    /// Updates (used/total) slot count UI.
     /// </summary>
     protected override void OnSlotUsageChanged(int used, int total)
     {
-        slotUsageText.text = $"{used} / {total}";
+        slotUsageText.text = $"({used} / {total})";
     }
 
     /// <summary>
-    /// Called when inventory is full.
-    /// Displays a warning message on screen.
+    /// Displays full-inventory warning.
     /// </summary>
     protected override void OnInventoryFull(string message)
     {
         UIManager.Instance.ShowWarningText(message);
     }
 
+    #endregion
+
+    //─────────────────────────────────────────────────────────────
+    #region === Item Actions ===
+
     /// <summary>
-    /// Handles "Sell Item" action – increases money and plays sounds.
+    /// Handles selling logic for selected item.
     /// </summary>
     protected override void OnSellSelectedItem(ItemDataSO data)
     {
@@ -100,7 +148,7 @@ public class CakeInventoryUI : InventoryBase<CakeInventoryUI>
     }
 
     /// <summary>
-    /// Handles "Drop Item" action – only plays feedback sound.
+    /// Feedback only when dropping an item.
     /// </summary>
     protected override void OnDropSelectedItem(ItemDataSO data)
     {
@@ -108,7 +156,7 @@ public class CakeInventoryUI : InventoryBase<CakeInventoryUI>
     }
 
     /// <summary>
-    /// Handles closing the inventory – stops interaction and plays sound.
+    /// Called when closing inventory panel.
     /// </summary>
     protected override void OnCloseRequested()
     {
@@ -116,13 +164,5 @@ public class CakeInventoryUI : InventoryBase<CakeInventoryUI>
         AudioManager.Instance.PlayInteractSound(8);
     }
 
-    /// <summary>
-    /// Coroutine to rebuild UI layout in the next frame.
-    /// Ensures updated stat elements are properly arranged.
-    /// </summary>
-    private IEnumerator RebuildLayoutNextFrame(Transform layoutRoot)
-    {
-        yield return null;
-        LayoutRebuilder.ForceRebuildLayoutImmediate(layoutRoot as RectTransform);
-    }
+    #endregion
 }

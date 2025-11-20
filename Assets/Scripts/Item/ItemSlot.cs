@@ -10,7 +10,7 @@ public class ItemSlot : MonoBehaviour
     [Header("UI References")]
     [SerializeField] private Image itemImage;
     [SerializeField] private TextMeshProUGUI quantityText;
-    [SerializeField] private GameObject plusIcon;
+    [SerializeField] private GameObject framePlus;
     [SerializeField] private GameObject highlight;
     [SerializeField] private GameObject framequantity;
     [SerializeField] private Sprite[] spriteBtns;        // [0] = empty, [1] = filled
@@ -114,7 +114,7 @@ public class ItemSlot : MonoBehaviour
         }
 
         // Plus icon & Frame quantity
-        if (plusIcon != null) plusIcon.SetActive(!hasItem);
+        if (framePlus != null) framePlus.SetActive(!hasItem);
         if (framequantity != null) framequantity.SetActive(hasItem);
 
         // Quantity text

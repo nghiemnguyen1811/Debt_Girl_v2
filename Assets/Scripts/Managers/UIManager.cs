@@ -44,7 +44,7 @@ public class UIManager : SingletonMonobehaviour<UIManager>
 
     private Tween[] moneyTweens = new Tween[3];
     private Tween[] debtTweens = new Tween[2];
-    private Tween[] diamondTweens = new Tween[2];
+    private Tween[] diamondTweens = new Tween[3];
 
     private bool hasInitialized = false;
 
