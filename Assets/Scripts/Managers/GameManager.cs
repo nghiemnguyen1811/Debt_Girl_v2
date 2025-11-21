@@ -18,8 +18,12 @@ public class GameManager : SingletonMonobehaviour<GameManager>
     // ─────────────────────────────────────────────────────
     // Player Progress
     // ─────────────────────────────────────────────────────
+
+    [Header("Level Limit")]
+    [SerializeField] private int maxLevel = 99;
+
     [Header("Player Progress")]
-    [SerializeField, Min(1)]
+    [Min(1)]
     private int currentLevel = 1;
 
     /// <summary>
@@ -62,6 +66,15 @@ public class GameManager : SingletonMonobehaviour<GameManager>
         NotifyLevelChanged();
         AutoSave();
     }
+
+    /// <summary>
+    /// Returns true if current level has reached or exceeded maxLevel.
+    /// </summary>
+    public bool CheckMaxLevel()
+    {
+        return currentLevel >= maxLevel;
+    }
+
 
     // ─────────────────────────────────────────────────────
     // Helpers
