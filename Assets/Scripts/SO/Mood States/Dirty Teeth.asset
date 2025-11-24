@@ -1,22 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2906d38c16a7bca4082cf89680b21d04, type: 3}
-  m_Name: Dirty Teeth
-  m_EditorClassIdentifier: 
-  conditionType: 9
-  moodIcon: {fileID: -523125672, guid: 2fd481fa2786e114f8d118d6746a76e0, type: 3}
-  moodAnimName: 
-  animatorLayerIndex: 0
-  moodDecayRate: 0.5
-  minTime: 110
-  maxTime: 210
-  requiredLevel: 3
+version https://git-lfs.github.com/spec/v1
+oid sha256:a2ce93474cccd440b3ff8a709d5a8c2c49f950fed0a4438d600369dbaa0f3ee5
+size 634

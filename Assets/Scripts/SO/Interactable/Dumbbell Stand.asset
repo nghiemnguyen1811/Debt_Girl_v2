@@ -1,23 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c731a44fa0590af40b37813c2c0aafb2, type: 3}
-  m_Name: Dumbbell Stand
-  m_EditorClassIdentifier: 
-  objectName: Dumbbell Stand
-  animationName: Weightlifting
-  interactionDuration: 10
-  requiredActionType: 12
-  clearsMoodType: 0
-  moodAmount: 20
-  energyAmount: -30
-  earnsMoney: 0
-  moneyEarned: 0
+version https://git-lfs.github.com/spec/v1
+oid sha256:872096a4a936fe02fc8a5eb10604992207de89e47713308aaa9eeb231cb1decc
+size 627

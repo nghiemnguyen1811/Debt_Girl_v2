@@ -1,22 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a54dc5c4dc1aab7419cd23800e79f042, type: 3}
-  m_Name: CherryClock
-  m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: e08bd8d397540d64d819df82529a8da5, type: 3}
-  itemName: CherryClock
-  description: Bright pink wall clock with a clean, playful design.
-  decorationNameKey: decoration.chohee2Name
-  decorationDescriptionKey: decoration.chohee2Des
-  itemID: 1
-  owner: 5
-  price: 1800
+version https://git-lfs.github.com/spec/v1
+oid sha256:b0131c95d7772d7d172a4ea1de65af03179bf36401be3e6ec5c6740d5e193668
+size 721

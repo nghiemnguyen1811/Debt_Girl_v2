@@ -1,22 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a54dc5c4dc1aab7419cd23800e79f042, type: 3}
-  m_Name: Nezuko Collage
-  m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: a644f8690f4757e44977b79d4146637e, type: 3}
-  itemName: Nezuko Collage
-  description: Nezuko wall collage, perfect for Demon Slayer fans.
-  decorationNameKey: decoration.chohee5Name
-  decorationDescriptionKey: decoration.chohee5Des
-  itemID: 4
-  owner: 5
-  price: 3800
+version https://git-lfs.github.com/spec/v1
+oid sha256:961274ec6b6082fec8635f61b18c2376808caea50bc85aaebd13dc9fe95af0bc
+size 726

@@ -1,22 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a54dc5c4dc1aab7419cd23800e79f042, type: 3}
-  m_Name: StoneGray Rug
-  m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: 66b2b7d7dbf17ee489ccf65bc111e2a2, type: 3}
-  itemName: StoneGray Rug
-  description: Rectangular gray rug, adding warmth and modern style to your floor.
-  decorationNameKey: decoration.jiho4Name
-  decorationDescriptionKey: decoration.jiho4Des
-  itemID: 3
-  owner: 3
-  price: 1600
+version https://git-lfs.github.com/spec/v1
+oid sha256:a19cea18e4cc03dd8ca0a4798d2776222943627f0e6a289620e9fa750a7c2a1e
+size 736

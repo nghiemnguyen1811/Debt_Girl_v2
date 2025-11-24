@@ -1,22 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a54dc5c4dc1aab7419cd23800e79f042, type: 3}
-  m_Name: Nordic Rack
-  m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: b0d722f0a8ac71c4696e809047c611a8, type: 3}
-  itemName: Nordic Rack
-  description: Minimalist rack with storage, keeps outfits tidy.
-  decorationNameKey: decoration.danbi4Name
-  decorationDescriptionKey: decoration.danbi4Des
-  itemID: 3
-  owner: 1
-  price: 3800
+version https://git-lfs.github.com/spec/v1
+oid sha256:11806f399e5943de1c584f37f2aac8f6c7220b10bbdd9a8db4a7a337de709ee7
+size 716

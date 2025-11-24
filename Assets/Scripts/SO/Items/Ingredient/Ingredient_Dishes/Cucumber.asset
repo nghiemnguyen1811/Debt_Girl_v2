@@ -1,34 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6acbbd15e75140948b9abbe0097c4bec, type: 3}
-  m_Name: Cucumber
-  m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: 037d5bd50eb1a7348864c9d2e855d482, type: 3}
-  itemName: "\uC624\uC774"
-  description: "\uB0C9\uBA74\uC5D0 \uACC1\uB4E4\uC774\uB294 \uC2DC\uC6D0\uD55C \uCC44\uC18C\uC608\uC694."
-  itemNameKey: food.cucumberName
-  itemDescriptionKey: food.cucumberDes
-  itemType: 0
-  ingredientType: 76
-  requiredIngredients:
-  - ingredientType: 0
-    icon: {fileID: 0}
-    amount: 1
-  canBeSold: 1
-  sellPrice: 0
-  craftingTime: 3
-  requiredLevel: 0
-  energy: 0
-  mood: 0
-  purchaseCost: 1430
-  canStackItem: 1
-  maxStackAmount: 99
+version https://git-lfs.github.com/spec/v1
+oid sha256:76e014b0f419a880c6adf91ef3ff39baa3344b079f5564f4fac15b856f817a5a
+size 977

@@ -1,18 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f4ca9bea53598946a96f1cfd389b990, type: 3}
-  m_Name: Exercise
-  m_EditorClassIdentifier: 
-  conditionType: 12
-  eyebrowSprite: {fileID: 21300000, guid: 66cf82a957204924f9165ad22cb7cdc5, type: 3}
-  eyeSprite: {fileID: 21300000, guid: 5436b8c8cd383c74da4e94fb106667a3, type: 3}
-  mouthSprite: {fileID: 21300000, guid: 32157cf0f92376d46b0cde5703a5df24, type: 3}
+version https://git-lfs.github.com/spec/v1
+oid sha256:18fc23f0964c721f688b1e400c0f6143f9ec6cfbb4a4590197f6ce6aa0073df7
+size 684

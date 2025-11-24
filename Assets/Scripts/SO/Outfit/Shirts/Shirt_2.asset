@@ -1,25 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cb5727547030f74582fcb09a0c5a2c4, type: 3}
-  m_Name: Shirt_2
-  m_EditorClassIdentifier: 
-  skinType: 0
-  icon: {fileID: 21300000, guid: c68645c5f8760fe4b98fe3ff4d4b8d32, type: 3}
-  outfitMesh: {fileID: -1716110407043338123, guid: 2d460c9c688365043815939f4d687830, type: 3}
-  outfitMaterials:
-  - {fileID: 2100000, guid: cb0cd7ff6cd4de447a77b30cffd8991b, type: 2}
-  - {fileID: 2100000, guid: 94b34064b69127249b89e007f5bed16e, type: 2}
-  - {fileID: 2100000, guid: 4c487458a4135bb4087b20d87e2a35ff, type: 2}
-  - {fileID: 2100000, guid: 99a96088afcc3a64d82b307f7c1e53fc, type: 2}
-  owner: 1
-  isDefaultSkin: 0
-  sellPrice: 2
+version https://git-lfs.github.com/spec/v1
+oid sha256:f566edf28c77c2d22f9c180da15b69f97c38496eeb09fa89733453e9fa655a60
+size 953

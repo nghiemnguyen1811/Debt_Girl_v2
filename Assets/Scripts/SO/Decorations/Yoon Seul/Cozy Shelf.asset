@@ -1,22 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a54dc5c4dc1aab7419cd23800e79f042, type: 3}
-  m_Name: Cozy Shelf
-  m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: e5f6222c6c261764191fce039a926ce2, type: 3}
-  itemName: Cozy Shelf
-  description: "Wooden wall shelf with books and plant \u2014 functional and charming."
-  decorationNameKey: decoration.yoonseul3Name
-  decorationDescriptionKey: decoration.yoonseul3Des
-  itemID: 2
-  owner: 4
-  price: 2400
+version https://git-lfs.github.com/spec/v1
+oid sha256:2bb804dec50981bd6256182b036ede09249e4221c8983cb8b10f53185b70de05
+size 743

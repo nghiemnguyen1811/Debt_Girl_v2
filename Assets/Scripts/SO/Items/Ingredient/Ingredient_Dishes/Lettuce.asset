@@ -1,35 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6acbbd15e75140948b9abbe0097c4bec, type: 3}
-  m_Name: Lettuce
-  m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: e509e32fecf521a41aef04ea8a424ae2, type: 3}
-  itemName: "\uC0C1\uCD94"
-  description: "\uC0BC\uACB9\uC0B4\uC744 \uC2F8\uBA39\uC744 \uB54C \uC0AC\uC6A9\uD558\uB294
-    \uC78E\uCC44\uC18C\uC608\uC694."
-  itemNameKey: food.lettuceName
-  itemDescriptionKey: food.lettuceDes
-  itemType: 0
-  ingredientType: 62
-  requiredIngredients:
-  - ingredientType: 0
-    icon: {fileID: 0}
-    amount: 1
-  canBeSold: 1
-  sellPrice: 0
-  craftingTime: 3
-  requiredLevel: 0
-  energy: 0
-  mood: 0
-  purchaseCost: 2140
-  canStackItem: 1
-  maxStackAmount: 99
+version https://git-lfs.github.com/spec/v1
+oid sha256:3d2d9e5d9c39ac147d3fc1fbedd601d52b0bb4b65c20f382c1b0d4fdf41f26c6
+size 998

@@ -1,22 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a54dc5c4dc1aab7419cd23800e79f042, type: 3}
-  m_Name: Blush Pouf
-  m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: 0723dd1804d50384491e8f0ebe800e8c, type: 3}
-  itemName: Blush Pouf
-  description: Soft bean bag chair for lounging or reading.
-  decorationNameKey: decoration.danbi1Name
-  decorationDescriptionKey: decoration.danbi1Des
-  itemID: 0
-  owner: 1
-  price: 3800
+version https://git-lfs.github.com/spec/v1
+oid sha256:1d5aeae41d2e5a3ffa7f70123fa3e51a0cb30e081faf8df6e716d0975a2f8f87
+size 709

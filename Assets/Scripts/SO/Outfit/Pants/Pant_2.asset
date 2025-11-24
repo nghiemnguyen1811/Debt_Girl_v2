@@ -1,23 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cb5727547030f74582fcb09a0c5a2c4, type: 3}
-  m_Name: Pant_2
-  m_EditorClassIdentifier: 
-  skinType: 1
-  icon: {fileID: 21300000, guid: cf11274eba557df4d890ce36b8840077, type: 3}
-  outfitMesh: {fileID: -5768860637884414165, guid: 2d460c9c688365043815939f4d687830, type: 3}
-  outfitMaterials:
-  - {fileID: 2100000, guid: cb0cd7ff6cd4de447a77b30cffd8991b, type: 2}
-  - {fileID: 2100000, guid: 525cffb0c9e694f408ae26ba9586f2ee, type: 2}
-  owner: 1
-  isDefaultSkin: 0
-  sellPrice: 2
+version https://git-lfs.github.com/spec/v1
+oid sha256:0c3556f10a7163b193dceb099acceefeb2a7b13a6bfeeb421bb2b86843c98b80
+size 808

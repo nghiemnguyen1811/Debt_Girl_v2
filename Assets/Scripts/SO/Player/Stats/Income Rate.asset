@@ -1,19 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4abc1b9627b5b86429ca9f3e695b8f2a, type: 3}
-  m_Name: Income Rate
-  m_EditorClassIdentifier: 
-  statType: 0
-  icon: {fileID: 21300000, guid: 6f10343d058bf504396d66494a8d98fb, type: 3}
-  statNameKey: stat.incomeName
-  statDescriptionKey: stat.incomeDes
-  level: 1
+version https://git-lfs.github.com/spec/v1
+oid sha256:44dd7b7f5f4ced0126f85c9e96766116dc8efc5581bad964de922c8ace117090
+size 569

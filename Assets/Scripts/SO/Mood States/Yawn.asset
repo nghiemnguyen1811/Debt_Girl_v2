@@ -1,22 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2906d38c16a7bca4082cf89680b21d04, type: 3}
-  m_Name: Yawn
-  m_EditorClassIdentifier: 
-  conditionType: 2
-  moodIcon: {fileID: 2099301544, guid: 2fd481fa2786e114f8d118d6746a76e0, type: 3}
-  moodAnimName: Yawn
-  animatorLayerIndex: 1
-  moodDecayRate: 1.5
-  minTime: 600
-  maxTime: 700
-  requiredLevel: 1
+version https://git-lfs.github.com/spec/v1
+oid sha256:ad44a953778a0626bed07570259dea080378e550e1985fb007084b25778efe82
+size 631

@@ -1,24 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 2050440665, guid: a4865f1ab4504ed8a368670db22f409c, type: 3}
-  m_Name: TypeRegistryUserConfig
-  m_EditorClassIdentifier: 
-  shownTypes:
-    serializedCollection: []
-  hiddenTypes:
-    serializedCollection: []
-  addedIllegalTypes:
-    serializedCollection: []
-  typeSettings:
-    serializedDictionary: []
-  typePriorities:
-    serializedDictionary: []
+version https://git-lfs.github.com/spec/v1
+oid sha256:082871bb20ce48dc0ef87c7783a26c813d446d0160edd16c9b025cf1c13081ab
+size 666

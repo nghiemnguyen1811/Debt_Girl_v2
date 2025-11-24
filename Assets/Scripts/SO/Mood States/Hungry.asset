@@ -1,22 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2906d38c16a7bca4082cf89680b21d04, type: 3}
-  m_Name: Hungry
-  m_EditorClassIdentifier: 
-  conditionType: 3
-  moodIcon: {fileID: 192999894, guid: 2fd481fa2786e114f8d118d6746a76e0, type: 3}
-  moodAnimName: Hungry
-  animatorLayerIndex: 2
-  moodDecayRate: 1
-  minTime: 100
-  maxTime: 200
-  requiredLevel: 5
+version https://git-lfs.github.com/spec/v1
+oid sha256:9393b324914881aecdff5312b583251e7a5a3eb19067dc6d81f8772fdb3f3d88
+size 632

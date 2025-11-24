@@ -1,30 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Localization-String-Tables-Korean
-  m_EditorClassIdentifier: 
-  m_GroupName: Localization-String-Tables-Korean
-  m_GUID: 779ff439b04cdd64c9ed7a789bba8dc5
-  m_SerializeEntries:
-  - m_GUID: 5e974d5c444533f44bc9ef67908e62d0
-    m_Address: Shop Labels_ko
-    m_ReadOnly: 1
-    m_SerializedLabels:
-    - Locale-ko
-    - Preload
-    FlaggedDuringContentUpdateRestriction: 0
-  m_ReadOnly: 1
-  m_Settings: {fileID: 11400000, guid: c57502a728ac11c488549df1949557c5, type: 2}
-  m_SchemaSet:
-    m_Schemas:
-    - {fileID: 11400000, guid: 798c40b49e5cd2a47a1394561ffcce7f, type: 2}
-    - {fileID: 11400000, guid: 544504e8333f14d48b8bd7240957368a, type: 2}
+version https://git-lfs.github.com/spec/v1
+oid sha256:7c8b8a2660e8bf4c6a96a52e1ae23d2e129220af6889c77bc71c7fc9e708a9c3
+size 838

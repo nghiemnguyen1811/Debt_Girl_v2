@@ -1,27 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
-  m_Name: Loading Labels_ko-KR
-  m_EditorClassIdentifier: 
-  m_LocaleId:
-    m_Code: ko-KR
-  m_SharedData: {fileID: 11400000, guid: d16c836481ae892489c5f1052d5b380c, type: 2}
-  m_Metadata:
-    m_Items: []
-  m_TableData:
-  - m_Id: 9493102592
-    m_Localized: "\uB0A8\uC740 \uBD80\uCC44\uB97C \uACC4\uC0B0 \uC911\uC785\uB2C8\uB2E4..."
-    m_Metadata:
-      m_Items: []
-  references:
-    version: 2
-    RefIds: []
+version https://git-lfs.github.com/spec/v1
+oid sha256:72a148c1f77af5692c3347ace3a215c0401dd6caf281f128dfde91df002679ed
+size 788

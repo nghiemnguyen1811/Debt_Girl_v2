@@ -1,22 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a54dc5c4dc1aab7419cd23800e79f042, type: 3}
-  m_Name: Petal Set
-  m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: 89553b3d2ca5a764daafe78ee2621660, type: 3}
-  itemName: Petal Set
-  description: Trio of daisy wall decor, brightens up any room.
-  decorationNameKey: decoration.danbi6Name
-  decorationDescriptionKey: decoration.danbi6Des
-  itemID: 5
-  owner: 1
-  price: 800
+version https://git-lfs.github.com/spec/v1
+oid sha256:5f9eac4f91a764e4670d0889173075a77117ac5d0ec4664aae40f6e907072fde
+size 710

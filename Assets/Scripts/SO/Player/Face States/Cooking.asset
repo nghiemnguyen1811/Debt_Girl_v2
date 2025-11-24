@@ -1,18 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f4ca9bea53598946a96f1cfd389b990, type: 3}
-  m_Name: Cooking
-  m_EditorClassIdentifier: 
-  conditionType: 8
-  eyebrowSprite: {fileID: 21300000, guid: 2f2db4c512ae89249896eeafa02483f3, type: 3}
-  eyeSprite: {fileID: 21300000, guid: fec84712dee094944b580e9d6c6e4330, type: 3}
-  mouthSprite: {fileID: 21300000, guid: 9c2cd8e1017237544b50eda5553c0aed, type: 3}
+version https://git-lfs.github.com/spec/v1
+oid sha256:8f35aef70da53b5f45beb13e3ee2806ed73fc4de71577bf849c22a77d4d3702a
+size 682

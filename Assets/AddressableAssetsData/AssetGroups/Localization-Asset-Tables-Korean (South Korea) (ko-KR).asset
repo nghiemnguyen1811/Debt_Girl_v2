@@ -1,23 +1,3 @@
-%YAML 1.1
-%TAG !u! tag:unity3d.com,2011:
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: Localization-Asset-Tables-Korean (South Korea) (ko-KR)
-  m_EditorClassIdentifier: 
-  m_GroupName: Localization-Asset-Tables-Korean (South Korea) (ko-KR)
-  m_GUID: e990656733751974a95bab55afa499dc
-  m_SerializeEntries: []
-  m_ReadOnly: 1
-  m_Settings: {fileID: 11400000, guid: c57502a728ac11c488549df1949557c5, type: 2}
-  m_SchemaSet:
-    m_Schemas:
-    - {fileID: 11400000, guid: 50eb3272bef4a224c90217477ac6164b, type: 2}
-    - {fileID: 11400000, guid: 86ba0e1088a2dab47a9ede229e891b6c, type: 2}
+version https://git-lfs.github.com/spec/v1
+oid sha256:db0b14c91c7a3b132ae2d33c78fff6bb996ba9f9177044b5160053d7870c4403
+size 857
