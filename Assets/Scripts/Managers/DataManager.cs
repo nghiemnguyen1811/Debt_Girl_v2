@@ -53,11 +53,12 @@ public class DataManager : SingletonMonobehaviour<DataManager>
         if (cachedSaveData == null) yield break;
 
         // Load core data
+        MainMenu.Instance?.ImportSaveData(cachedSaveData);
         GameManager.Instance?.ImportSaveData(cachedSaveData);
         StatUpgradeManager.Instance?.ImportSaveData(cachedSaveData);
-        PlayerControl.Instance.stats?.ImportSaveData(cachedSaveData);
+        PlayerControl.Instance?.stats.ImportSaveData(cachedSaveData);
         BakingManager.Instance?.ImportSaveData(cachedSaveData);
-        StatUpgradeManager.Instance.ImportSaveData(cachedSaveData);
+        StatUpgradeManager.Instance?.ImportSaveData(cachedSaveData);
         CoinTradeManager.Instance?.ImportSaveData(cachedSaveData);
         MoodManager.Instance?.ImportSaveData(cachedSaveData);
         PostManager.Instance?.ImportSaveData(cachedSaveData);

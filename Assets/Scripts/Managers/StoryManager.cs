@@ -25,7 +25,8 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
 
     [Header("Buttons")]
     [SerializeField] private Button nextButton;
-    [SerializeField] private Button skipButton;
+    [SerializeField] private Button skipButtonEnable;
+    [SerializeField] private Button skipButtonDisable;
 
     [Header("Typewriter Settings")]
     [SerializeField] private float typeSpeed = 0.03f;
@@ -48,7 +49,7 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
     {
         // Hook up button events
         if (nextButton != null) nextButton.onClick.AddListener(OnClickNext);
-        if (skipButton != null) skipButton.onClick.AddListener(SkipStory);
+        if (skipButtonEnable != null) skipButtonEnable.onClick.AddListener(SkipStory);
 
         // Initialize story flow
         SpawnImages();
@@ -155,10 +156,8 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
 
         bool isLastImage = currentIndex == stackedImages.Count - 1;
 
-        if (isLastImage)
-            MainMenu.Instance.StartStoryEndSequence();
-        else
-            SlideOutCurrentImage();
+        if (isLastImage) MainMenu.Instance.StartStoryEndSequence();
+        else SlideOutCurrentImage();
     }
 
 
@@ -232,10 +231,8 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
                     UpdateActiveImages();
                     ShowCurrentStory();
                 }
-                else
-                {
-                    EndStory();
-                }
+
+                else EndStory();
             });
     }
 
@@ -250,5 +247,22 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
     private void EndStory()
     {
         MainMenu.Instance.StartStoryEndSequence();
+    }
+
+
+    //────────────────────────────────────────────────────
+    // == External Controls ==
+    //────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Enables or disables the Skip button (called by MainMenu).
+    /// </summary>
+    public void SetSkipInteractable(bool state)
+    {
+        if (skipButtonEnable != null)
+            skipButtonEnable.gameObject.SetActive(state);
+
+        if (skipButtonDisable != null)
+            skipButtonDisable.gameObject.SetActive(!state);
     }
 }

@@ -63,7 +63,7 @@ public class DecorationManager : SingletonMonobehaviour<DecorationManager>
     // Save & Load
     // ─────────────────────────────────────────────────────
 
-    public void AutoSave()
+    private void AutoSave()
     {
         if (SaveManager.Data == null) return;
 

@@ -3,8 +3,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 /// <summary>
-/// Controls main menu UI: settings panel, instructions, quitting,
-/// story transitions using Fader, and gameplay scene start.
+/// Controls main menu UI, story transitions, preload logic, and general navigation.
 /// </summary>
 public class MainMenu : SingletonMonobehaviour<MainMenu>
 {
@@ -24,6 +23,8 @@ public class MainMenu : SingletonMonobehaviour<MainMenu>
     [Header("Preload Data")]
     [SerializeField] private ScenePreloadDataSO gameplayPreloadDataSO;
 
+    private bool viewed = false;
+
 
     //────────────────────────────────────────────────────
     // == Unity Lifecycle ==
@@ -33,6 +34,9 @@ public class MainMenu : SingletonMonobehaviour<MainMenu>
     {
         // Play main menu music
         AudioManager.Instance.PlayMusic(0);
+
+        // Load all saved data via DataManager
+        DataManager.Instance.ReloadAllData();
     }
 
 
@@ -41,7 +45,7 @@ public class MainMenu : SingletonMonobehaviour<MainMenu>
     //────────────────────────────────────────────────────
 
     /// <summary>
-    /// Loads the main gameplay scene using SceneLoadRequest.
+    /// Loads the gameplay scene with preload data.
     /// </summary>
     public void StartGame()
     {
@@ -64,7 +68,7 @@ public class MainMenu : SingletonMonobehaviour<MainMenu>
     public void ToggleQuitPanel(bool show) => TogglePanel(quitPanel, show);
 
     /// <summary>
-    /// Handles enabling/disabling any provided panel.
+    /// Enables or disables a given menu panel.
     /// </summary>
     private void TogglePanel(GameObject panel, bool show)
     {
@@ -80,7 +84,7 @@ public class MainMenu : SingletonMonobehaviour<MainMenu>
     //────────────────────────────────────────────────────
 
     /// <summary>
-    /// Begins the transition into story mode using Fader.
+    /// Starts async flow to open the story view with fade transition.
     /// </summary>
     public void OpenStorySequence()
     {
@@ -88,23 +92,16 @@ public class MainMenu : SingletonMonobehaviour<MainMenu>
     }
 
     /// <summary>
-    /// Fade to black → reset story → show story panel → fade in.
+    /// Fade-out → reset story → show panel → fade-in.
     /// </summary>
     private IEnumerator OpenStoryFlow()
     {
-        // Enable fader
         fader.gameObject.SetActive(true);
-
-        // Fade screen to black
         yield return fader.FadeOutCo(1f);
 
-        // Reset all story state
         StoryManager.Instance.ResetStory();
-
-        // Activate story UI
         storyPanel.SetActive(true);
 
-        // Fade screen back to visible
         yield return fader.FadeInCo(1f);
     }
 
@@ -114,7 +111,7 @@ public class MainMenu : SingletonMonobehaviour<MainMenu>
     //────────────────────────────────────────────────────
 
     /// <summary>
-    /// Starts ending sequence after story finishes.
+    /// Starts async flow to close the story view.
     /// </summary>
     public void StartStoryEndSequence()
     {
@@ -122,19 +119,18 @@ public class MainMenu : SingletonMonobehaviour<MainMenu>
     }
 
     /// <summary>
-    /// Fade to black → hide storyPanel → fade back in.
+    /// Fade-out → hide panel → fade-in.
     /// </summary>
     private IEnumerator EndStoryFlow()
     {
         fader.gameObject.SetActive(true);
-
-        // Fade screen to black
         yield return fader.FadeOutCo(1f);
 
-        // Hide story view
         storyPanel.SetActive(false);
 
-        // Fade screen back to normal
+        // Save only on first view
+        AutoSaveStoryViewed();
+
         yield return fader.FadeInCo(1f);
     }
 
@@ -149,5 +145,37 @@ public class MainMenu : SingletonMonobehaviour<MainMenu>
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+
+    //────────────────────────────────────────────────────
+    // == Save & Load ==
+    //────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Saves first-time story view only once.
+    /// </summary>
+    public void AutoSaveStoryViewed()
+    {
+        if (viewed) return;
+
+        viewed = true;
+        StoryManager.Instance.SetSkipInteractable(viewed);
+        SaveManager.Data.hasViewedStoryFirstTime = true;
+        SaveManager.SaveGame();
+    }
+
+    /// <summary>
+    /// Loads story-view state and initializes skip-button + auto-open logic.
+    /// </summary>
+    public void ImportSaveData(SaveData data)
+    {
+        if (data == null) return;
+
+        viewed = data.hasViewedStoryFirstTime;
+
+        StoryManager.Instance.SetSkipInteractable(viewed);
+
+        if (!viewed) OpenStorySequence();
     }
 }

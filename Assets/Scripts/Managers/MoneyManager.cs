@@ -125,7 +125,7 @@ public class MoneyManager : SingletonMonobehaviour<MoneyManager>
     // ▶ SAVE / LOAD API
     // ==================================================
     /// <summary>Automatically saves current money and diamond data.</summary>
-    protected void AutoSave()
+    private void AutoSave()
     {
         SaveManager.Data.playerMoney = totalMoneys;
         SaveManager.Data.playerDiamond = totalDiamonds;

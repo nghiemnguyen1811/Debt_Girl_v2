@@ -42,6 +42,11 @@ public class EquippedOutfitEntry
 public class SaveData
 {
     // ─────────────────────────────────────────────────────
+    // 🟦 Story System
+    // ─────────────────────────────────────────────────────
+    public bool hasViewedStoryFirstTime;
+
+    // ─────────────────────────────────────────────────────
     // 🧍 Player Core Stats
     // ─────────────────────────────────────────────────────
     public int playerLevel = 1;
