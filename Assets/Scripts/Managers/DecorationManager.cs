@@ -84,6 +84,8 @@ public class DecorationManager : SingletonMonobehaviour<DecorationManager>
 
     public void ImportSaveData(SaveData data)
     {
+        CleanDestroyedDecorations();
+
         ownedDecorations.Clear();
 
         if (data?.ownedDecorations == null) return;
@@ -100,5 +102,19 @@ public class DecorationManager : SingletonMonobehaviour<DecorationManager>
         ShopManager.Instance?.RefreshDecorOwnershipUI();
 
         Debug.Log($"[DecorationManager] Imported {ownedDecorations.Count} decorations");
+    }
+
+    //────────────────────────────────────────────────────
+    // Maintenance
+    //────────────────────────────────────────────────────
+
+    /// <summary>Removes destroyed/null decoration objects from the list.</summary>
+    private void CleanDestroyedDecorations()
+    {
+        for (int i = allDecorations.Count - 1; i >= 0; i--)
+        {
+            if (allDecorations[i] == null)
+                allDecorations.RemoveAt(i);
+        }
     }
 }

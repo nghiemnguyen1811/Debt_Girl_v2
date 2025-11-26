@@ -218,6 +218,8 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
 
         RectTransform rt = img.rectTransform;
 
+        AudioManager.Instance?.PlayInteractSound(16);
+
         DOTween.Sequence()
             .Append(rt.DOAnchorPosX(800f, 1.2f))
             .Join(cg.DOFade(0f, 1.2f))

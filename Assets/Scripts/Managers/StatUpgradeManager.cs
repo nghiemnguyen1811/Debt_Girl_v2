@@ -26,10 +26,9 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
     //─────────────────────────────────────────────
     // Mono
     //─────────────────────────────────────────────
-    private void Start()
-    {
-        playerControl = PlayerControl.Instance;
 
+    private void OnEnable()
+    {
         InitializeStatUI();
         SetupListeners();
 
@@ -38,8 +37,15 @@ public class StatUpgradeManager : SingletonMonobehaviour<StatUpgradeManager>
             LocalizationManager.Instance.RegisterForGlobalRefresh(RefreshAllLocalizedTexts);
     }
 
-    private void OnDestroy()
+    private void Start()
     {
+        playerControl = PlayerControl.Instance;
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
         if (LocalizationManager.Instance != null)
             LocalizationManager.Instance.UnregisterForGlobalRefresh(RefreshAllLocalizedTexts);
     }

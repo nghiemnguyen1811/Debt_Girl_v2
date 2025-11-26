@@ -61,12 +61,18 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
     {
         if (LocalizationManager.Instance != null)
             LocalizationManager.Instance.OnLanguageChanged += HandleLanguageChanged;
+
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnLevelChanged += RefreshAllFloors;
     }
 
     private void OnDisable()
     {
         if (LocalizationManager.Instance != null)
             LocalizationManager.Instance.OnLanguageChanged -= HandleLanguageChanged;
+
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnLevelChanged -= RefreshAllFloors;
     }
 
     private void Start()
@@ -78,24 +84,20 @@ public class FloorSelectionManager : SingletonMonobehaviour<FloorSelectionManage
 
         if (autoSelectFirst && floorDataArray != null && floorDataArray.Length > 0)
             SelectFloor(floorDataArray[0]);
-        else
-            UpdateFloorDescriptionText(null);
+
+        else UpdateFloorDescriptionText(null);
 
         UpdateNavButtons();
-
-        if (GameManager.Instance != null)
-            GameManager.Instance.OnLevelChanged += RefreshAllFloors;
     }
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
+
         CleanupFloorButtons();
         CleanupRoomGroups();
         CleanupNavigation();
         CleanupConfirmButton();
-
-        if (GameManager.Instance != null)
-            GameManager.Instance.OnLevelChanged -= RefreshAllFloors;
     }
 
 #if UNITY_EDITOR

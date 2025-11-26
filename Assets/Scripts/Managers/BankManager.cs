@@ -50,12 +50,13 @@ public class BankManager : SingletonMonobehaviour<BankManager>
     //─────────────────────────────────────────────
     // === 🌿 Unity Lifecycle ===
     //─────────────────────────────────────────────
-    private void Start()
+
+    private void OnEnable()
     {
-        SetupListeners();                  // Bind button
-        SubscribeToGameManagerEvents();    // Listen to level change
-        InitializeCanvasGroups();          // Initial UI state
-        RefreshAllUI();                    // Update UI on start
+        if (GameManager.Instance == null) return;
+
+        GameManager.Instance.OnLevelChanged += RecalculateDebtFromLevel;
+        GameManager.Instance.OnLevelChanged += UpdateLevelUI;
     }
 
     private void OnDisable()
@@ -66,18 +67,16 @@ public class BankManager : SingletonMonobehaviour<BankManager>
         GameManager.Instance.OnLevelChanged -= UpdateLevelUI;
     }
 
+    private void Start()
+    {
+        SetupListeners();                  
+        InitializeCanvasGroups();          
+        RefreshAllUI();                    
+    }
+
     //─────────────────────────────────────────────
     // === 🧩 Initialization Helpers ===
     //─────────────────────────────────────────────
-
-    /// <summary>Subscribe to GameManager level events.</summary>
-    private void SubscribeToGameManagerEvents()
-    {
-        if (GameManager.Instance == null) return;
-
-        GameManager.Instance.OnLevelChanged += RecalculateDebtFromLevel;
-        GameManager.Instance.OnLevelChanged += UpdateLevelUI;
-    }
 
     /// <summary>Set initial visibility of CanvasGroups.</summary>
     private void InitializeCanvasGroups()

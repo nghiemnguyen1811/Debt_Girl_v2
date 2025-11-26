@@ -46,7 +46,7 @@ public class MoodVisualizer : MonoBehaviour
 
     #region === Unity Lifecycle ===
 
-    private void Start()
+    private void OnEnable()
     {
         playerControl = GetComponent<PlayerControl>();
 
@@ -58,7 +58,7 @@ public class MoodVisualizer : MonoBehaviour
             playerControl.OnCharacterProfileChanged += HandleCharacterProfileChanged;
     }
 
-    private void OnDestroy()
+    private void OnDisable()
     {
         // Unsubscribe to prevent memory leaks
         if (playerControl != null)
@@ -121,11 +121,8 @@ public class MoodVisualizer : MonoBehaviour
         currentMood = null;
         moodTween?.Kill();
 
-        moodIconImage.DOFade(0f, 0.3f).OnComplete(() =>
-        {
-            moodIconRoot.SetActive(false);
-            moodIconImage.sprite = null;
-        });
+        moodIconRoot.SetActive(false);
+        moodIconImage.sprite = null;
 
         ApplyFaceTextures(MoodConditionType.Normal);
         StopMoodAnimationLoop();

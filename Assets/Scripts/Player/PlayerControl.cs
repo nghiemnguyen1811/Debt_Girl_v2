@@ -71,7 +71,7 @@ public class PlayerControl : SingletonMonobehaviour<PlayerControl>
         }
     }
 
-    private void Start()
+    private void OnEnable()
     {
         StartCoroutine(DelayedInit());
     }

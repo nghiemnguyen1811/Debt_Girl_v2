@@ -30,13 +30,19 @@ public class MainMenu : SingletonMonobehaviour<MainMenu>
     // == Unity Lifecycle ==
     //────────────────────────────────────────────────────
 
+    protected override void Awake()
+    {
+        base.Awake();
+        DataManager.Instance.LoadCachedSaveData();
+    }
+
     private void Start()
     {
-        // Play main menu music
-        AudioManager.Instance.PlayMusic(0);
+        // Start background music
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayMusic(0);
 
-        // Load all saved data via DataManager
-        DataManager.Instance.ReloadAllData();
+        DataManager.Instance.NotifySceneReady();
     }
 
 
@@ -88,6 +94,7 @@ public class MainMenu : SingletonMonobehaviour<MainMenu>
     /// </summary>
     public void OpenStorySequence()
     {
+        AudioManager.Instance.PlayInteractSound(8);
         StartCoroutine(OpenStoryFlow());
     }
 
@@ -176,6 +183,6 @@ public class MainMenu : SingletonMonobehaviour<MainMenu>
 
         StoryManager.Instance.SetSkipInteractable(viewed);
 
-        if (!viewed) OpenStorySequence();
+        if (!viewed) StartCoroutine(OpenStoryFlow());
     }
 }

@@ -73,7 +73,7 @@ public class CookingManager : SingletonMonobehaviour<CookingManager>
             GameManager.Instance.OnLevelChanged -= RefreshCakeUnlockStates;
     }
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
         if (LocalizationManager.Instance != null)
             LocalizationManager.Instance.UnregisterForGlobalRefresh(RefreshLocalization);

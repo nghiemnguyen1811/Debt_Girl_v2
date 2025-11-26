@@ -79,6 +79,7 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
     private string currentDate;
     private float checkInterval = 60f;
     private bool hasClaimedBonus;
+    private bool _isAlive;
 
     // Cached event handlers
     private Action cakeBakedHandler;
@@ -96,10 +97,16 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
 
     #region Unity Lifecycle
 
-    private void Start() => InitializeSystem();
-
-    private void OnDestroy()
+    private void Start()
     {
+        _isAlive = true;
+        InitializeSystem();
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        _isAlive = false;
         UnsubscribeEvents();
         LocalizationManager.Instance.UnregisterForGlobalRefresh(OnLanguageChanged);
         StopAllCoroutines();
@@ -416,6 +423,8 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
     /// </summary>
     private void RefreshUI()
     {
+        if (!_isAlive) return;
+
         if (questUIGroups == null || questUIGroups.Length == 0)
             return;
 
@@ -432,6 +441,8 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
     /// </summary>
     private void UpdateQuestUI(int index)
     {
+        if (!_isAlive) return;
+
         if (index < 0 || index >= questUIGroups.Length)
             return;
 
@@ -470,6 +481,8 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
 
     private IEnumerator UpdateQuestDescriptionAsync(TextMeshProUGUI label, DailyQuestData quest)
     {
+        if (!_isAlive) yield break;
+
         var task = quest.GetLocalizedDescriptionAsync();
         yield return new WaitUntil(() => task.IsCompleted);
         label.text = task.Result;
@@ -558,6 +571,10 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
     /// </summary>
     public void ImportSaveData(SaveData data)
     {
+        CleanDestroyedQuestUI();
+
+        if (!_isAlive) return;
+
         if (data == null)
             return;
 
@@ -711,7 +728,7 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
     /// </summary>
     private IEnumerator CheckDateChangeRoutine()
     {
-        while (true)
+        while (_isAlive)
         {
             string today = DateTime.Now.ToString("yyyy-MM-dd");
 
@@ -728,4 +745,28 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
     }
 
     #endregion
+
+    // ══════════════════════════════════════════════════════
+    // 🧹 Cleanup Destroyed UI Elements (Prevents Crash)
+    // ══════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Removes quest UI entries whose root GameObject was destroyed.
+    /// </summary>
+    private void CleanDestroyedQuestUI()
+    {
+        if (questUIGroups == null) return;
+
+        for (int i = 0; i < questUIGroups.Length; i++)
+        {
+            var ui = questUIGroups[i];
+            if (ui == null) continue;
+
+            // Root object destroyed
+            if (ui.questGroup == null)
+                // Hard clean — replace with empty placeholder
+                questUIGroups[i] = new QuestUIGroup();
+        }
+    }
+
 }

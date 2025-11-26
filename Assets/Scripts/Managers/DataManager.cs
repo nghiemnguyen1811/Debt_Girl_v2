@@ -4,61 +4,82 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// DataManager handles building item database and importing saved data 
-/// for inventories, stats, player, and baking system.
+/// Central loader: builds item database and applies saved data
+/// to all game systems after scene is fully initialized.
 /// </summary>
 public class DataManager : SingletonMonobehaviour<DataManager>
 {
-    // ─────────────────────────────────────────────────────
+    //────────────────────────────────────────────────────
     // Inspector Fields
-    // ─────────────────────────────────────────────────────
+    //────────────────────────────────────────────────────
     [Header("Reference to Item Database")]
     [SerializeField] private ItemDatabaseSO itemDatabaseSO;
 
-    // ─────────────────────────────────────────────────────
+    //────────────────────────────────────────────────────
     // Runtime Data
-    // ─────────────────────────────────────────────────────
+    //────────────────────────────────────────────────────
     private Dictionary<IngredientType, ItemDataSO> itemDatabase;
     private SaveData cachedSaveData;
 
-    // ─────────────────────────────────────────────────────
+    //────────────────────────────────────────────────────
     // Unity Lifecycle
-    // ─────────────────────────────────────────────────────
+    //────────────────────────────────────────────────────
     protected override void Awake()
     {
         base.Awake();
         BuildItemDatabase();
+    }
+
+    //────────────────────────────────────────────────────
+    // Public API
+    //────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Reads save data into memory without applying it.
+    /// </summary>
+    public void LoadCachedSaveData()
+    {
         cachedSaveData = SaveManager.LoadGame();
     }
 
-    // ─────────────────────────────────────────────────────
-    // Public Methods
-    // ─────────────────────────────────────────────────────
+    /// <summary>
+    /// Called by scene entry point to confirm scene initialization is finished.
+    /// </summary>
+    public void NotifySceneReady()
+    {
+        StartCoroutine(ApplySaveWhenReady());
+    }
+
+    //────────────────────────────────────────────────────
+    // Save Import Logic
+    //────────────────────────────────────────────────────
 
     /// <summary>
-    /// Public method to trigger reloading of save data.
+    /// Waits a frame, ensures cachedSaveData is loaded, then imports all systems.
     /// </summary>
-    public void ReloadAllData()
+    private IEnumerator ApplySaveWhenReady()
     {
-        StartCoroutine(ReloadSaveData());
+        yield return null;
+
+        if (cachedSaveData == null)
+            cachedSaveData = SaveManager.LoadGame();
+
+        ImportAllSaveData();
     }
 
     /// <summary>
-    /// Reloads SaveData from SaveManager and re-imports data to managers.
+    /// Sends save data to every manager that supports loading.
     /// </summary>
-    private IEnumerator ReloadSaveData()
+    private void ImportAllSaveData()
     {
-        yield return new WaitForEndOfFrame();
-
-        if (cachedSaveData == null) yield break;
-
-        // Load core data
+        // Core managers
         MainMenu.Instance?.ImportSaveData(cachedSaveData);
         GameManager.Instance?.ImportSaveData(cachedSaveData);
         StatUpgradeManager.Instance?.ImportSaveData(cachedSaveData);
         PlayerControl.Instance?.stats.ImportSaveData(cachedSaveData);
+
+        // Gameplay systems
         BakingManager.Instance?.ImportSaveData(cachedSaveData);
-        StatUpgradeManager.Instance?.ImportSaveData(cachedSaveData);
         CoinTradeManager.Instance?.ImportSaveData(cachedSaveData);
         MoodManager.Instance?.ImportSaveData(cachedSaveData);
         PostManager.Instance?.ImportSaveData(cachedSaveData);
@@ -66,18 +87,20 @@ public class DataManager : SingletonMonobehaviour<DataManager>
         OutfitManager.Instance?.ImportSaveData(cachedSaveData);
         MoneyManager.Instance?.ImportSaveData(cachedSaveData);
         DailyQuestManager.Instance?.ImportSaveData(cachedSaveData);
+
+        // Inventories
         FoodInventoryUI.Instance?.ImportSaveData(cachedSaveData.foodInventory, itemDatabase);
         CakeInventoryUI.Instance?.ImportSaveData(cachedSaveData.cakeInventory, itemDatabase);
 
-        Debug.Log("[DataManager] All game systems imported after delayed reload.");
+        Debug.Log("[DataManager] Save imported AFTER scene fully initialized.");
     }
 
-    // ─────────────────────────────────────────────────────
-    // Private Methods
-    // ─────────────────────────────────────────────────────
+    //────────────────────────────────────────────────────
+    // Private Helpers
+    //────────────────────────────────────────────────────
 
     /// <summary>
-    /// Build dictionary mapping IngredientType -> ItemDataSO.
+    /// Builds dictionary IngredientType → ItemDataSO for fast lookups.
     /// </summary>
     private void BuildItemDatabase()
     {

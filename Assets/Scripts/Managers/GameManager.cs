@@ -34,13 +34,20 @@ public class GameManager : SingletonMonobehaviour<GameManager>
     // ─────────────────────────────────────────────────────
     // Unity Lifecycle
     // ─────────────────────────────────────────────────────
+
+    protected override void Awake()
+    {
+        base.Awake();
+        DataManager.Instance.LoadCachedSaveData();
+    }
+
     private void Start()
     {
         // Start background music
         if (AudioManager.Instance != null)
             AudioManager.Instance.PlayMusic(1);
 
-        DataManager.Instance.ReloadAllData();
+        DataManager.Instance.NotifySceneReady();
     }
 
     // ─────────────────────────────────────────────────────

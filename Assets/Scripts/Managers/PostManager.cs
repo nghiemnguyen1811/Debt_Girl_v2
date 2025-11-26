@@ -79,24 +79,25 @@ public class PostManager : SingletonMonobehaviour<PostManager>
     //─────────────────────────────────────────────────────────────
     #region === Unity Events ===
 
-    private void Start()
+    private void OnEnable()
     {
         // Setup references
         playerControl = PlayerControl.Instance;
 
         // Disable post button at start
         postButton.interactable = false;
-        postButton.onClick.AddListener(OnPostButtonClicked);
 
         // Start passive money routine
         moneyRoutine = StartCoroutine(AutoAddMoney());
 
-        // Wait for PlayerStats to be ready
+        postButton.onClick.AddListener(OnPostButtonClicked);
         playerControl.stats.OnStatsInitialized += OnStatsReady;
     }
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
+
         postButton.onClick.RemoveListener(OnPostButtonClicked);
         playerControl.stats.OnStatsInitialized -= OnStatsReady;
     }
@@ -167,6 +168,13 @@ public class PostManager : SingletonMonobehaviour<PostManager>
     private void BeginCooldown()
     {
         canPost = false;
+
+        if (postButton == null || postButton.gameObject == null)
+        {
+            Debug.LogWarning("[PostManager] postButton missing → skip cooldown");
+            return;
+        }
+
         postButton.interactable = false;
 
         if (cooldownRoutine != null) StopCoroutine(cooldownRoutine);
@@ -349,12 +357,18 @@ public class PostManager : SingletonMonobehaviour<PostManager>
         hasPostedFirstTime = data.hasPostedFirstTime;
 
         if (hasPostedFirstTime)
-        {
-            BeginCooldown();
+            StartCoroutine(WaitForUIReadyThenCooldown());
+    }
 
-            if (moneyRoutine == null)
-                moneyRoutine = StartCoroutine(AutoAddMoney());
-        }
+
+    private IEnumerator WaitForUIReadyThenCooldown()
+    {
+        yield return new WaitUntil(() => postButton != null && postButton.gameObject != null);
+
+        BeginCooldown();
+
+        if (moneyRoutine == null)
+            moneyRoutine = StartCoroutine(AutoAddMoney());
     }
 
     #endregion

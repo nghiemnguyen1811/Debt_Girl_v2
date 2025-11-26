@@ -71,6 +71,17 @@ public class CoinTradeManager : SingletonMonobehaviour<CoinTradeManager>
     // ─────────────────────────────────────────────────────
     // Unity Lifecycle
     // ─────────────────────────────────────────────────────
+    private void OnEnable()
+    {
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnLevelChanged += HandleLevelChanged;
+    }
+
+    private void OnDisable()
+    {
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnLevelChanged -= HandleLevelChanged;
+    }
 
     private void Start()
     {
@@ -79,14 +90,6 @@ public class CoinTradeManager : SingletonMonobehaviour<CoinTradeManager>
         HandleLevelChanged();
         ResetFluctuationTimer();
         HideAllPriceDeltaUI();
-
-        GameManager.Instance.OnLevelChanged += HandleLevelChanged;
-    }
-
-    private void OnDestroy()
-    {
-        if (GameManager.Instance != null)
-            GameManager.Instance.OnLevelChanged -= HandleLevelChanged;
     }
 
     // ─────────────────────────────────────────────────────

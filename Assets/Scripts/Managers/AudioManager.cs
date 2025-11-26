@@ -38,6 +38,7 @@ public class AudioManager : SingletonMonobehaviour<AudioManager>
     protected override void Awake()
     {
         base.Awake();
+
         audioGroups = new Dictionary<AudioGroup, AudioSource[]>
         {
             { AudioGroup.Music, musics },
@@ -46,16 +47,6 @@ public class AudioManager : SingletonMonobehaviour<AudioManager>
             { AudioGroup.Mood, moodSounds }
         };
     }
-    //private void Start()
-    //{
-    //    audioGroups = new Dictionary<AudioGroup, AudioSource[]>
-    //    {
-    //        { AudioGroup.Music, musics },
-    //        { AudioGroup.Sound, sounds },
-    //        { AudioGroup.Footstep, footstepSounds },
-    //        { AudioGroup.Mood, moodSounds }
-    //    };
-    //}
 
     #endregion
 

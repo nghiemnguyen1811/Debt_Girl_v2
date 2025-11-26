@@ -76,6 +76,9 @@ public class StatContainer : MonoBehaviour, ILocalizableContainer
     //─────────────────────────────────────────────
     private void UpdatePendingUI()
     {
+        if (this == null || gameObject == null) return;
+        if (pendingLevelText == null || pendingLevelText.gameObject == null) return;
+
         pendingLevelText.text = pendingLevel > 0 ? $"{pendingLevel}" : "0";
     }
 
@@ -105,12 +108,21 @@ public class StatContainer : MonoBehaviour, ILocalizableContainer
 
     public void UpdateButtonStates()
     {
-        plusButton.interactable = StatUpgradeManager.Instance.HasAvailablePoints();
+        if (this == null || gameObject == null) return;
+
+        if (plusButton == null || plusButton.gameObject == null) return;
+        if (minusButton == null || minusButton.gameObject == null) return;
+
+        plusButton.interactable = StatUpgradeManager.Instance != null &&
+                                  StatUpgradeManager.Instance.HasAvailablePoints();
+
         minusButton.interactable = pendingLevel > 0;
     }
 
     public void SyncFromData()
     {
+        if (this == null || gameObject == null) return;
+
         pendingLevel = 0;
         RefreshUI();
         UpdatePendingUI();

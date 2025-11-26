@@ -24,15 +24,26 @@ public class PlayerStatsUI : MonoBehaviour
     private Tween engagementTween;
 
     private PlayerControl control;
-    private PlayerStats playerStats => control.stats;
+    private PlayerStats playerStats;
 
     #endregion
 
-    #region === Unity Events ===
+    #region === Initialization (Private) ===
 
-    private void Start()
+    /// <summary>
+    /// Cache PlayerControl and PlayerStats references.
+    /// </summary>
+    private bool SetupComponent()
     {
-        control = GetComponent<PlayerControl>();
+        if (this == null || gameObject == null)
+            return false;
+
+        if (!TryGetComponent(out control) || control == null)
+            return false;
+
+        playerStats = control.stats;
+
+        return playerStats != null;
     }
 
     #endregion
@@ -44,9 +55,9 @@ public class PlayerStatsUI : MonoBehaviour
     /// </summary>
     public void InitUI()
     {
-        if (playerStats == null)
+        if (!SetupComponent())
         {
-            Debug.LogError("PlayerStats reference is missing.");
+            Debug.LogWarning("PlayerStatsUI: SetupComponent failed — UI was destroyed or PlayerControl missing.");
             return;
         }
 

@@ -67,7 +67,7 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
     // 🏁 Unity Lifecycle
     // ══════════════════════════════════════════════════════
 
-    private void Start()
+    private void OnEnable()
     {
         InitializeCharacterTabs();
         InitializeOutfitUI();
@@ -101,8 +101,10 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
     /// <summary>
     /// Clean up events to prevent leaks when the object is destroyed.
     /// </summary>
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
+
         CharacterTabButton.OnTabSelected -= HandleCharacterTabSelected;
 
         if (PlayerControl.Instance != null)
@@ -195,6 +197,7 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
                 currentSelectedSlot.SetSelected(false);
                 currentSelectedSlot = null;
             }
+
             else canEquip = currentSelectedSlot.IsUnlocked;
         }
 
@@ -526,6 +529,8 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
     /// </summary>
     public void ImportSaveData(SaveData data)
     {
+        CleanDestroyedSlots();
+
         unlockedSkins = data.unlockedSkins ?? new List<string>();
         equippedOutfits = data.equippedOutfits ?? new List<EquippedOutfitEntry>();
 
@@ -617,6 +622,33 @@ public class OutfitManager : SingletonMonobehaviour<OutfitManager>
             return;
 
         PlayerControl.Instance.outfitVisualizer.ApplyOutfits(currentCharacter, equippedOutfits);
+    }
+
+    // ══════════════════════════════════════════════════════
+    // 🧹 Cleanup Destroyed UI Slots (Prevent Null-Reference)
+    // ══════════════════════════════════════════════════════
+
+    /// <summary>
+    /// Removes destroyed SkinSlot objects from all slot lists.
+    /// </summary>
+    private void CleanDestroyedSlots()
+    {
+        CleanList(spawnedShirtSlots);
+        CleanList(spawnedPantSlots);
+        CleanList(spawnedShoesSlots);
+        CleanList(allSkinSlots);
+    }
+
+    /// <summary>
+    /// Safely removes destroyed/null entries from a list.
+    /// </summary>
+    private void CleanList(List<SkinSlot> list)
+    {
+        for (int i = list.Count - 1; i >= 0; i--)
+        {
+            if (list[i] == null)
+                list.RemoveAt(i);
+        }
     }
 
     // ══════════════════════════════════════════════════════

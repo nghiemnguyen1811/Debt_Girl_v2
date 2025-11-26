@@ -6,7 +6,7 @@ using UnityEngine;
 /// Base inventory system that manages slots, items, and selection logic.
 /// Derived classes (UI) handle how the inventory is displayed and interacted with.
 /// </summary>
-public abstract class InventoryBase<T> : SingletonMonobehaviour<T>, IInventoryBase
+public abstract class InventoryBase<T> : SingletonMonobehaviour<T>
     where T : InventoryBase<T>
 {
     [Header("References")]
@@ -29,11 +29,17 @@ public abstract class InventoryBase<T> : SingletonMonobehaviour<T>, IInventoryBa
     /// <summary>
     /// Unity Start – initialize slots on scene start.
     /// </summary>
+    protected void OnEnable()
+    {
+        InitializeSlots();
+    }
+
+    /// <summary>
+    /// Unity Start – initialize slots on scene start.
+    /// </summary>
     protected virtual void Start()
     {
         playerControl = PlayerControl.Instance;
-
-        InitializeSlots();
     }
 
     /// <summary>
@@ -414,10 +420,4 @@ public abstract class InventoryBase<T> : SingletonMonobehaviour<T>, IInventoryBa
 
         SaveManager.SaveGame();
     }
-}
-
-public interface IInventoryBase
-{
-    List<InventorySlotData> ExportSaveData();
-    void ImportSaveData(List<InventorySlotData> savedSlots, Dictionary<IngredientType, ItemDataSO> itemDB);
 }

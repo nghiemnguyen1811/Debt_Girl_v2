@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public abstract class SingletonMonobehaviour<T> : MonoBehaviour where T : MonoBehaviour
 {
@@ -18,5 +18,12 @@ public abstract class SingletonMonobehaviour<T> : MonoBehaviour where T : MonoBe
             instance = this as T;
 
         else Destroy(gameObject);
+    }
+
+    protected virtual void OnDestroy()
+    {
+        // When scene unloads or object removed → clear instance
+        if (instance == this)
+            instance = null;
     }
 }

@@ -57,8 +57,10 @@ public class ShopManager : SingletonMonobehaviour<ShopManager>
             LocalizationManager.Instance.RegisterForGlobalRefresh(RefreshAllLocalizedTexts);
     }
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
+
         if (LocalizationManager.Instance != null)
             LocalizationManager.Instance.UnregisterForGlobalRefresh(RefreshAllLocalizedTexts);
 
