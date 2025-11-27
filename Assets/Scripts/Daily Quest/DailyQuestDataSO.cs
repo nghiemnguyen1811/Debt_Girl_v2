@@ -13,7 +13,7 @@ public class DailyQuestDataSO : ScriptableObject
     //[TextArea(2, 4)]
     //[ShowIf("@questType != DailyQuestType.Interact")]
     //public string description;
-
+    [ShowIf("@questType != DailyQuestType.Interact")]
     public string descriptionKey;
     // ─────────────────────────────────────────────────────
     // TARGET & REWARD SETTINGS
