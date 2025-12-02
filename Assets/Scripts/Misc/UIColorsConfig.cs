@@ -6,6 +6,7 @@ public class UIColorsConfig : ScriptableObject
     [Header("Cooking")]
     public Color canCookColor;
     public Color cantCookColor;
+
     [Header("Ingredient Colors")]
     public Color textEnoughColor;
     public Color textNotEnoughColor;
@@ -19,4 +20,8 @@ public class UIColorsConfig : ScriptableObject
     [Header("Tab Colors")]
     public Color tabOn;
     public Color tabOff;
+
+    [Header("Guide Tab Colors (Guide Panel)")]
+    public Color guideTabOn;
+    public Color guideTabOff;
 }
