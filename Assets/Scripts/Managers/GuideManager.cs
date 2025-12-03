@@ -17,6 +17,7 @@ public class GuideManager : MonoBehaviour
     [Header("Tab UI")]
     [SerializeField] private Transform tabContainer;                        // Parent for all tab items (ScrollView content)
     [SerializeField] private GuideTabItem tabItemPrefab;                    // Prefab for a single tab item
+    [SerializeField] private ScrollRect tabScrollRect;                      // ScrollRect that scrolls the tabs
 
     [Header("Tab Navigation Buttons")]
     [SerializeField] private Button prevTabButton;                          // Go to previous tab
@@ -78,7 +79,7 @@ public class GuideManager : MonoBehaviour
 
             var tabItem = Instantiate(tabItemPrefab, tabContainer);
 
-            // Capture index AFTER adding to list so it matches runtime ordering
+            // Capture index AFTER adding to list so it matches runtime ordering.
             int capturedIndex = spawnedTabs.Count;
             spawnedTabs.Add(tabItem);
 
@@ -177,7 +178,7 @@ public class GuideManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Moves selection to the previous tab (if possible).
+    /// Moves selection to the previous tab (if possible) and recenters it.
     /// </summary>
     private void GoToPreviousTab()
     {
@@ -185,11 +186,12 @@ public class GuideManager : MonoBehaviour
             return;
 
         SelectTabByIndex(currentTabIndex - 1);
+        CenterCurrentTabInScrollView();
         AudioManager.Instance.PlayInteractSound(8);
     }
 
     /// <summary>
-    /// Moves selection to the next tab (if possible).
+    /// Moves selection to the next tab (if possible) and recenters it.
     /// </summary>
     private void GoToNextTab()
     {
@@ -197,6 +199,7 @@ public class GuideManager : MonoBehaviour
             return;
 
         SelectTabByIndex(currentTabIndex + 1);
+        CenterCurrentTabInScrollView();
         AudioManager.Instance.PlayInteractSound(8);
     }
 
@@ -211,6 +214,54 @@ public class GuideManager : MonoBehaviour
         if (nextTabButton != null)
             nextTabButton.interactable = currentTabIndex >= 0 &&
                                          currentTabIndex < spawnedTabs.Count - 1;
+    }
+
+    /// <summary>
+    /// Centers the current tab inside the ScrollView (except first and last).
+    /// </summary>
+    private void CenterCurrentTabInScrollView()
+    {
+        if (tabScrollRect == null)
+            return;
+
+        // Don't center first and last tab.
+        if (currentTabIndex <= 0 || currentTabIndex >= spawnedTabs.Count - 1)
+            return;
+
+        if (tabContainer is not RectTransform contentRect)
+            return;
+
+        var currentTab = spawnedTabs[currentTabIndex];
+        if (currentTab == null)
+            return;
+
+        var tabRect = currentTab.transform as RectTransform;
+        if (tabRect == null)
+            return;
+
+        // Ensure layout is updated before measuring.
+        LayoutRebuilder.ForceRebuildLayoutImmediate(contentRect);
+
+        float contentWidth = contentRect.rect.width;
+        float viewportWidth = ((RectTransform)tabScrollRect.viewport).rect.width;
+
+        // Nothing to scroll if content fits inside viewport.
+        if (contentWidth <= viewportWidth)
+            return;
+
+        // World position of the tab center → local position in content space.
+        Vector3 worldCenter = tabRect.TransformPoint(tabRect.rect.center);
+        Vector3 localCenter = contentRect.InverseTransformPoint(worldCenter);
+
+        // Convert to distance from left edge of content.
+        float contentLeft = contentRect.rect.xMin;
+        float tabCenterFromLeft = localCenter.x - contentLeft;
+        float targetLeftPos = tabCenterFromLeft - viewportWidth * 0.5f;
+        float maxScrollableDistance = contentWidth - viewportWidth;
+
+        float normalized = Mathf.Clamp01(targetLeftPos / maxScrollableDistance);
+
+        tabScrollRect.horizontalNormalizedPosition = normalized;
     }
 
     #endregion
@@ -242,8 +293,11 @@ public class GuideManager : MonoBehaviour
 
         if (currentTabIndex < 0 || currentTabIndex >= spawnedTabs.Count)
             AutoSelectFirstTab();
-
-        else SelectTabByIndex(currentTabIndex);
+        else
+        {
+            SelectTabByIndex(currentTabIndex);
+            CenterCurrentTabInScrollView();
+        }
     }
 
     #endregion
@@ -300,8 +354,8 @@ public class GuideManager : MonoBehaviour
 
         if (imageCount == 1)
             ShowSingleImageLayout(data.guideImages[0]);
-
-        else ShowDoubleImageLayout(data.guideImages);
+        else
+            ShowDoubleImageLayout(data.guideImages);
     }
 
     /// <summary>
@@ -349,8 +403,10 @@ public class GuideManager : MonoBehaviour
                 slot.sprite = sprites[i];
                 slot.enabled = true;
             }
-
-            else slot.enabled = false;
+            else
+            {
+                slot.enabled = false;
+            }
         }
     }
 
