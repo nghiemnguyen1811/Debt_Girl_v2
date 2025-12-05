@@ -400,7 +400,8 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
             return;
         }
 
-        ShowWarningText(warningMessages[URandom.Range(0, warningMessages.Length)]);
+        ShowWarningText(warningMessages[URandom.Range(0, warningMessages.Length)], debugOnly: true);
+
     }
 
     // ─────────────────────────────────────────────────────
@@ -410,8 +411,12 @@ public class BakingManager : SingletonMonobehaviour<BakingManager>
     /// <summary>
     /// Shows warning text with animation.
     /// </summary>
-    private void ShowWarningText(string message)
+    private void ShowWarningText(string message, bool debugOnly = false)
     {
+        // nếu là debug text mà debug bị tắt → không hiện
+        if (debugOnly && !UIManager.Instance.DebugWarningsEnabled)
+            return;
+
         if (warningSequence != null && warningSequence.IsActive())
             warningSequence.Kill();
 

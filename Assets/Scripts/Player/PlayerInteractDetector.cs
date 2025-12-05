@@ -97,7 +97,7 @@ public class PlayerInteractDetector : MonoBehaviour
         if (control.stats.energy.current < -CurrentInteractable.GetEnergyAmount())
         {
             string warning = energyWarningMessages[URandom.Range(0, energyWarningMessages.Length)];
-            UIManager.Instance.ShowWarningText(warning);
+            UIManager.Instance.ShowDebugWarning(warning);
             return;
         }
 

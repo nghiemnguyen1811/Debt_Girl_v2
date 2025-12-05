@@ -42,6 +42,10 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     [SerializeField] private float punchDuration = 0.25f;
     [SerializeField] private float floatingTextFadeDuration = 2f;
 
+    [Header("Debug Options")]
+    [SerializeField] private bool enableDebugWarnings = false;
+    public bool DebugWarningsEnabled => enableDebugWarnings;
+
     private Tween[] moneyTweens = new Tween[3];
     private Tween[] debtTweens = new Tween[2];
     private Tween[] diamondTweens = new Tween[3];
@@ -269,8 +273,17 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     // ─────────────────────────────────────────────────────
     #region Warning Text
 
-    public void ShowWarningText(string message)
+    public void ShowDebugWarning(string message)
     {
+        ShowWarningText(message, true);
+    }
+
+    public void ShowWarningText(string message, bool debugOnly = false)
+    {
+        // Nếu là debug message mà debug đang tắt → không làm gì
+        if (debugOnly && !enableDebugWarnings)
+            return;
+
         if (warningText == null) return;
 
         warningText.text = message;
