@@ -293,6 +293,7 @@ public class GuideManager : MonoBehaviour
 
         if (currentTabIndex < 0 || currentTabIndex >= spawnedTabs.Count)
             AutoSelectFirstTab();
+
         else
         {
             SelectTabByIndex(currentTabIndex);
@@ -354,8 +355,8 @@ public class GuideManager : MonoBehaviour
 
         if (imageCount == 1)
             ShowSingleImageLayout(data.guideImages[0]);
-        else
-            ShowDoubleImageLayout(data.guideImages);
+
+        else ShowDoubleImageLayout(data.guideImages);
     }
 
     /// <summary>
@@ -398,16 +399,27 @@ public class GuideManager : MonoBehaviour
             if (slot == null)
                 continue;
 
-            if (sprites != null && i < sprites.Length && sprites[i] != null)
+            var slotGO = slot.gameObject;
+
+            bool hasSprite = sprites != null && i < sprites.Length && sprites[i] != null;
+
+            if (hasSprite)
             {
                 slot.sprite = sprites[i];
                 slot.enabled = true;
+                slotGO.SetActive(true);
             }
+
             else
             {
                 slot.enabled = false;
+                slotGO.SetActive(false);
             }
         }
+
+        var rect = doubleImageLayout.GetComponent<RectTransform>();
+        if (rect != null)
+            LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
     }
 
     #endregion

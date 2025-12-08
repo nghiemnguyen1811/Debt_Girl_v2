@@ -27,7 +27,7 @@ public abstract class InventoryBase<T> : SingletonMonobehaviour<T>
     // ─────────────────────────────────────────────────────
 
     /// <summary>
-    /// Unity Start – initialize slots on scene start.
+    /// Unity OnEnable – initialize slots OnEnable.
     /// </summary>
     protected void OnEnable()
     {

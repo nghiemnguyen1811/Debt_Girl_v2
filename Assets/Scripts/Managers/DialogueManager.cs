@@ -6,18 +6,20 @@ using DG.Tweening;
 
 public class DialogueManager : SingletonMonobehaviour<DialogueManager>
 {
-    // ─────────────────────────────────────────────────────
-    // Inspector Fields
-    // ─────────────────────────────────────────────────────
+    //────────────────────────────────────────────────────
+    #region === Inspector Fields ===
+
     [Header("References")]
     private PlayerControl playerControl;
 
     [Header("UI References")]
     [SerializeField] private Image leftPortrait;
     [SerializeField] private Image rightPortrait;
-    [SerializeField] private TMP_Text nameText;
     [SerializeField] private TMP_Text dialogueText;
     [SerializeField] private GameObject dialogueBox;
+
+    [Header("Speaker Name UI (0 = Player, 1 = NPC)")]
+    [SerializeField] private SpeakerNameUI[] speakerNameSlots = new SpeakerNameUI[2];
 
     [Header("Typing Settings")]
     [SerializeField] private float typingSpeed = 0.03f;
@@ -29,9 +31,10 @@ public class DialogueManager : SingletonMonobehaviour<DialogueManager>
     [Header("UI Input")]
     [SerializeField] private Button dialogueClickArea;
 
-    // ─────────────────────────────────────────────────────
-    // Runtime Data
-    // ─────────────────────────────────────────────────────
+    #endregion
+    //────────────────────────────────────────────────────
+    #region === Runtime State ===
+
     private DialogueSequence currentSequence;
     private int currentIndex;
     private string npcName;
@@ -42,13 +45,22 @@ public class DialogueManager : SingletonMonobehaviour<DialogueManager>
 
     private Coroutine typingCoroutine;
 
-    // Cached RectTransforms & Positions
-    private RectTransform leftRect, rightRect, dialogueRect;
-    private Vector2 leftDefaultPos, rightDefaultPos, dialogueDefaultPos;
+    // Cached RectTransforms & positions
+    private RectTransform leftRect;
+    private RectTransform rightRect;
+    private RectTransform dialogueRect;
 
-    // ─────────────────────────────────────────────────────
-    // Unity Lifecycle
-    // ─────────────────────────────────────────────────────
+    private Vector2 leftDefaultPos;
+    private Vector2 rightDefaultPos;
+    private Vector2 dialogueDefaultPos;
+
+    #endregion
+    //────────────────────────────────────────────────────
+    #region === Unity Lifecycle ===
+
+    /// <summary>
+    /// Initialize references and register button events.
+    /// </summary>
     private void Start()
     {
         playerControl = PlayerControl.Instance;
@@ -58,12 +70,12 @@ public class DialogueManager : SingletonMonobehaviour<DialogueManager>
             dialogueClickArea.onClick.AddListener(NextLine);
     }
 
-    // ─────────────────────────────────────────────────────
-    // Public API
-    // ─────────────────────────────────────────────────────
+    #endregion
+    //────────────────────────────────────────────────────
+    #region === Public API ===
 
     /// <summary>
-    /// Start dialogue with an NPC, matching dialogue entries with current player type.
+    /// Start dialogue for a given NPC based on current player character type.
     /// </summary>
     public void StartNpcDialogue(NPCDialogueData npcData)
     {
@@ -83,52 +95,57 @@ public class DialogueManager : SingletonMonobehaviour<DialogueManager>
     }
 
     /// <summary>
-    /// Move to the next line or skip typing if still in progress.
+    /// Advance to the next line or instantly finish typing the current line.
     /// </summary>
     public void NextLine()
     {
-        if (!isActive || !canProceed) return;
+        if (!isActive || !canProceed)
+            return;
 
-        // Skip typing if still in progress
+        // If still typing, finish the line immediately
         if (isTyping)
         {
-            if (typingCoroutine != null) StopCoroutine(typingCoroutine);
+            if (typingCoroutine != null)
+                StopCoroutine(typingCoroutine);
+
             DialogueLine line = currentSequence.lines[currentIndex];
             dialogueText.text = line.dialogueText;
             isTyping = false;
             return;
         }
 
-        // Otherwise move to the next line
+        // Move to next line
         currentIndex++;
 
         if (currentIndex < currentSequence.lines.Length)
             ShowCurrentLine();
-
-        else EndDialogue();
+        else
+            EndDialogue();
     }
 
-    // ─────────────────────────────────────────────────────
-    // Dialogue Flow
-    // ─────────────────────────────────────────────────────
+    #endregion
+    //────────────────────────────────────────────────────
+    #region === Dialogue Flow ===
 
     /// <summary>
-    /// Start a dialogue sequence and play intro animation.
+    /// Start a dialogue sequence and play the intro animation.
     /// </summary>
     private void StartDialogue(DialogueSequence sequence)
     {
-        if (sequence == null) return;
+        if (sequence == null)
+            return;
 
         PrepareDialogueState(sequence);
         PlayIntroAnimation();
     }
 
     /// <summary>
-    /// Prepare state before dialogue starts.
+    /// Prepare internal state and UI for a new dialogue sequence.
     /// </summary>
     private void PrepareDialogueState(DialogueSequence sequence)
     {
         UIManager.Instance.ToggleDialoguePanel(true);
+
         currentSequence = sequence;
         currentIndex = 0;
         isActive = true;
@@ -138,7 +155,7 @@ public class DialogueManager : SingletonMonobehaviour<DialogueManager>
     }
 
     /// <summary>
-    /// Display the current dialogue line.
+    /// Display the current dialogue line and update speaker UI.
     /// </summary>
     private void ShowCurrentLine()
     {
@@ -146,15 +163,38 @@ public class DialogueManager : SingletonMonobehaviour<DialogueManager>
         CharacterInfoSO playerData = playerControl.CharacterProfile;
         bool isPlayer = (line.speakerType == playerData.characterType);
 
+        // Update portraits and highlight the active speaker
         UpdatePortraits(line, isPlayer);
-        nameText.text = isPlayer ? playerData.characterName : npcName;
 
-        if (typingCoroutine != null) StopCoroutine(typingCoroutine);
+        // Hide all speaker name panels
+        if (speakerNameSlots != null)
+        {
+            for (int i = 0; i < speakerNameSlots.Length; i++)
+            {
+                if (speakerNameSlots[i] != null)
+                    speakerNameSlots[i].Hide();
+            }
+        }
+
+        // 0 = Player, 1 = NPC
+        int index = isPlayer ? 0 : 1;
+        if (speakerNameSlots != null &&
+            index >= 0 && index < speakerNameSlots.Length &&
+            speakerNameSlots[index] != null)
+        {
+            string displayName = isPlayer ? playerData.characterName : npcName;
+            speakerNameSlots[index].Show(displayName);
+        }
+
+        // Start typing effect for the dialogue text
+        if (typingCoroutine != null)
+            StopCoroutine(typingCoroutine);
+
         typingCoroutine = StartCoroutine(TypeText(line.dialogueText));
     }
 
     /// <summary>
-    /// End dialogue sequence.
+    /// Finish the dialogue and restore normal gameplay.
     /// </summary>
     private void EndDialogue()
     {
@@ -164,7 +204,7 @@ public class DialogueManager : SingletonMonobehaviour<DialogueManager>
     }
 
     /// <summary>
-    /// Reset dialogue state.
+    /// Reset dialogue state and hide all speaker name panels.
     /// </summary>
     private void ResetDialogueState()
     {
@@ -172,14 +212,23 @@ public class DialogueManager : SingletonMonobehaviour<DialogueManager>
         canProceed = false;
         currentSequence = null;
         npcName = null;
+
+        if (speakerNameSlots != null)
+        {
+            for (int i = 0; i < speakerNameSlots.Length; i++)
+            {
+                if (speakerNameSlots[i] != null)
+                    speakerNameSlots[i].Hide();
+            }
+        }
     }
 
-    // ─────────────────────────────────────────────────────
-    // UI & Animation
-    // ─────────────────────────────────────────────────────
+    #endregion
+    //────────────────────────────────────────────────────
+    #region === UI & Animation ===
 
     /// <summary>
-    /// Cache RectTransforms and default positions.
+    /// Cache RectTransform references and their default anchored positions.
     /// </summary>
     private void CacheUIReferences()
     {
@@ -193,14 +242,16 @@ public class DialogueManager : SingletonMonobehaviour<DialogueManager>
     }
 
     /// <summary>
-    /// Play intro animation for portraits and dialogue panel.
+    /// Play entry animation for portraits and dialogue box.
     /// </summary>
     private void PlayIntroAnimation()
     {
+        // Start from off-screen positions
         leftRect.anchoredPosition = leftDefaultPos + Vector2.left * animOffset;
         rightRect.anchoredPosition = rightDefaultPos + Vector2.right * animOffset;
         dialogueRect.anchoredPosition = dialogueDefaultPos + Vector2.down * animOffset;
 
+        // Tween them into place
         Sequence introSeq = DOTween.Sequence();
         introSeq.Append(leftRect.DOAnchorPos(leftDefaultPos, animDuration).SetEase(Ease.OutBack));
         introSeq.Join(rightRect.DOAnchorPos(rightDefaultPos, animDuration).SetEase(Ease.OutBack));
@@ -214,20 +265,29 @@ public class DialogueManager : SingletonMonobehaviour<DialogueManager>
     }
 
     /// <summary>
-    /// Clear name and dialogue text instantly.
+    /// Clear dialogue text and hide all speaker name panels.
     /// </summary>
     private void ClearDialogueUI()
     {
-        nameText.DOFade(0, 0f);
-        dialogueText.DOFade(0, 0f);
-        nameText.text = "";
-        dialogueText.text = "";
-        nameText.DOFade(1, 0.01f);
-        dialogueText.DOFade(1, 0.01f);
+        if (dialogueText != null)
+        {
+            dialogueText.DOFade(0, 0f);
+            dialogueText.text = "";
+            dialogueText.DOFade(1, 0.01f);
+        }
+
+        if (speakerNameSlots != null)
+        {
+            for (int i = 0; i < speakerNameSlots.Length; i++)
+            {
+                if (speakerNameSlots[i] != null)
+                    speakerNameSlots[i].Hide();
+            }
+        }
     }
 
     /// <summary>
-    /// Update speaker and listener portraits.
+    /// Update portraits and highlight the active speaker.
     /// </summary>
     private void UpdatePortraits(DialogueLine line, bool isPlayer)
     {
@@ -236,17 +296,14 @@ public class DialogueManager : SingletonMonobehaviour<DialogueManager>
 
         leftPortrait.gameObject.SetActive(true);
         rightPortrait.gameObject.SetActive(true);
-
-        leftPortrait.color = isPlayer ? Color.white : new Color(0.5f, 0.5f, 0.5f, 1f);
-        rightPortrait.color = isPlayer ? new Color(0.5f, 0.5f, 0.5f, 1f) : Color.white;
     }
 
-    // ─────────────────────────────────────────────────────
-    // Typing Effect
-    // ─────────────────────────────────────────────────────
+    #endregion
+    //────────────────────────────────────────────────────
+    #region === Typing Effect ===
 
     /// <summary>
-    /// Coroutine to display text with typing effect.
+    /// Coroutine that types the dialogue text character by character.
     /// </summary>
     private IEnumerator TypeText(string line)
     {
@@ -260,5 +317,39 @@ public class DialogueManager : SingletonMonobehaviour<DialogueManager>
         }
 
         isTyping = false;
+    }
+
+    #endregion
+}
+
+
+[System.Serializable]
+public class SpeakerNameUI
+{
+    [Header("Root Object (Panel containing name)")]
+    public GameObject rootObject;      // UI panel that contains the speaker name
+
+    [Header("Name Text")]
+    public TMP_Text nameText;          // TextMeshProUGUI that displays the name
+
+    /// <summary>
+    /// Show this name panel and set the display text.
+    /// </summary>
+    public void Show(string displayName)
+    {
+        if (rootObject != null)
+            rootObject.SetActive(true);
+
+        if (nameText != null)
+            nameText.text = displayName;
+    }
+
+    /// <summary>
+    /// Hide this name panel.
+    /// </summary>
+    public void Hide()
+    {
+        if (rootObject != null)
+            rootObject.SetActive(false);
     }
 }
