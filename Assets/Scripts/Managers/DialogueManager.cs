@@ -119,8 +119,8 @@ public class DialogueManager : SingletonMonobehaviour<DialogueManager>
 
         if (currentIndex < currentSequence.lines.Length)
             ShowCurrentLine();
-        else
-            EndDialogue();
+
+        else EndDialogue();
     }
 
     #endregion
@@ -287,15 +287,23 @@ public class DialogueManager : SingletonMonobehaviour<DialogueManager>
     }
 
     /// <summary>
-    /// Update portraits and highlight the active speaker.
+    /// Update portraits and dim the one who is not speaking.
     /// </summary>
     private void UpdatePortraits(DialogueLine line, bool isPlayer)
     {
+        // Set sprites
         leftPortrait.sprite = line.portraits.playerPortrait;
         rightPortrait.sprite = line.portraits.npcPortrait;
 
         leftPortrait.gameObject.SetActive(true);
         rightPortrait.gameObject.SetActive(true);
+
+        // Active speaker full alpha, the other is dimmed
+        Color activeColor = Color.white;
+        Color inactiveColor = new Color(0.5f, 0.5f, 0.5f, 1f);
+
+        leftPortrait.color = isPlayer ? activeColor : inactiveColor;
+        rightPortrait.color = isPlayer ? inactiveColor : activeColor;
     }
 
     #endregion
@@ -321,7 +329,6 @@ public class DialogueManager : SingletonMonobehaviour<DialogueManager>
 
     #endregion
 }
-
 
 [System.Serializable]
 public class SpeakerNameUI

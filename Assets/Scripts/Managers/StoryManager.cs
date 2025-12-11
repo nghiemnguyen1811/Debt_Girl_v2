@@ -49,6 +49,7 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
     //────────────────────────────────────────────────────
     // == Unity Events ==
     //────────────────────────────────────────────────────
+    /// <summary>Initializes UI and shows the first story page.</summary>
     private void Start()
     {
         InitButtons();
@@ -58,16 +59,16 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
     }
 
     //────────────────────────────────────────────────────
-    // == Initialization ==
+    // == Initialization Helpers ==
     //────────────────────────────────────────────────────
-    /// <summary>Assigns button listeners.</summary>
+    /// <summary>Registers listeners for next/skip buttons.</summary>
     private void InitButtons()
     {
         nextButton.onClick.AddListener(OnClickNext);
         skipButtonEnable.onClick.AddListener(SkipStory);
     }
 
-    /// <summary>Creates all images for story pages.</summary>
+    /// <summary>Instantiates all story images from StoryData list.</summary>
     private void SpawnImages()
     {
         stackedImages.Clear();
@@ -81,7 +82,7 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
         }
     }
 
-    /// <summary>Reorders images so page 0 appears on top.</summary>
+    /// <summary>Sets sibling order so the first page appears on top.</summary>
     private void ArrangeStackOrder()
     {
         int count = stackedImages.Count;
@@ -95,7 +96,7 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
         UpdateActiveImages();
     }
 
-    /// <summary>Enables only images from currentIndex onward.</summary>
+    /// <summary>Activates images from currentIndex onward, hides previous ones.</summary>
     private void UpdateActiveImages()
     {
         for (int i = 0; i < stackedImages.Count; i++)
@@ -103,17 +104,23 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
     }
 
     //────────────────────────────────────────────────────
-    // == Story Text ==
+    // == Story Text & Typewriter ==
     //────────────────────────────────────────────────────
-    /// <summary>Displays story text with typewriter effect.</summary>
+    /// <summary>Prepares and starts typewriter for the current story page.</summary>
     private void ShowCurrentStory()
     {
         StopAllCoroutines();
+
+        // Ensure text is fully visible for new page
+        Color c = storyTextUI.color;
+        c.a = 1f;
+        storyTextUI.color = c;
+
         storyTextUI.text = "";
         StartCoroutine(Typewriter(storyList[currentIndex].storyText));
     }
 
-    /// <summary>Reveals text character-by-character.</summary>
+    /// <summary>Reveals story text character by character.</summary>
     private IEnumerator Typewriter(string text)
     {
         isTyping = true;
@@ -130,17 +137,16 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
     //────────────────────────────────────────────────────
     // == Next Button Logic ==
     //────────────────────────────────────────────────────
-    /// <summary>Main click handler: skip typing or move to next page.</summary>
+    /// <summary>Handles next button: skip typing or go to next page.</summary>
     private void OnClickNext()
     {
         if (!canClickNext)
             return;
 
-        // Hard prevent spam
         canClickNext = false;
         nextButton.interactable = false;
 
-        // If still typing → skip to full text
+        // If text is still typing → reveal instantly
         if (isTyping)
         {
             StopAllCoroutines();
@@ -153,17 +159,11 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
 
         bool isLastPage = currentIndex == stackedImages.Count - 1;
 
-        if (isLastPage)
-        {
-            EndStory();
-        }
-        else
-        {
-            SlideOutCurrentImage();
-        }
+        if (isLastPage) EndStory();
+        else SlideOutCurrentImage();
     }
 
-    /// <summary>Re-enables next button with small delay (anti-spam).</summary>
+    /// <summary>Prevents button spam by delaying re-enable.</summary>
     private IEnumerator EnableNextButtonDelayed()
     {
         yield return new WaitForSeconds(antiSpamDelay);
@@ -174,7 +174,10 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
     //────────────────────────────────────────────────────
     // == Image Transition ==
     //────────────────────────────────────────────────────
-    /// <summary>Slide current page to the right and fade out.</summary>
+    /// <summary>
+    /// Slides current image to the right and fades out both image and text.
+    /// New text starts only after the image has fully faded.
+    /// </summary>
     private void SlideOutCurrentImage()
     {
         Image img = stackedImages[currentIndex];
@@ -187,42 +190,40 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
 
         AudioManager.Instance?.PlayInteractSound(16);
 
-        DOTween.Sequence()
+        // Slide image + fade image + fade current text together
+        Sequence seq = DOTween.Sequence()
             .Append(rt.DOAnchorPosX(800f, slideDuration))
             .Join(cg.DOFade(0f, slideDuration))
-            .OnComplete(() =>
+            .Join(storyTextUI.DOFade(0f, slideDuration));
+
+        seq.OnComplete(() =>
+        {
+            img.gameObject.SetActive(false);
+            currentIndex++;
+
+            if (currentIndex < stackedImages.Count)
             {
-                img.gameObject.SetActive(false);
-                currentIndex++;
+                UpdateActiveImages();
+                ShowCurrentStory();
+            }
 
-                if (currentIndex < stackedImages.Count)
-                {
-                    UpdateActiveImages();
-                    ShowCurrentStory();
-                }
-                else
-                {
-                    EndStory();
-                }
+            else EndStory();
 
-                StartCoroutine(EnableNextButtonDelayed());
-            });
+            StartCoroutine(EnableNextButtonDelayed());
+        });
     }
 
     //────────────────────────────────────────────────────
-    // == Skip Logic ==
+    // == Skip & Reset ==
     //────────────────────────────────────────────────────
-    /// <summary>Skips story instantly.</summary>
-    public void SkipStory()
+    /// <summary>Immediately ends the story sequence.</summary>
+    private void SkipStory()
     {
         StopAllCoroutines();
         EndStory();
     }
 
-    //────────────────────────────────────────────────────
-    // == Reset Logic ==
-    //────────────────────────────────────────────────────
-    /// <summary>Allows story to replay from beginning.</summary>
+    /// <summary>Resets story state so it can be played from the beginning.</summary>
     public void ResetStory()
     {
         StopAllCoroutines();
@@ -235,6 +236,11 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
         currentIndex = 0;
         isTyping = false;
 
+        // Restore text alpha
+        Color c = storyTextUI.color;
+        c.a = 1f;
+        storyTextUI.color = c;
+
         SpawnImages();
         ArrangeStackOrder();
         ShowCurrentStory();
@@ -246,7 +252,7 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
     //────────────────────────────────────────────────────
     // == End of Story ==
     //────────────────────────────────────────────────────
-    /// <summary>Notify MainMenu when story ends.</summary>
+    /// <summary>Notifies MainMenu that the story has finished.</summary>
     private void EndStory()
     {
         MainMenu.Instance.StartStoryEndSequence();
@@ -255,7 +261,7 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
     //────────────────────────────────────────────────────
     // == External Controls ==
     //────────────────────────────────────────────────────
-    /// <summary>Enable/disable skip button (controlled by MainMenu).</summary>
+    /// <summary>Shows or hides the active skip button variant.</summary>
     public void SetSkipInteractable(bool state)
     {
         skipButtonEnable.gameObject.SetActive(state);
