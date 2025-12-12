@@ -6,6 +6,8 @@
     Jiho,
     YoonSeul,
     ChoHee,
+    DanbiBoyfriend,
+    DanbiGrandmother,
 }
 
 public enum FloorType
