@@ -6,7 +6,9 @@ public class StoryDataSO : ScriptableObject
     [Header("Story Visual")]
     public Sprite illustration;
 
-    [Header("Story Content")]
-    [TextArea(4, 12)]
-    public string storyText;
+    //[Header("Story Content")]
+    //[TextArea(4, 12)]
+    //public string storyText;
+
+    public string storyTextKey;
 }

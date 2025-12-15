@@ -19,20 +19,6 @@ public class MoneyManager : SingletonMonobehaviour<MoneyManager>
     private double totalDiamonds = 0;
 
     // ==================================================
-    // ▶ UNITY EVENTS
-    // ==================================================
-    private void Update()
-    {
-        // Debug key for adding money quickly
-        if (Input.GetKeyDown(KeyCode.M))
-        {
-            ChangeMoneys(100000);
-            ChangeDiamonds(10);
-        }
-    }
-
-
-    // ==================================================
     // ▶ PUBLIC MONEY METHODS
     // ==================================================
     /// <summary>

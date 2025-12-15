@@ -81,6 +81,14 @@ public class GuideTabItem : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Forces the UI to refresh localized strings. Called by GuideManager.
+    /// </summary>
+    public void RefreshLocalizedText()
+    {
+        RefreshUI();
+    }
+
     #endregion
 
     // ─────────────────────────────────────────────────────────────
@@ -94,7 +102,7 @@ public class GuideTabItem : MonoBehaviour
         if (guideData == null) return;
 
         if (titleLabel != null)
-            titleLabel.text = guideData.systemName;
+            LocalizationManager.Instance.SetLocalizedText(titleLabel, "Guide Labels", guideData.systemNameKey);
     }
 
     #endregion

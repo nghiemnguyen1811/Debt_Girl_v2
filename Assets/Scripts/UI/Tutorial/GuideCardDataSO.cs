@@ -11,9 +11,12 @@ public class GuideCardDataSO : ScriptableObject
     [Header("Basic Info")]
     public string systemName;                // Name shown on the guide tab
 
-    [TextArea(2, 4)]
-    public string description;
+    public string systemNameKey;
 
+    //[TextArea(2, 4)]
+    //public string description;
+
+    public string descriptionKey;
     #endregion
 
     #region === Guide Content ===

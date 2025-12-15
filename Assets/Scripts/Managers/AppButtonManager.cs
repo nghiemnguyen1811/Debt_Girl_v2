@@ -15,18 +15,17 @@ public class AppButtonManager : MonoBehaviour
     [Header("App Buttons")]
     [SerializeField] private AppButtonData[] appButtons;
 
-    [Header("Global Level Requirement")]
-    [SerializeField] private bool useLevelRequirement = true;
+    // [REMOVED] Local 'useLevelRequirement' bool. 
+    // Now using GameManager global setting.
 
     // ─────────────────────────────────────────────────────
     // Unity Lifecycle
     // ─────────────────────────────────────────────────────
     private void Start()
     {
-        // Subscribe to GameManager event when the level changes
-        GameManager.Instance.OnLevelChanged += RefreshAll;
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnLevelChanged += RefreshAll;
 
-        // Initial refresh on startup
         RefreshAll();
     }
 
@@ -45,12 +44,18 @@ public class AppButtonManager : MonoBehaviour
     /// </summary>
     public void RefreshAll()
     {
+        if (GameManager.Instance == null) return;
+
         int currentLevel = GameManager.Instance.CurrentLevel;
+
+        // [UPDATED] Check the global debug setting from GameManager
+        bool useLevelRequirement = GameManager.Instance.EnableLevelRequirements;
 
         foreach (var app in appButtons)
         {
             if (!app.appButton) continue;
 
+            // If global requirement is disabled, unlock everything
             if (!useLevelRequirement)
             {
                 app.appButton.interactable = true;
@@ -61,6 +66,7 @@ public class AppButtonManager : MonoBehaviour
                 continue;
             }
 
+            // Normal logic: Check if level meets requirement
             bool unlocked = currentLevel >= app.requiredLevel;
 
             app.appButton.interactable = unlocked;
@@ -73,23 +79,6 @@ public class AppButtonManager : MonoBehaviour
                     app.requiredLevelText.text = $"Lv. {app.requiredLevel}";
             }
         }
-    }
-
-    /// <summary>
-    /// Enables or disables level requirements for all apps.
-    /// </summary>
-    public void SetLevelRequirementActive(bool active)
-    {
-        useLevelRequirement = active;
-        RefreshAll();
-    }
-
-    /// <summary>
-    /// Returns whether level requirement is currently active.
-    /// </summary>
-    public bool IsLevelRequirementActive()
-    {
-        return useLevelRequirement;
     }
 }
 
@@ -106,6 +95,6 @@ public class AppButtonData
     public Button appButton;
     public TextMeshProUGUI requiredLevelText;
 
-    //[Header("Unlock Requirement")]
+    // Level required to unlock this app
     [Min(1)] public int requiredLevel = 1;
 }

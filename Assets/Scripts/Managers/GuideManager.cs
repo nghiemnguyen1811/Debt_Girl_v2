@@ -32,9 +32,9 @@ public class GuideManager : MonoBehaviour
     [SerializeField] private Image[] doubleImageSlots;                      // Images for multi-image layout (size = 2)
 
     [Header("Guide Descriptions")]
-    [SerializeField] private TextMeshProUGUI descriptionText;          // Description for single layout
-    [SerializeField] private TextMeshProUGUI doubleDescriptionText01;        // Description for guide item 1
-    [SerializeField] private TextMeshProUGUI doubleDescriptionText02;        // Description for guide item 2
+    [SerializeField] private TextMeshProUGUI descriptionText;               // Description for single layout
+    [SerializeField] private TextMeshProUGUI doubleDescriptionText01;       // Description for guide item 1
+    [SerializeField] private TextMeshProUGUI doubleDescriptionText02;       // Description for guide item 2
 
     #endregion
 
@@ -57,6 +57,15 @@ public class GuideManager : MonoBehaviour
         SpawnAllTabs();
         WireNavigationButtons();
         AutoSelectFirstTab();
+
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.RegisterForGlobalRefresh(OnLanguageChanged);
+    }
+
+    private void OnDestroy()
+    {
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.UnregisterForGlobalRefresh(OnLanguageChanged);
     }
 
     #endregion
@@ -262,6 +271,18 @@ public class GuideManager : MonoBehaviour
     //─────────────────────────────────────────────────────────────
     #region === Update / Refresh ===
 
+    private void OnLanguageChanged()
+    {
+        RefreshTabs();
+
+        if (currentTabIndex >= 0 && currentTabIndex < spawnedTabs.Count)
+        {
+            var tab = spawnedTabs[currentTabIndex];
+            if (tab != null)
+                DisplayGuideContent(tab.GuideData);
+        }
+    }
+
     /// <summary>
     /// Refresh all tabs (e.g. localization).
     /// </summary>
@@ -358,8 +379,7 @@ public class GuideManager : MonoBehaviour
             singleImageSlot.enabled = (singleImageSlot.sprite != null);
         }
 
-        // ✅ dùng description chung của GuideCardDataSO
-        ApplyDescription(descriptionText, data != null ? data.description : null);
+        ApplyDescription(descriptionText, data != null ? data.descriptionKey : null);
     }
 
     /// <summary>
@@ -372,8 +392,7 @@ public class GuideManager : MonoBehaviour
 
         var entries = data != null ? data.guideEntries : null;
 
-        // ✅ DOUBLE cũng hiện descriptionText (mô tả chung)
-        ApplyDescription(descriptionText, data != null ? data.description : null);
+        ApplyDescription(descriptionText, data != null ? data.descriptionKey : null);
 
         // Images (max 2 slots)
         for (int i = 0; i < (doubleImageSlots?.Length ?? 0); i++)
@@ -403,7 +422,6 @@ public class GuideManager : MonoBehaviour
         ApplyDescription(doubleDescriptionText01, e0 != null ? e0.description : null);
         ApplyDescription(doubleDescriptionText02, e1 != null ? e1.description : null);
 
-        // (optional)
         var rect = doubleImageLayout != null ? doubleImageLayout.GetComponent<RectTransform>() : null;
         if (rect != null)
             LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
@@ -413,15 +431,17 @@ public class GuideManager : MonoBehaviour
     /// <summary>
     /// Set TMP text and toggle active based on null/empty.
     /// </summary>
-    private void ApplyDescription(TextMeshProUGUI label, string text)
+    private void ApplyDescription(TextMeshProUGUI label, string key)
     {
         if (label == null) return;
 
-        bool hasText = !string.IsNullOrWhiteSpace(text);
-        label.gameObject.SetActive(hasText);
+        bool hasKey = !string.IsNullOrWhiteSpace(key);
+        label.gameObject.SetActive(hasKey);
 
-        if (hasText)
-            label.text = text;
+        if (hasKey)
+        {
+            LocalizationManager.Instance.SetLocalizedText(label, "Guide Labels", key);
+        }
     }
 
     /// <summary>

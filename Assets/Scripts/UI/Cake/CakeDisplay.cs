@@ -41,6 +41,24 @@ public class CakeDisplay : MonoBehaviour
         selectionOutline = cakeIconImage.GetComponent<Outline>();
     }
 
+    // [FIX] Use OnEnable to ensure state updates every time the panel opens
+    private void OnEnable()
+    {
+        // Register for level change events
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnLevelChanged += EvaluateLockState;
+
+        // Force check immediately in case level changed while this object was disabled
+        EvaluateLockState();
+    }
+
+    private void OnDisable()
+    {
+        // Unregister to prevent memory leaks
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnLevelChanged -= EvaluateLockState;
+    }
+
     // ─────────────────────────────────────────────────────
     // Setup
     // ─────────────────────────────────────────────────────
@@ -77,6 +95,9 @@ public class CakeDisplay : MonoBehaviour
     /// </summary>
     public void EvaluateLockState()
     {
+        // Safety check
+        if (itemData == null) return;
+
         int requiredLevel = itemData.requiredLevel;
         isLocked = GameManager.Instance.CurrentLevel < requiredLevel;
         UpdateLockVisuals(isLocked);

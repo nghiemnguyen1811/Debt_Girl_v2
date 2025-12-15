@@ -8,6 +8,7 @@ using System.Collections.Generic;
 /// <summary>
 /// Controls story image transitions, typewriter text, next/skip logic,
 /// and notifies MainMenu when the story ends.
+/// Integration: Uses LocalizationManager to fetch localized text dynamically.
 /// </summary>
 public class StoryManager : SingletonMonobehaviour<StoryManager>
 {
@@ -16,6 +17,9 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
     //────────────────────────────────────────────────────
     [Header("Story Data")]
     [SerializeField] private List<StoryDataSO> storyList = new();
+
+    [Tooltip("The name of the Localization Table that contains the story text keys.")]
+    [SerializeField] private string localizationTableName = "Story Labels";
 
     //────────────────────────────────────────────────────
     // == UI References ==
@@ -46,29 +50,50 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
     private bool isTyping = false;
     private bool canClickNext = true;
 
+    // Cache the localized string to handle "Instant Finish" typing or Language changes
+    private string currentLocalizedString = "";
+
     //────────────────────────────────────────────────────
-    // == Unity Events ==
+    // == Unity Lifecycle ==
     //────────────────────────────────────────────────────
-    /// <summary>Initializes UI and shows the first story page.</summary>
+
     private void Start()
     {
         InitButtons();
         SpawnImages();
         ArrangeStackOrder();
+
+        // Start showing the story immediately
         ShowCurrentStory();
+
+        // Register for language change events to update text dynamically
+        if (LocalizationManager.Instance != null)
+        {
+            LocalizationManager.Instance.RegisterForGlobalRefresh(OnLanguageChanged);
+        }
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        // Unregister to prevent memory leaks or errors when the object is destroyed
+        if (LocalizationManager.Instance != null)
+        {
+            LocalizationManager.Instance.UnregisterForGlobalRefresh(OnLanguageChanged);
+        }
     }
 
     //────────────────────────────────────────────────────
     // == Initialization Helpers ==
     //────────────────────────────────────────────────────
-    /// <summary>Registers listeners for next/skip buttons.</summary>
+
     private void InitButtons()
     {
         nextButton.onClick.AddListener(OnClickNext);
         skipButtonEnable.onClick.AddListener(SkipStory);
     }
 
-    /// <summary>Instantiates all story images from StoryData list.</summary>
     private void SpawnImages()
     {
         stackedImages.Clear();
@@ -82,11 +107,10 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
         }
     }
 
-    /// <summary>Sets sibling order so the first page appears on top.</summary>
     private void ArrangeStackOrder()
     {
         int count = stackedImages.Count;
-
+        // Stack images so the first one (index 0) is rendered on top (last sibling)
         for (int i = 0; i < count; i++)
         {
             int topIndex = count - 1 - i;
@@ -96,7 +120,6 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
         UpdateActiveImages();
     }
 
-    /// <summary>Activates images from currentIndex onward, hides previous ones.</summary>
     private void UpdateActiveImages()
     {
         for (int i = 0; i < stackedImages.Count; i++)
@@ -106,24 +129,43 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
     //────────────────────────────────────────────────────
     // == Story Text & Typewriter ==
     //────────────────────────────────────────────────────
-    /// <summary>Prepares and starts typewriter for the current story page.</summary>
-    private void ShowCurrentStory()
+
+    /// <summary>
+    /// Fetches the localized text for the current page and starts the typewriter effect.
+    /// </summary>
+    private async void ShowCurrentStory()
     {
         StopAllCoroutines();
 
-        // Ensure text is fully visible for new page
+        // Reset text alpha and content
         Color c = storyTextUI.color;
         c.a = 1f;
         storyTextUI.color = c;
-
         storyTextUI.text = "";
-        StartCoroutine(Typewriter(storyList[currentIndex].storyText));
+
+        if (currentIndex < storyList.Count)
+        {
+            string key = storyList[currentIndex].storyTextKey;
+
+            // Fetch text from LocalizationManager asynchronously
+            if (LocalizationManager.Instance != null)
+            {
+                currentLocalizedString = await LocalizationManager.Instance.GetLocalizedString(localizationTableName, key);
+            }
+            else
+            {
+                currentLocalizedString = "Error: LocalizationManager not found.";
+            }
+
+            // Start typing effect with the fetched text
+            StartCoroutine(Typewriter(currentLocalizedString));
+        }
     }
 
-    /// <summary>Reveals story text character by character.</summary>
     private IEnumerator Typewriter(string text)
     {
         isTyping = true;
+        storyTextUI.text = "";
 
         foreach (char c in text)
         {
@@ -135,9 +177,47 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
     }
 
     //────────────────────────────────────────────────────
+    // == Localization Handler ==
+    //────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Triggered automatically when the user changes language settings.
+    /// Updates the currently displayed text immediately.
+    /// </summary>
+    private async void OnLanguageChanged()
+    {
+        // If story is finished or index is invalid, do nothing
+        if (currentIndex >= storyList.Count) return;
+
+        // 1. Stop the typewriter if it's running
+        StopAllCoroutines();
+        isTyping = false;
+
+        // 2. Get the key for the current page
+        string key = storyList[currentIndex].storyTextKey;
+
+        // 3. Fetch the new localized string
+        if (LocalizationManager.Instance != null)
+        {
+            currentLocalizedString = await LocalizationManager.Instance.GetLocalizedString(localizationTableName, key);
+        }
+
+        // 4. Update the text UI immediately (don't type it out again to avoid annoyance)
+        if (storyTextUI != null)
+        {
+            storyTextUI.text = currentLocalizedString;
+
+            // Ensure alpha is visible (in case it was fading out)
+            Color c = storyTextUI.color;
+            c.a = 1f;
+            storyTextUI.color = c;
+        }
+    }
+
+    //────────────────────────────────────────────────────
     // == Next Button Logic ==
     //────────────────────────────────────────────────────
-    /// <summary>Handles next button: skip typing or go to next page.</summary>
+
     private void OnClickNext()
     {
         if (!canClickNext)
@@ -146,24 +226,24 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
         canClickNext = false;
         nextButton.interactable = false;
 
-        // If text is still typing → reveal instantly
+        // If text is still typing, finish it instantly
         if (isTyping)
         {
             StopAllCoroutines();
-            storyTextUI.text = storyList[currentIndex].storyText;
+            storyTextUI.text = currentLocalizedString; // Show full cached text
             isTyping = false;
 
             StartCoroutine(EnableNextButtonDelayed());
             return;
         }
 
+        // Otherwise, move to the next page
         bool isLastPage = currentIndex == stackedImages.Count - 1;
 
         if (isLastPage) EndStory();
         else SlideOutCurrentImage();
     }
 
-    /// <summary>Prevents button spam by delaying re-enable.</summary>
     private IEnumerator EnableNextButtonDelayed()
     {
         yield return new WaitForSeconds(antiSpamDelay);
@@ -174,23 +254,22 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
     //────────────────────────────────────────────────────
     // == Image Transition ==
     //────────────────────────────────────────────────────
-    /// <summary>
-    /// Slides current image to the right and fades out both image and text.
-    /// New text starts only after the image has fully faded.
-    /// </summary>
+
     private void SlideOutCurrentImage()
     {
         Image img = stackedImages[currentIndex];
 
+        // Ensure CanvasGroup exists for fading
         CanvasGroup cg = img.GetComponent<CanvasGroup>();
         if (cg == null)
             cg = img.gameObject.AddComponent<CanvasGroup>();
 
         RectTransform rt = img.rectTransform;
 
-        AudioManager.Instance?.PlayInteractSound(16);
+        if (AudioManager.Instance != null)
+            AudioManager.Instance.PlayInteractSound(16);
 
-        // Slide image + fade image + fade current text together
+        // Animate: Slide Right + Fade Out Image + Fade Out Text
         Sequence seq = DOTween.Sequence()
             .Append(rt.DOAnchorPosX(800f, slideDuration))
             .Join(cg.DOFade(0f, slideDuration))
@@ -204,10 +283,12 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
             if (currentIndex < stackedImages.Count)
             {
                 UpdateActiveImages();
-                ShowCurrentStory();
+                ShowCurrentStory(); // Load next text and start typing
             }
-
-            else EndStory();
+            else
+            {
+                EndStory();
+            }
 
             StartCoroutine(EnableNextButtonDelayed());
         });
@@ -216,31 +297,38 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
     //────────────────────────────────────────────────────
     // == Skip & Reset ==
     //────────────────────────────────────────────────────
-    /// <summary>Immediately ends the story sequence.</summary>
+
     private void SkipStory()
     {
         StopAllCoroutines();
         EndStory();
     }
 
-    /// <summary>Resets story state so it can be played from the beginning.</summary>
+    /// <summary>
+    /// Resets the story to the beginning. Useful for replaying.
+    /// </summary>
     public void ResetStory()
     {
         StopAllCoroutines();
 
+        // Clean up existing image instances
         foreach (var img in stackedImages)
-            Destroy(img.gameObject);
+        {
+            if (img != null) Destroy(img.gameObject);
+        }
 
         stackedImages.Clear();
 
         currentIndex = 0;
         isTyping = false;
+        currentLocalizedString = "";
 
-        // Restore text alpha
+        // Reset Text Alpha
         Color c = storyTextUI.color;
         c.a = 1f;
         storyTextUI.color = c;
 
+        // Re-spawn and start
         SpawnImages();
         ArrangeStackOrder();
         ShowCurrentStory();
@@ -252,16 +340,17 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
     //────────────────────────────────────────────────────
     // == End of Story ==
     //────────────────────────────────────────────────────
-    /// <summary>Notifies MainMenu that the story has finished.</summary>
+
     private void EndStory()
     {
-        MainMenu.Instance.StartStoryEndSequence();
+        if (MainMenu.Instance != null)
+            MainMenu.Instance.StartStoryEndSequence();
     }
 
     //────────────────────────────────────────────────────
     // == External Controls ==
     //────────────────────────────────────────────────────
-    /// <summary>Shows or hides the active skip button variant.</summary>
+
     public void SetSkipInteractable(bool state)
     {
         skipButtonEnable.gameObject.SetActive(state);

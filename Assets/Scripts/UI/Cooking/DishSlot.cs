@@ -22,6 +22,30 @@ public class DishSlot : MonoBehaviour
     public Button GetButton() => selectButton;
     public bool IsLocked() => isLocked;
 
+    // ─────────────────────────────────────────────────────
+    // Unity Lifecycle (Event Subscription)
+    // ─────────────────────────────────────────────────────
+
+    // [FIX] Use OnEnable to ensure state updates every time the panel opens
+    private void OnEnable()
+    {
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnLevelChanged += EvaluateLockState;
+
+        // Force check immediately in case level changed while this object was disabled
+        EvaluateLockState();
+    }
+
+    private void OnDisable()
+    {
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnLevelChanged -= EvaluateLockState;
+    }
+
+    // ─────────────────────────────────────────────────────
+    // Public API
+    // ─────────────────────────────────────────────────────
+
     /// <summary>
     /// Initializes the UI slot using dish data.
     /// </summary>
@@ -55,6 +79,9 @@ public class DishSlot : MonoBehaviour
 
     public void EvaluateLockState()
     {
+        // Safety check to prevent errors if event fires before data setup
+        if (itemData == null) return;
+
         isLocked = GameManager.Instance.CurrentLevel < itemData.requiredLevel;
         UpdateLockVisuals(isLocked);
     }
@@ -70,6 +97,11 @@ public class DishSlot : MonoBehaviour
         selectButton.interactable = !locked;
     }
 }
+
+// ─────────────────────────────────────────────────────
+// Helper Class: IngredientUI
+// ─────────────────────────────────────────────────────
+
 [System.Serializable]
 public class IngredientUI
 {

@@ -185,6 +185,8 @@ public class CoinTradeManager : SingletonMonobehaviour<CoinTradeManager>
 
         UpdateUI();
         AudioManager.Instance.PlayInteractSound(3);
+
+        OnCoinBought?.Invoke();
     }
 
     private void HandleSell()
@@ -224,6 +226,8 @@ public class CoinTradeManager : SingletonMonobehaviour<CoinTradeManager>
 
         UpdateUI();
         AudioManager.Instance.PlayInteractSound(1);
+
+        OnCoinSell?.Invoke();
     }
 
     // ─────────────────────────────────────────────────────
@@ -349,7 +353,7 @@ public class CoinTradeManager : SingletonMonobehaviour<CoinTradeManager>
         SaveManager.Data.ownedCoins = ownedCoins;
         SaveManager.SaveGame();
 
-        Debug.Log($"[CoinTradeManager] AutoSaved → ownedCoins={ownedCoins}");
+        Debug.Log($"[CoinTradeManager] AutoSaved -> ownedCoins={ownedCoins}");
     }
 
     public void ImportSaveData(SaveData data)
@@ -387,7 +391,7 @@ public class CoinTradeManager : SingletonMonobehaviour<CoinTradeManager>
 [System.Serializable]
 public class PriceDeltaUI
 {
-    [SerializeField] private GameObject deltaGroup;     // UI group (icon + text)
+    [SerializeField] private GameObject deltaGroup;      // UI group (icon + text)
     [SerializeField] private TextMeshProUGUI deltaText; // UI text
 
     public void Show(double value)
@@ -395,7 +399,8 @@ public class PriceDeltaUI
         if (deltaGroup == null || deltaText == null) return;
 
         deltaGroup.SetActive(true);
-        deltaText.text = $"{System.Math.Round(value)}원";
+        // Using System.Math directly to avoid ambiguity if using UnityEngine.Mathf
+        deltaText.text = $"{System.Math.Round(value)}";
     }
 
     public void Hide()

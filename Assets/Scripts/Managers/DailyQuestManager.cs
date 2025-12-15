@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine.UI;
 using DG.Tweening;
 using URandom = UnityEngine.Random;
+
 /// <summary>
 /// UI container used by DailyQuestManager to display one quest entry.
 /// Holds all UI elements for description, progress, reward display,
@@ -35,6 +36,7 @@ public class QuestUIGroup
     public Button rewardButtonDisable;            // Button shown when quest not finished yet
     public Button claimedButton;                  // Button/indicator shown after claiming reward
 }
+
 /// <summary>
 /// Controls generation, progression, UI updates, saving and localization
 /// of the Daily Quest system.
@@ -108,7 +110,10 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
         base.OnDestroy();
         _isAlive = false;
         UnsubscribeEvents();
-        LocalizationManager.Instance.UnregisterForGlobalRefresh(OnLanguageChanged);
+
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.UnregisterForGlobalRefresh(OnLanguageChanged);
+
         StopAllCoroutines();
     }
     #endregion
@@ -126,7 +131,10 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
         SubscribeToEvents();
         InitializeBonusUI();
         SetupButtonListeners();
-        LocalizationManager.Instance.RegisterForGlobalRefresh(OnLanguageChanged);
+
+        if (LocalizationManager.Instance != null)
+            LocalizationManager.Instance.RegisterForGlobalRefresh(OnLanguageChanged);
+
         RefreshUI();
 
         StartCoroutine(CheckDateChangeRoutine());
@@ -747,7 +755,7 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
     #endregion
 
     // ══════════════════════════════════════════════════════
-    // 🧹 Cleanup Destroyed UI Elements (Prevents Crash)
+    // Cleanup Destroyed UI Elements (Prevents Crash)
     // ══════════════════════════════════════════════════════
 
     /// <summary>
@@ -764,9 +772,8 @@ public class DailyQuestManager : SingletonMonobehaviour<DailyQuestManager>
 
             // Root object destroyed
             if (ui.questGroup == null)
-                // Hard clean — replace with empty placeholder
+                // Hard clean - replace with empty placeholder
                 questUIGroups[i] = new QuestUIGroup();
         }
     }
-
 }

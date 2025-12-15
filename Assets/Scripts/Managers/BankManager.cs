@@ -11,12 +11,12 @@ using DG.Tweening;
 public class BankManager : SingletonMonobehaviour<BankManager>
 {
     //─────────────────────────────────────────────
-    // === 🔔 Events ===
+    // === Events ===
     //─────────────────────────────────────────────
     public event Action OnDebtPaid;
 
     //─────────────────────────────────────────────
-    // === ⚙️ Inspector Settings ===
+    // === Inspector Settings ===
     //─────────────────────────────────────────────
     [Header("Debt Settings")]
     [SerializeField] private double initialDebt = 100;
@@ -42,21 +42,25 @@ public class BankManager : SingletonMonobehaviour<BankManager>
     [SerializeField] private float holdDuration = 1.5f;
 
     //─────────────────────────────────────────────
-    // === 💾 Runtime Data ===
+    // === Runtime Data ===
     //─────────────────────────────────────────────
     private double currentDebt;
     private bool isAnimating = false;
 
     //─────────────────────────────────────────────
-    // === 🌿 Unity Lifecycle ===
+    // === Unity Lifecycle ===
     //─────────────────────────────────────────────
 
+    // [FIX] Changed logic to refresh UI immediately upon enabling
     private void OnEnable()
     {
         if (GameManager.Instance == null) return;
 
         GameManager.Instance.OnLevelChanged += RecalculateDebtFromLevel;
         GameManager.Instance.OnLevelChanged += UpdateLevelUI;
+
+        // Force update UI in case level changed while this panel was disabled
+        RefreshAllUI();
     }
 
     private void OnDisable()
@@ -69,13 +73,23 @@ public class BankManager : SingletonMonobehaviour<BankManager>
 
     private void Start()
     {
-        SetupListeners();                  
-        InitializeCanvasGroups();          
-        RefreshAllUI();                    
+        SetupListeners();
+        InitializeCanvasGroups();
+        // RefreshAllUI is already called in OnEnable, but calling here is safe too
+        RefreshAllUI();
+    }
+
+    private void Update()
+    {
+        // Continuously check to update button state if money changes from other sources
+        if (!isAnimating)
+        {
+            RefreshPayButton();
+        }
     }
 
     //─────────────────────────────────────────────
-    // === 🧩 Initialization Helpers ===
+    // === Initialization Helpers ===
     //─────────────────────────────────────────────
 
     /// <summary>Set initial visibility of CanvasGroups.</summary>
@@ -105,11 +119,14 @@ public class BankManager : SingletonMonobehaviour<BankManager>
     private void SetupListeners()
     {
         if (payDebtButtonEnabled != null)
+        {
+            payDebtButtonEnabled.onClick.RemoveAllListeners();
             payDebtButtonEnabled.onClick.AddListener(TryPayDebt);
+        }
     }
 
     //─────────────────────────────────────────────
-    // === 🌍 Public Methods ===
+    // === Public Methods ===
     //─────────────────────────────────────────────
 
     /// <summary>Try paying debt if the player has enough money.</summary>
@@ -120,8 +137,14 @@ public class BankManager : SingletonMonobehaviour<BankManager>
         if (MoneyManager.Instance.HasEnoughMoney(currentDebt))
         {
             MoneyManager.Instance.ChangeMoneys(-currentDebt);
-            StatUpgradeManager.Instance.AddStatPoint();
-            IncreaseDebt();
+
+            // Safe null check for StatUpgradeManager
+            if (StatUpgradeManager.Instance != null)
+                StatUpgradeManager.Instance.AddStatPoint();
+
+            // NOTE: Do NOT call IncreaseDebt() here.
+            // It is called inside the Coroutine after the animation finishes.
+
             AudioManager.Instance.PlayInteractSound(1);
 
             StopAllCoroutines();
@@ -135,7 +158,8 @@ public class BankManager : SingletonMonobehaviour<BankManager>
     /// <summary>Update button state based on money availability.</summary>
     public void RefreshPayButton()
     {
-        TogglePayDebtButton(MoneyManager.Instance.HasEnoughMoney(currentDebt));
+        if (MoneyManager.Instance != null)
+            TogglePayDebtButton(MoneyManager.Instance.HasEnoughMoney(currentDebt));
     }
 
     /// <summary>Switch between enabled and disabled pay buttons.</summary>
@@ -153,6 +177,9 @@ public class BankManager : SingletonMonobehaviour<BankManager>
     {
         if (GameManager.Instance.CheckMaxLevel()) return;
 
+        // If animating, do not update debt UI yet to avoid jumping numbers
+        if (isAnimating) return;
+
         int level = GameManager.Instance.CurrentLevel;
 
         float growthFactor = Mathf.Lerp(earlyRate, lateRate, Mathf.Clamp01(level / smoothRange));
@@ -163,7 +190,7 @@ public class BankManager : SingletonMonobehaviour<BankManager>
     }
 
     //─────────────────────────────────────────────
-    // === 🔒 Private Logic Methods ===
+    // === Private Logic Methods ===
     //─────────────────────────────────────────────
 
     /// <summary>Increase level — triggers new debt calculation.</summary>
@@ -176,6 +203,11 @@ public class BankManager : SingletonMonobehaviour<BankManager>
     private void UpdateDebtUI()
     {
         UIManager.Instance?.UpdateDebt(currentDebt);
+
+        // Update display text if assigned
+        if (debtRemainingText != null)
+            debtRemainingText.text = DoubleUtilities.ToIdleNotation(currentDebt); // Directly use DoubleUtilities
+
         RefreshPayButton();
     }
 
@@ -187,14 +219,18 @@ public class BankManager : SingletonMonobehaviour<BankManager>
         int level = GameManager.Instance.CurrentLevel;
         levelText.text = $"{level}";
 
-        levelText.transform.DOKill(true);
-        levelText.transform.localScale = Vector3.one;
-        levelText.transform.DOScale(1.3f, 0.25f).SetLoops(2, LoopType.Yoyo);
-        levelText.DOFade(0.3f, 0.15f).From(1f).SetLoops(2, LoopType.Yoyo);
+        // Only play bounce animation if not inside the main payment sequence
+        if (!isAnimating)
+        {
+            levelText.transform.DOKill(true);
+            levelText.transform.localScale = Vector3.one;
+            levelText.transform.DOScale(1.3f, 0.25f).SetLoops(2, LoopType.Yoyo);
+            levelText.DOFade(0.3f, 0.15f).From(1f).SetLoops(2, LoopType.Yoyo);
+        }
     }
 
     //─────────────────────────────────────────────
-    // === 🧭 CanvasGroup Helpers ===
+    // === CanvasGroup Helpers ===
     //─────────────────────────────────────────────
 
     /// <summary>Fade in and enable a CanvasGroup.</summary>
@@ -221,7 +257,7 @@ public class BankManager : SingletonMonobehaviour<BankManager>
     }
 
     //─────────────────────────────────────────────
-    // === 💫 Payment Animation Sequence ===
+    // === Payment Animation Sequence ===
     //─────────────────────────────────────────────
 
     /// <summary>Full animation sequence for paying debt.</summary>
@@ -231,8 +267,8 @@ public class BankManager : SingletonMonobehaviour<BankManager>
         TogglePayDebtButton(false);
 
         // Hide "need to pay"
-        HideGroup(needToPayGroup, 0f);
-        debtRemainingText.gameObject.SetActive(false);
+        HideGroup(needToPayGroup, 0.2f); // Slightly faster
+        if (debtRemainingText != null) debtRemainingText.gameObject.SetActive(false);
 
         // Fill bar
         fillBar.fillAmount = 0;
@@ -262,13 +298,21 @@ public class BankManager : SingletonMonobehaviour<BankManager>
         fillBar.fillAmount = 0;
         HideGroup(congratsGroup, 0.3f);
         yield return new WaitForSeconds(0.3f);
-        ShowGroup(needToPayGroup, 0.5f);
 
-        debtRemainingText.gameObject.SetActive(true);
+        // Increase Level here (After congrats animation finishes)
+        isAnimating = false; // Disable flag temporarily so RecalculateDebtFromLevel can run
+        IncreaseDebt();
+        isAnimating = true;  // Re-enable flag to handle the rest of UI reveal
+
+        ShowGroup(needToPayGroup, 0.5f);
+        if (debtRemainingText != null) debtRemainingText.gameObject.SetActive(true);
+
+        // Final UI update to match new data
+        UpdateLevelUI();
 
         yield return new WaitForSeconds(0.5f);
-        UpdateDebtUI();
 
         isAnimating = false;
+        RefreshPayButton();
     }
 }
