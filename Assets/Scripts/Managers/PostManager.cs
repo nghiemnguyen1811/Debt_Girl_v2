@@ -29,6 +29,7 @@ public class PostManager : SingletonMonobehaviour<PostManager>
     [SerializeField] private TextMeshProUGUI postLevelText;
     [SerializeField] private TextMeshProUGUI warningText;
     [SerializeField] private Button postButton;
+    [SerializeField] private Image postEnableFillImage;
 
     private PlayerControl playerControl;
 
@@ -74,6 +75,8 @@ public class PostManager : SingletonMonobehaviour<PostManager>
 
     private int postCount = 0;
 
+    private Tween postCooldownFillTween;
+
     #endregion
 
     //─────────────────────────────────────────────────────────────
@@ -86,6 +89,8 @@ public class PostManager : SingletonMonobehaviour<PostManager>
 
         // Disable post button at start
         postButton.interactable = false;
+
+        if (postEnableFillImage != null) postEnableFillImage.fillAmount = 0f;
 
         // Start passive money routine
         moneyRoutine = StartCoroutine(AutoAddMoney());
@@ -177,6 +182,16 @@ public class PostManager : SingletonMonobehaviour<PostManager>
 
         postButton.interactable = false;
 
+        postCooldownFillTween?.Kill();
+
+        if (postEnableFillImage != null)
+        {
+            if (postEnableFillImage.type != Image.Type.Filled)
+                postEnableFillImage.type = Image.Type.Filled;
+
+            postEnableFillImage.fillAmount = 0f;
+        }
+
         if (cooldownRoutine != null) StopCoroutine(cooldownRoutine);
         cooldownRoutine = StartCoroutine(CooldownTimer());
 
@@ -187,9 +202,25 @@ public class PostManager : SingletonMonobehaviour<PostManager>
     /// <summary>Cooldown timer before next post allowed.</summary>
     private IEnumerator CooldownTimer()
     {
-        yield return new WaitForSeconds(URandom.Range(cooldownRange.x, cooldownRange.y));
+        float duration = URandom.Range(cooldownRange.x, cooldownRange.y);
+
+        // Animate fill smoothly using DOTween
+        if (postEnableFillImage != null)
+        {
+            postCooldownFillTween?.Kill();
+
+            postCooldownFillTween = postEnableFillImage
+                .DOFillAmount(1f, duration)
+                .SetEase(Ease.Linear);
+        }
+
+        yield return new WaitForSeconds(duration);
+
         canPost = true;
         postButton.interactable = true;
+
+        if (postEnableFillImage != null)
+            postEnableFillImage.fillAmount = 1f;
     }
 
     /// <summary>Gradually decreases engagement and updates FX periodically.</summary>
