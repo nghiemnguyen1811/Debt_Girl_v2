@@ -66,6 +66,7 @@ public class DailyQuestData
                 }
             }
         }
+
         // Normal quest → use template key
         else if (!string.IsNullOrEmpty(questTemplate.descriptionKey))
         {
