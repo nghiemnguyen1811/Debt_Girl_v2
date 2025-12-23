@@ -5,37 +5,31 @@ using System;
 using URandom = UnityEngine.Random;
 
 /// <summary>
-/// Detects interactable objects around the player and manages interaction logic.
+/// Detects interactable objects around the player using Physics.OverlapSphere
+/// and manages the interaction sequence (animation, UI, stat changes).
 /// </summary>
 [RequireComponent(typeof(PlayerControl))]
 public class PlayerInteractDetector : MonoBehaviour
 {
-    #region === Serialized Fields ===
+    //─────────────────────────────────────────────────────────────
+    #region === Inspector Fields ===
 
-    [Header("Settings")]
+    [Header("Detection Settings")]
     [SerializeField] private float detectionRadius = 2f;
     [SerializeField] private LayerMask interactableLayer;
+
+    [Header("Interaction Config")]
     [SerializeField] private float fadeSpeed = 3f;
     [SerializeField] private float earnMoneyMultiplier = 1.3f;
 
-    [Header("UI Elements")]
+    [Header("UI References")]
     [SerializeField] private CanvasGroup interactableButton;
     [SerializeField] private Slider durationSlider;
 
-    [Header("Energy Warning Messages")]
-    [TextArea(2, 5)]
-    [SerializeField]
-    private string[] energyWarningMessages = {
-        "에너지가 부족합니다.",
-        "너무 피곤해서 할 수 없습니다.",
-        "먼저 쉬는 게 좋습니다.",
-        "이 행동은 더 많은 에너지가 필요합니다.",
-        "에너지가 너무 낮습니다."
-    };
-
     #endregion
 
-    #region === Private Fields ===
+    //─────────────────────────────────────────────────────────────
+    #region === Internal State ===
 
     private PlayerControl control;
     private Vector3 originalPosition;
@@ -43,22 +37,17 @@ public class PlayerInteractDetector : MonoBehaviour
 
     private static readonly Vector3 HeightOffset = Vector3.up * 0.25f;
 
-    #endregion
-
-    #region === Public Properties ===
-
     public InteractableBase CurrentInteractable { get; private set; }
     public bool IsInteracting { get; set; }
 
     #endregion
 
+    //─────────────────────────────────────────────────────────────
     #region === Unity Events ===
-
 
     private void Start()
     {
         control = GetComponent<PlayerControl>();
-
         ToggleUI(false, true);
         durationSlider.gameObject.SetActive(false);
     }
@@ -71,81 +60,58 @@ public class PlayerInteractDetector : MonoBehaviour
         ToggleUI(CurrentInteractable != null);
     }
 
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position + HeightOffset, detectionRadius);
+    }
+
     #endregion
 
-    #region === Public Interaction API ===
+    //─────────────────────────────────────────────────────────────
+    #region === Interaction API ===
 
     /// <summary>
-    /// Called when player activates interaction (e.g., presses a key).
-    /// Checks energy and starts interaction if valid.
+    /// Called by Input (e.g., F key or button). Validates energy/cooldown
+    /// and starts the interaction sequence.
     /// </summary>
     public void InteractIndicator()
     {
         if (CurrentInteractable == null || IsInteracting || control.animationHandler.IsPhoneActive) return;
 
-        // Only restrict when interactable has specific character (not All)
+        // 1. Validate Character Type
         if (CurrentInteractable.AllowedCharacter != CharacterType.All &&
             control.CharacterProfile.characterType != CurrentInteractable.AllowedCharacter)
             return;
 
+        // 2. Validate Cooldown
         if (CurrentInteractable is ICooldownInteractable cooldown && cooldown.IsOnCooldown(out float remain))
         {
             cooldown.ShowCooldownWarning(remain);
             return;
         }
 
+        // 3. Validate Energy
         if (control.stats.energy.current < -CurrentInteractable.GetEnergyAmount())
         {
-            string warning = energyWarningMessages[URandom.Range(0, energyWarningMessages.Length)];
-            UIManager.Instance.ShowDebugWarning(warning);
+            GameManager.Instance.ShowEnergyWarning();
             return;
         }
 
-        IsInteracting = true;
-        originalPosition = transform.position;
-        originalRotation = transform.rotation;
-
-        Transform point = CurrentInteractable.GetInteractPoint();
-
-        if (point != null)
-            transform.SetPositionAndRotation(point.position, point.rotation);
-
-        if (CurrentInteractable.MoodIconOffset != Vector3.zero)
-            control.visualizer?.OffsetMoodIcon(CurrentInteractable.MoodIconOffset);
-
-        var data = CurrentInteractable.Data;
-        if (data != null && data.requiredActionType != MoodConditionType.None)
-            control.visualizer?.ApplyFaceTextures(data.requiredActionType);
-
-        switch (CurrentInteractable.GetInteractionMode())
-        {
-            case InteractionPlayMode.Instant:
-                PlayInteractionIfValid();
-                break;
-
-            case InteractionPlayMode.WaitForConfirm:
-                CurrentInteractable.OnInteract(false);
-                break;
-
-            case InteractionPlayMode.SoundOnly:
-                CurrentInteractable.OnInteract();
-                break;
-        }
+        StartInteractionSequence();
     }
 
     /// <summary>
-    /// Forcibly begins interaction animation and coroutine without checking energy.
-    /// Useful for scripted triggers or debug purposes.
+    /// Forcibly begins interaction animation without checking energy.
     /// </summary>
     public void ForceStartInteraction()
     {
         if (CurrentInteractable == null) return;
-
         PlayInteractionIfValid();
     }
 
     /// <summary>
-    /// Immediately cancels the current interaction and resets state.
+    /// Cancels interaction immediately.
     /// </summary>
     public void StopCurrentInteraction()
     {
@@ -155,33 +121,66 @@ public class PlayerInteractDetector : MonoBehaviour
         IsInteracting = false;
     }
 
+    public void ClearCurrentInteractable()
+    {
+        IsInteracting = true;
+        CurrentInteractable = null;
+        ToggleUI(false, true);
+    }
+
     #endregion
 
-    #region === Private Interaction Logic ===
+    //─────────────────────────────────────────────────────────────
+    #region === Interaction Logic Flow ===
 
-    /// <summary>
-    /// Plays the animation and starts the interaction coroutine
-    /// only if the interactable is set to play animation immediately.
-    /// </summary>
+    private void StartInteractionSequence()
+    {
+        IsInteracting = true;
+        originalPosition = transform.position;
+        originalRotation = transform.rotation;
+
+        // Snap to position
+        Transform point = CurrentInteractable.GetInteractPoint();
+        if (point != null)
+            transform.SetPositionAndRotation(point.position, point.rotation);
+
+        // Visual FX
+        if (CurrentInteractable.MoodIconOffset != Vector3.zero)
+            control.visualizer?.OffsetMoodIcon(CurrentInteractable.MoodIconOffset);
+
+        var data = CurrentInteractable.Data;
+        if (data != null && data.requiredActionType != MoodConditionType.None)
+            control.visualizer?.ApplyFaceTextures(data.requiredActionType);
+
+        // Execute Mode
+        switch (CurrentInteractable.GetInteractionMode())
+        {
+            case InteractionPlayMode.Instant:
+                PlayInteractionIfValid();
+                break;
+            case InteractionPlayMode.WaitForConfirm:
+                CurrentInteractable.OnInteract(false);
+                break;
+            case InteractionPlayMode.SoundOnly:
+                CurrentInteractable.OnInteract();
+                break;
+        }
+    }
+
     private void PlayInteractionIfValid()
     {
         CurrentInteractable.OnInteract();
 
         string anim = CurrentInteractable.GetAnimationName();
-
         if (!string.IsNullOrEmpty(anim))
             control.animationHandler.SetBoolParameter(anim, true);
 
         StartCoroutine(HandleInteraction(anim, CurrentInteractable.GetDuration()));
     }
 
-    /// <summary>
-    /// Runs the interaction duration, shows slider, applies effects, resets state.
-    /// </summary>
-    /// <param name="animName">The animation name to stop at the end.</param>
-    /// <param name="duration">How long the interaction lasts.</param>
     private IEnumerator HandleInteraction(string animName, float duration)
     {
+        // Show progress bar
         durationSlider.gameObject.SetActive(true);
         durationSlider.value = 0f;
 
@@ -194,14 +193,23 @@ public class PlayerInteractDetector : MonoBehaviour
         durationSlider.value = 1f;
         durationSlider.gameObject.SetActive(false);
 
+        // End Animation
         if (!string.IsNullOrEmpty(animName))
             control.animationHandler.SetBoolParameter(animName, false);
 
         transform.SetPositionAndRotation(originalPosition, originalRotation);
         CurrentInteractable.OnStopInteract();
 
-        var data = CurrentInteractable.Data;
+        ApplyInteractionResults();
 
+        control.visualizer?.ResetMoodIconPosition();
+        yield return new WaitForSeconds(0.5f);
+        IsInteracting = false;
+    }
+
+    private void ApplyInteractionResults()
+    {
+        var data = CurrentInteractable.Data;
         if (data != null)
         {
             control.stats.ApplyStatChange(StatType.Mood, data.moodAmount);
@@ -219,31 +227,13 @@ public class PlayerInteractDetector : MonoBehaviour
             if (data.clearsMoodType != MoodConditionType.None)
                 MoodManager.Instance.ClearMood(data.clearsMoodType);
         }
-
-        control.visualizer?.ResetMoodIconPosition();
-
-        yield return new WaitForSeconds(0.5f);
-        IsInteracting = false;
-    }
-
-    /// <summary>
-    /// Clears the current interactable and hides the interact UI.
-    /// Useful when forcing a reset from other scripts.
-    /// </summary>
-    public void ClearCurrentInteractable()
-    {
-        IsInteracting = true;
-        CurrentInteractable = null;
-        ToggleUI(false, true);
     }
 
     #endregion
 
-    #region === Detection ===
+    //─────────────────────────────────────────────────────────────
+    #region === Detection & UI ===
 
-    /// <summary>
-    /// Scans for nearby interactable objects using overlap sphere.
-    /// </summary>
     private void DetectInteractable()
     {
         var hits = Physics.OverlapSphere(transform.position + HeightOffset, detectionRadius, interactableLayer);
@@ -255,7 +245,6 @@ public class PlayerInteractDetector : MonoBehaviour
                 CurrentInteractable.OnExit();
                 CurrentInteractable = null;
             }
-
             return;
         }
 
@@ -273,38 +262,16 @@ public class PlayerInteractDetector : MonoBehaviour
         }
     }
 
-    #endregion
-
-    #region === UI Handling ===
-
-    /// <summary>
-    /// Smoothly fades in/out the interact UI.
-    /// </summary>
-    /// <param name="visible">Whether the UI should be visible.</param>
-    /// <param name="instant">Skip fade animation if true.</param>
     private void ToggleUI(bool visible, bool instant = false)
     {
         float targetAlpha = visible ? 1f : 0f;
         float fadeStep = instant ? 1000f : Time.deltaTime * fadeSpeed;
 
         interactableButton.alpha = Mathf.MoveTowards(interactableButton.alpha, targetAlpha, fadeStep);
-        bool shouldShow = interactableButton.alpha > 0.01f;
 
+        bool shouldShow = interactableButton.alpha > 0.01f;
         if (interactableButton.gameObject.activeSelf != shouldShow)
             interactableButton.gameObject.SetActive(shouldShow);
-    }
-
-    #endregion
-
-    #region === Debug ===
-
-    /// <summary>
-    /// Draws detection radius in editor.
-    /// </summary>
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position + HeightOffset, detectionRadius);
     }
 
     #endregion

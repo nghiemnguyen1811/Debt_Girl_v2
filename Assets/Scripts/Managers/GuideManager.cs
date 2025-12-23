@@ -1,13 +1,16 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Manages guide tabs and displays the corresponding guide content (images + per-item descriptions).
+/// Manages guide tabs and displays the corresponding guide content (images + localized descriptions).
 /// </summary>
 public class GuideManager : MonoBehaviour
 {
+    // Define the Localization Table Name constant
+    private const string GUIDE_TABLE = "Guide Labels";
+
     //─────────────────────────────────────────────────────────────
     #region === Inspector Fields ===
 
@@ -49,15 +52,13 @@ public class GuideManager : MonoBehaviour
     //─────────────────────────────────────────────────────────────
     #region === Unity Lifecycle ===
 
-    /// <summary>
-    /// Spawn tabs, wire buttons, auto-select first tab.
-    /// </summary>
     private void Start()
     {
         SpawnAllTabs();
         WireNavigationButtons();
         AutoSelectFirstTab();
 
+        // Register to update text when language changes
         if (LocalizationManager.Instance != null)
             LocalizationManager.Instance.RegisterForGlobalRefresh(OnLanguageChanged);
     }
@@ -85,29 +86,23 @@ public class GuideManager : MonoBehaviour
 
         foreach (var data in guideDataList)
         {
-            if (data == null)
-                continue;
+            if (data == null) continue;
 
             var tabItem = Instantiate(tabItemPrefab, tabContainer);
-
             int capturedIndex = spawnedTabs.Count;
             spawnedTabs.Add(tabItem);
 
+            // Note: GuideTabItem.Configure should handle localizing the tab name using data.systemNameKey
             tabItem.Configure(data, () => SelectTabByIndex(capturedIndex));
         }
     }
 
-    /// <summary>
-    /// Destroy old tabs and reset selection.
-    /// </summary>
     private void ClearExistingTabs()
     {
         foreach (var tab in spawnedTabs)
         {
-            if (tab != null)
-                Destroy(tab.gameObject);
+            if (tab != null) Destroy(tab.gameObject);
         }
-
         spawnedTabs.Clear();
         currentTabIndex = -1;
     }
@@ -117,9 +112,6 @@ public class GuideManager : MonoBehaviour
     //─────────────────────────────────────────────────────────────
     #region === Navigation Buttons Wiring ===
 
-    /// <summary>
-    /// Wire Prev/Next buttons.
-    /// </summary>
     private void WireNavigationButtons()
     {
         if (prevTabButton != null)
@@ -133,7 +125,6 @@ public class GuideManager : MonoBehaviour
             nextTabButton.onClick.RemoveAllListeners();
             nextTabButton.onClick.AddListener(GoToNextTab);
         }
-
         UpdateNavigationButtonsState();
     }
 
@@ -142,9 +133,6 @@ public class GuideManager : MonoBehaviour
     //─────────────────────────────────────────────────────────────
     #region === Tab Selection & Navigation ===
 
-    /// <summary>
-    /// Auto select first tab (or clear UI if empty).
-    /// </summary>
     private void AutoSelectFirstTab()
     {
         if (spawnedTabs.Count == 0)
@@ -154,25 +142,21 @@ public class GuideManager : MonoBehaviour
             UpdateNavigationButtonsState();
             return;
         }
-
         SelectTabByIndex(0);
     }
 
-    /// <summary>
-    /// Select tab by index and display its content.
-    /// </summary>
     private void SelectTabByIndex(int index)
     {
-        if (index < 0 || index >= spawnedTabs.Count)
-            return;
+        if (index < 0 || index >= spawnedTabs.Count) return;
 
+        // Deselect previous
         if (currentTabIndex >= 0 && currentTabIndex < spawnedTabs.Count)
         {
             var previousTab = spawnedTabs[currentTabIndex];
-            if (previousTab != null)
-                previousTab.SetSelected(false);
+            if (previousTab != null) previousTab.SetSelected(false);
         }
 
+        // Select new
         currentTabIndex = index;
         var newTab = spawnedTabs[currentTabIndex];
 
@@ -185,74 +169,46 @@ public class GuideManager : MonoBehaviour
         UpdateNavigationButtonsState();
     }
 
-    /// <summary>
-    /// Go to previous tab.
-    /// </summary>
     private void GoToPreviousTab()
     {
-        if (currentTabIndex <= 0)
-            return;
-
+        if (currentTabIndex <= 0) return;
         SelectTabByIndex(currentTabIndex - 1);
         CenterCurrentTabInScrollView();
         AudioManager.Instance.PlayInteractSound(8);
     }
 
-    /// <summary>
-    /// Go to next tab.
-    /// </summary>
     private void GoToNextTab()
     {
-        if (currentTabIndex < 0 || currentTabIndex >= spawnedTabs.Count - 1)
-            return;
-
+        if (currentTabIndex < 0 || currentTabIndex >= spawnedTabs.Count - 1) return;
         SelectTabByIndex(currentTabIndex + 1);
         CenterCurrentTabInScrollView();
         AudioManager.Instance.PlayInteractSound(8);
     }
 
-    /// <summary>
-    /// Enable/disable Prev/Next based on current index.
-    /// </summary>
     private void UpdateNavigationButtonsState()
     {
         if (prevTabButton != null)
             prevTabButton.interactable = currentTabIndex > 0;
 
         if (nextTabButton != null)
-            nextTabButton.interactable = currentTabIndex >= 0 &&
-                                         currentTabIndex < spawnedTabs.Count - 1;
+            nextTabButton.interactable = currentTabIndex >= 0 && currentTabIndex < spawnedTabs.Count - 1;
     }
 
-    /// <summary>
-    /// Center current tab in ScrollView (except first/last).
-    /// </summary>
     private void CenterCurrentTabInScrollView()
     {
-        if (tabScrollRect == null)
-            return;
-
-        if (currentTabIndex <= 0 || currentTabIndex >= spawnedTabs.Count - 1)
-            return;
-
-        if (tabContainer is not RectTransform contentRect)
-            return;
+        if (tabScrollRect == null || tabContainer is not RectTransform contentRect) return;
+        if (currentTabIndex <= 0 || currentTabIndex >= spawnedTabs.Count - 1) return;
 
         var currentTab = spawnedTabs[currentTabIndex];
-        if (currentTab == null)
-            return;
-
+        if (currentTab == null) return;
         var tabRect = currentTab.transform as RectTransform;
-        if (tabRect == null)
-            return;
+        if (tabRect == null) return;
 
         LayoutRebuilder.ForceRebuildLayoutImmediate(contentRect);
 
         float contentWidth = contentRect.rect.width;
         float viewportWidth = ((RectTransform)tabScrollRect.viewport).rect.width;
-
-        if (contentWidth <= viewportWidth)
-            return;
+        if (contentWidth <= viewportWidth) return;
 
         Vector3 worldCenter = tabRect.TransformPoint(tabRect.rect.center);
         Vector3 localCenter = contentRect.InverseTransformPoint(worldCenter);
@@ -271,46 +227,39 @@ public class GuideManager : MonoBehaviour
     //─────────────────────────────────────────────────────────────
     #region === Update / Refresh ===
 
+    /// <summary>
+    /// Callback from LocalizationManager when language changes.
+    /// </summary>
     private void OnLanguageChanged()
     {
         RefreshTabs();
 
+        // Refresh currently displayed content
         if (currentTabIndex >= 0 && currentTabIndex < spawnedTabs.Count)
         {
             var tab = spawnedTabs[currentTabIndex];
-            if (tab != null)
-                DisplayGuideContent(tab.GuideData);
+            if (tab != null) DisplayGuideContent(tab.GuideData);
         }
     }
 
     /// <summary>
-    /// Refresh all tabs (e.g. localization).
+    /// Refresh all tab items (e.g. update their titles via Configure).
     /// </summary>
     public void RefreshTabs()
     {
-        if (spawnedTabs.Count == 0)
-            return;
+        if (spawnedTabs.Count == 0) return;
 
         for (int i = 0; i < spawnedTabs.Count; i++)
         {
             var tab = spawnedTabs[i];
-            if (tab == null)
-                continue;
+            if (tab == null) continue;
 
             var data = tab.GuideData;
-            if (data == null)
-                continue;
+            if (data == null) continue;
 
             int capturedIndex = i;
+            // Re-configure to update tab title localization
             tab.Configure(data, () => SelectTabByIndex(capturedIndex));
-        }
-
-        if (currentTabIndex < 0 || currentTabIndex >= spawnedTabs.Count)
-            AutoSelectFirstTab();
-        else
-        {
-            SelectTabByIndex(currentTabIndex);
-            CenterCurrentTabInScrollView();
         }
     }
 
@@ -320,7 +269,7 @@ public class GuideManager : MonoBehaviour
     #region === Guide Content Display ===
 
     /// <summary>
-    /// Update UI for selected guide tab (images + per-item descriptions).
+    /// Update UI for selected guide tab using Localized Keys.
     /// </summary>
     public void DisplayGuideContent(GuideCardDataSO data)
     {
@@ -330,13 +279,9 @@ public class GuideManager : MonoBehaviour
             HideAllLayouts();
             return;
         }
-
         UpdateGuideEntries(data);
     }
 
-    /// <summary>
-    /// Decide single/double layout based on guideEntries count.
-    /// </summary>
     private void UpdateGuideEntries(GuideCardDataSO data)
     {
         int count = (data.guideEntries != null) ? data.guideEntries.Length : 0;
@@ -352,9 +297,6 @@ public class GuideManager : MonoBehaviour
         else ShowDoubleEntries(data);
     }
 
-    /// <summary>
-    /// Hide both layouts.
-    /// </summary>
     private void HideAllLayouts()
     {
         if (singleImageLayout != null) singleImageLayout.SetActive(false);
@@ -362,74 +304,69 @@ public class GuideManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Show single layout and apply image + description.
+    /// Single Layout: Uses 'descriptionKey' from the ScriptableObject itself.
     /// </summary>
     private void ShowSingleEntry(GuideCardDataSO data)
     {
         if (singleImageLayout != null) singleImageLayout.SetActive(true);
         if (doubleImageLayout != null) doubleImageLayout.SetActive(false);
 
-        var entry = (data != null && data.guideEntries != null && data.guideEntries.Length > 0)
-            ? data.guideEntries[0]
-            : null;
+        var entry = (data.guideEntries != null && data.guideEntries.Length > 0) ? data.guideEntries[0] : null;
 
+        // Set Image
         if (singleImageSlot != null)
         {
             singleImageSlot.sprite = entry != null ? entry.image : null;
             singleImageSlot.enabled = (singleImageSlot.sprite != null);
         }
 
-        ApplyDescription(descriptionText, data != null ? data.descriptionKey : null);
+        // Set Text using key
+        ApplyDescription(descriptionText, data.descriptionKey);
     }
 
     /// <summary>
-    /// Show double layout and apply up to 2 entries (image + description per item).
+    /// Double Layout: Uses 'entryKey' from each GuideImageEntry.
     /// </summary>
     private void ShowDoubleEntries(GuideCardDataSO data)
     {
         if (singleImageLayout != null) singleImageLayout.SetActive(false);
         if (doubleImageLayout != null) doubleImageLayout.SetActive(true);
 
-        var entries = data != null ? data.guideEntries : null;
+        var entries = data.guideEntries;
 
-        ApplyDescription(descriptionText, data != null ? data.descriptionKey : null);
+        // The main description text in Double Layout (optional, using main descriptionKey)
+        ApplyDescription(descriptionText, data.descriptionKey);
 
-        // Images (max 2 slots)
+        // --- Images ---
         for (int i = 0; i < (doubleImageSlots?.Length ?? 0); i++)
         {
             var slot = doubleImageSlots[i];
             if (slot == null) continue;
 
-            bool hasEntry = entries != null && i < entries.Length && entries[i] != null && entries[i].image != null;
+            bool hasEntry = entries != null && i < entries.Length && entries[i] != null;
             slot.gameObject.SetActive(hasEntry);
 
             if (hasEntry)
             {
                 slot.sprite = entries[i].image;
-                slot.enabled = true;
-            }
-            else
-            {
-                slot.sprite = null;
-                slot.enabled = false;
+                slot.enabled = (slot.sprite != null);
             }
         }
 
-        // Descriptions for 2 guide items (auto hide if null/empty)
+        // --- Descriptions (using entryKey) ---
         var e0 = (entries != null && entries.Length > 0) ? entries[0] : null;
         var e1 = (entries != null && entries.Length > 1) ? entries[1] : null;
 
-        ApplyDescription(doubleDescriptionText01, e0 != null ? e0.description : null);
-        ApplyDescription(doubleDescriptionText02, e1 != null ? e1.description : null);
+        ApplyDescription(doubleDescriptionText01, e0 != null ? e0.entryKey : null);
+        ApplyDescription(doubleDescriptionText02, e1 != null ? e1.entryKey : null);
 
+        // Rebuild Layout
         var rect = doubleImageLayout != null ? doubleImageLayout.GetComponent<RectTransform>() : null;
-        if (rect != null)
-            LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
+        if (rect != null) LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
     }
 
-
     /// <summary>
-    /// Set TMP text and toggle active based on null/empty.
+    /// Uses LocalizationManager to set the text based on the key.
     /// </summary>
     private void ApplyDescription(TextMeshProUGUI label, string key)
     {
@@ -438,15 +375,13 @@ public class GuideManager : MonoBehaviour
         bool hasKey = !string.IsNullOrWhiteSpace(key);
         label.gameObject.SetActive(hasKey);
 
-        if (hasKey)
+        if (hasKey && LocalizationManager.Instance != null)
         {
-            LocalizationManager.Instance.SetLocalizedText(label, "Guide Labels", key);
+            // Use the constant table name and the specific key
+            LocalizationManager.Instance.SetLocalizedText(label, GUIDE_TABLE, key);
         }
     }
 
-    /// <summary>
-    /// Clear & hide all description labels.
-    /// </summary>
     private void ClearAllDescriptions()
     {
         ApplyDescription(descriptionText, null);

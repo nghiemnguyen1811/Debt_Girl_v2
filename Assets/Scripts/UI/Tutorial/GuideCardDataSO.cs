@@ -41,6 +41,8 @@ public class GuideImageEntry
     [Header("Text")]
     [TextArea(2, 4)]
     public string description;               // Description for this image
+
+    public string entryKey;
 }
 
 #endregion
