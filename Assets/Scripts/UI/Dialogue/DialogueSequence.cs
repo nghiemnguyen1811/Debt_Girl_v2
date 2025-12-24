@@ -15,6 +15,10 @@ public class DialogueLine
 
     [LabelText("Dialogue Text"), TextArea]
     public string dialogueText;
+
+    [Header("Localization")]
+    [LabelText("Dialogue Key")]
+    public string dialogueKey;
 }
 
 [System.Serializable]
