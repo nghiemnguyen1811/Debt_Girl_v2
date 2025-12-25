@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -17,6 +18,9 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     [SerializeField] private TextMeshProUGUI statPointText;
     [SerializeField] private TextMeshProUGUI totalPriceText;
     [SerializeField] private TextMeshProUGUI warningText;
+
+    [Header("Player UI")]
+    [SerializeField] private TextMeshProUGUI playerNameText;
 
     [Header("UI Panels")]
     [SerializeField] private GameObject phonePanel;
@@ -54,6 +58,20 @@ public class UIManager : SingletonMonobehaviour<UIManager>
 
     // ─────────────────────────────────────────────────────
     #region Unity Lifecycle
+
+    private void OnEnable()
+    {
+        if (PlayerControl.Instance != null)
+            PlayerControl.Instance.OnCharacterProfileChanged += UpdatePlayerName;
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+
+        if (PlayerControl.Instance != null)
+            PlayerControl.Instance.OnCharacterProfileChanged -= UpdatePlayerName;
+    }
 
     private void Start()
     {
@@ -99,7 +117,14 @@ public class UIManager : SingletonMonobehaviour<UIManager>
             statPointText.text = $"{total}";
     }
 
+    public void UpdatePlayerName(CharacterInfoSO newProfile)
+    {
+        if (playerNameText == null) return;
 
+        playerNameText.text = string.IsNullOrWhiteSpace(newProfile.characterName)
+            ? "-"
+            : newProfile.characterName.Trim();
+    }
 
     #endregion
 
