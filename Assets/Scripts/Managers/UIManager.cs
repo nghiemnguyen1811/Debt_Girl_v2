@@ -1,5 +1,4 @@
 ﻿using DG.Tweening;
-using Sirenix.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -18,8 +17,6 @@ public class UIManager : SingletonMonobehaviour<UIManager>
     [SerializeField] private TextMeshProUGUI statPointText;
     [SerializeField] private TextMeshProUGUI totalPriceText;
     [SerializeField] private TextMeshProUGUI warningText;
-
-    [Header("Player UI")]
     [SerializeField] private TextMeshProUGUI playerNameText;
 
     [Header("UI Panels")]
