@@ -124,7 +124,9 @@ public class DialogueManager : SingletonMonobehaviour<DialogueManager>
     private void StartDialogue(DialogueSequence sequence)
     {
         if (sequence == null) return;
+
         PrepareDialogueState(sequence);
+        PrewarmFirstLineVisuals();
         PlayIntroAnimation();
     }
 
@@ -140,6 +142,31 @@ public class DialogueManager : SingletonMonobehaviour<DialogueManager>
         canProceed = false;
         ClearDialogueUI();
     }
+
+    /// <summary>
+    /// Preloads the first line's portraits (and clears name/text UI) before the intro animation,
+    /// preventing a visible sprite "pop" when the dialogue panel appears.
+    /// </summary>
+    private void PrewarmFirstLineVisuals()
+    {
+        if (currentSequence == null || currentSequence.lines == null || currentSequence.lines.Length == 0) return;
+
+        DialogueLine firstLine = currentSequence.lines[0];
+        CharacterInfoSO playerData = playerControl.CharacterProfile;
+        bool isPlayer = (firstLine.speakerType == playerData.characterType);
+
+        UpdatePortraits(firstLine, isPlayer);
+
+        // Hide speaker names before animation (optional, avoids flicker)
+        if (speakerNameSlots != null)
+        {
+            foreach (var slot in speakerNameSlots)
+                if (slot != null) slot.Hide();
+        }
+
+        if (dialogueText != null) dialogueText.text = "";
+    }
+
 
     /// <summary>
     /// Asynchronously loads the localized dialogue content and updates the UI elements (portraits, names, and text) for the current line.
@@ -231,6 +258,10 @@ public class DialogueManager : SingletonMonobehaviour<DialogueManager>
     /// </summary>
     private void PlayIntroAnimation()
     {
+        leftRect.DOKill();
+        rightRect.DOKill();
+        dialogueRect.DOKill();
+
         leftRect.anchoredPosition = leftDefaultPos + Vector2.left * animOffset;
         rightRect.anchoredPosition = rightDefaultPos + Vector2.right * animOffset;
         dialogueRect.anchoredPosition = dialogueDefaultPos + Vector2.down * animOffset;
