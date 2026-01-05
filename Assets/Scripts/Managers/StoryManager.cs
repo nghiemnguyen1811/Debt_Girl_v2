@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
-using UnityEngine.Localization.Settings;
+using System.Collections;
+using System.Collections.Generic;
 
 /// <summary>
 /// Controls story image transitions, typewriter text, next/skip logic,
 /// and notifies MainMenu when the story ends.
-/// Integration: Fetches localized story text asynchronously (PAD-safe).
+/// Integration: Uses LocalizationManager to fetch localized text dynamically.
 /// </summary>
 public class StoryManager : SingletonMonobehaviour<StoryManager>
 {
@@ -53,12 +50,8 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
     private bool isTyping = false;
     private bool canClickNext = true;
 
-    // Cache current localized string (used for instant-finish typing)
+    // Cache the localized string to handle "Instant Finish" typing or Language changes
     private string currentLocalizedString = "";
-
-    // Guards against async race & scene/object lifecycle issues
-    private int _requestVersion = 0;
-    private bool _isDestroyed = false;
 
     //────────────────────────────────────────────────────
     // == Unity Lifecycle ==
@@ -75,18 +68,20 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
 
         // Register for language change events to update text dynamically
         if (LocalizationManager.Instance != null)
+        {
             LocalizationManager.Instance.RegisterForGlobalRefresh(OnLanguageChanged);
+        }
     }
 
     protected override void OnDestroy()
     {
-        _isDestroyed = true;
-
-        // Unregister to prevent leaks/errors
-        if (LocalizationManager.Instance != null)
-            LocalizationManager.Instance.UnregisterForGlobalRefresh(OnLanguageChanged);
-
         base.OnDestroy();
+
+        // Unregister to prevent memory leaks or errors when the object is destroyed
+        if (LocalizationManager.Instance != null)
+        {
+            LocalizationManager.Instance.UnregisterForGlobalRefresh(OnLanguageChanged);
+        }
     }
 
     //────────────────────────────────────────────────────
@@ -95,8 +90,8 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
 
     private void InitButtons()
     {
-        if (nextButton) nextButton.onClick.AddListener(OnClickNext);
-        if (skipButtonEnable) skipButtonEnable.onClick.AddListener(SkipStory);
+        nextButton.onClick.AddListener(OnClickNext);
+        skipButtonEnable.onClick.AddListener(SkipStory);
     }
 
     private void SpawnImages()
@@ -115,7 +110,6 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
     private void ArrangeStackOrder()
     {
         int count = stackedImages.Count;
-
         // Stack images so the first one (index 0) is rendered on top (last sibling)
         for (int i = 0; i < count; i++)
         {
@@ -133,81 +127,48 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
     }
 
     //────────────────────────────────────────────────────
-    // == Localization Fetch (PAD-safe) ==
-    //────────────────────────────────────────────────────
-
-    private async Task<string> FetchStoryTextAsync(string table, string key)
-    {
-        try
-        {
-            // Ensure localization system is initialized (async)
-            await LocalizationSettings.InitializationOperation.Task;
-
-            // Fetch directly from StringDatabase (avoid handle.Result usage)
-            string result = await LocalizationSettings.StringDatabase
-                .GetLocalizedStringAsync(table, key).Task;
-
-            return result ?? string.Empty;
-        }
-        catch (Exception ex)
-        {
-            Debug.LogWarning($"[StoryManager] Failed to fetch localized story text. Table='{table}', Key='{key}'. {ex.Message}");
-            return string.Empty;
-        }
-    }
-
-    //────────────────────────────────────────────────────
     // == Story Text & Typewriter ==
     //────────────────────────────────────────────────────
 
     /// <summary>
-    /// Fetches localized text for the current page and starts the typewriter effect.
-    /// Protected against async race conditions and destroyed objects.
+    /// Fetches the localized text for the current page and starts the typewriter effect.
     /// </summary>
     private async void ShowCurrentStory()
     {
         StopAllCoroutines();
 
         // Reset text alpha and content
-        if (storyTextUI)
-        {
-            Color c = storyTextUI.color;
-            c.a = 1f;
-            storyTextUI.color = c;
-            storyTextUI.text = "";
-        }
-
-        if (currentIndex < 0 || currentIndex >= storyList.Count)
-            return;
-
-        int version = ++_requestVersion;
-
-        string key = storyList[currentIndex].storyTextKey;
-
-        // Fetch localized string
-        currentLocalizedString = await FetchStoryTextAsync(localizationTableName, key);
-
-        // Abort if state changed while awaiting
-        if (_isDestroyed) return;
-        if (version != _requestVersion) return;
-        if (currentIndex < 0 || currentIndex >= storyList.Count) return;
-        if (!storyTextUI) return;
-
-        // Extra: settle TMP for first-frame weirdness
+        Color c = storyTextUI.color;
+        c.a = 1f;
+        storyTextUI.color = c;
         storyTextUI.text = "";
-        storyTextUI.ForceMeshUpdate(true, true);
 
-        StartCoroutine(Typewriter(currentLocalizedString));
+        if (currentIndex < storyList.Count)
+        {
+            string key = storyList[currentIndex].storyTextKey;
+
+            // Fetch text from LocalizationManager asynchronously
+            if (LocalizationManager.Instance != null)
+            {
+                currentLocalizedString = await LocalizationManager.Instance.GetLocalizedString(localizationTableName, key);
+            }
+            else
+            {
+                currentLocalizedString = "Error: LocalizationManager not found.";
+            }
+
+            // Start typing effect with the fetched text
+            StartCoroutine(Typewriter(currentLocalizedString));
+        }
     }
 
     private IEnumerator Typewriter(string text)
     {
         isTyping = true;
-        if (storyTextUI) storyTextUI.text = "";
+        storyTextUI.text = "";
 
         foreach (char c in text)
         {
-            if (!storyTextUI) break;
             storyTextUI.text += c;
             yield return new WaitForSeconds(typeSpeed);
         }
@@ -220,34 +181,37 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
     //────────────────────────────────────────────────────
 
     /// <summary>
-    /// Triggered when the language changes.
+    /// Triggered automatically when the user changes language settings.
     /// Updates the currently displayed text immediately.
     /// </summary>
     private async void OnLanguageChanged()
     {
-        if (_isDestroyed) return;
-        if (currentIndex < 0 || currentIndex >= storyList.Count) return;
+        // If story is finished or index is invalid, do nothing
+        if (currentIndex >= storyList.Count) return;
 
+        // 1. Stop the typewriter if it's running
         StopAllCoroutines();
         isTyping = false;
 
-        int version = ++_requestVersion;
-
+        // 2. Get the key for the current page
         string key = storyList[currentIndex].storyTextKey;
 
-        currentLocalizedString = await FetchStoryTextAsync(localizationTableName, key);
+        // 3. Fetch the new localized string
+        if (LocalizationManager.Instance != null)
+        {
+            currentLocalizedString = await LocalizationManager.Instance.GetLocalizedString(localizationTableName, key);
+        }
 
-        if (_isDestroyed) return;
-        if (version != _requestVersion) return;
-        if (!storyTextUI) return;
+        // 4. Update the text UI immediately (don't type it out again to avoid annoyance)
+        if (storyTextUI != null)
+        {
+            storyTextUI.text = currentLocalizedString;
 
-        storyTextUI.text = currentLocalizedString;
-
-        Color c = storyTextUI.color;
-        c.a = 1f;
-        storyTextUI.color = c;
-
-        storyTextUI.ForceMeshUpdate(true, true);
+            // Ensure alpha is visible (in case it was fading out)
+            Color c = storyTextUI.color;
+            c.a = 1f;
+            storyTextUI.color = c;
+        }
     }
 
     //────────────────────────────────────────────────────
@@ -260,19 +224,20 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
             return;
 
         canClickNext = false;
-        if (nextButton) nextButton.interactable = false;
+        nextButton.interactable = false;
 
         // If text is still typing, finish it instantly
         if (isTyping)
         {
             StopAllCoroutines();
-            if (storyTextUI) storyTextUI.text = currentLocalizedString;
+            storyTextUI.text = currentLocalizedString; // Show full cached text
             isTyping = false;
 
             StartCoroutine(EnableNextButtonDelayed());
             return;
         }
 
+        // Otherwise, move to the next page
         bool isLastPage = currentIndex == stackedImages.Count - 1;
 
         if (isLastPage) EndStory();
@@ -282,8 +247,7 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
     private IEnumerator EnableNextButtonDelayed()
     {
         yield return new WaitForSeconds(antiSpamDelay);
-
-        if (nextButton) nextButton.interactable = true;
+        nextButton.interactable = true;
         canClickNext = true;
     }
 
@@ -293,14 +257,9 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
 
     private void SlideOutCurrentImage()
     {
-        if (currentIndex < 0 || currentIndex >= stackedImages.Count)
-        {
-            EndStory();
-            return;
-        }
-
         Image img = stackedImages[currentIndex];
 
+        // Ensure CanvasGroup exists for fading
         CanvasGroup cg = img.GetComponent<CanvasGroup>();
         if (cg == null)
             cg = img.gameObject.AddComponent<CanvasGroup>();
@@ -310,14 +269,15 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
         if (AudioManager.Instance != null)
             AudioManager.Instance.PlayInteractSound(16);
 
+        // Animate: Slide Right + Fade Out Image + Fade Out Text
         Sequence seq = DOTween.Sequence()
             .Append(rt.DOAnchorPosX(800f, slideDuration))
             .Join(cg.DOFade(0f, slideDuration))
-            .Join(storyTextUI ? storyTextUI.DOFade(0f, slideDuration) : null);
+            .Join(storyTextUI.DOFade(0f, slideDuration));
 
         seq.OnComplete(() =>
         {
-            if (img) img.gameObject.SetActive(false);
+            img.gameObject.SetActive(false);
             currentIndex++;
 
             if (currentIndex < stackedImages.Count)
@@ -351,6 +311,7 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
     {
         StopAllCoroutines();
 
+        // Clean up existing image instances
         foreach (var img in stackedImages)
         {
             if (img != null) Destroy(img.gameObject);
@@ -362,21 +323,18 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
         isTyping = false;
         currentLocalizedString = "";
 
-        if (storyTextUI)
-        {
-            Color c = storyTextUI.color;
-            c.a = 1f;
-            storyTextUI.color = c;
-            storyTextUI.text = "";
-            storyTextUI.ForceMeshUpdate(true, true);
-        }
+        // Reset Text Alpha
+        Color c = storyTextUI.color;
+        c.a = 1f;
+        storyTextUI.color = c;
 
+        // Re-spawn and start
         SpawnImages();
         ArrangeStackOrder();
         ShowCurrentStory();
 
         canClickNext = true;
-        if (nextButton) nextButton.interactable = true;
+        nextButton.interactable = true;
     }
 
     //────────────────────────────────────────────────────
@@ -395,7 +353,7 @@ public class StoryManager : SingletonMonobehaviour<StoryManager>
 
     public void SetSkipInteractable(bool state)
     {
-        if (skipButtonEnable) skipButtonEnable.gameObject.SetActive(state);
-        if (skipButtonDisable) skipButtonDisable.gameObject.SetActive(!state);
+        skipButtonEnable.gameObject.SetActive(state);
+        skipButtonDisable.gameObject.SetActive(!state);
     }
 }
